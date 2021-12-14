@@ -39,4 +39,4 @@ cargo build --target x86_64-pc-windows-gnu [--release]
 
 A simple TCP reverse shell, no bells or whistles.
 
-Navigate to [its config file](https://github.com/kmanc/remote_code_oxidation/src/basic_tcp_reverse_shell/config.rs) and change the IP address and port before compiling
+Navigate to [its config file](https://github.com/kmanc/remote_code_oxidation/blob/master/src/basic_tcp_reverse_shell/config.rs) and change the IP address and port before compiling
