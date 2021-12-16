@@ -3,6 +3,12 @@
 
 A collection of offensive security tools written in Rust. More details to come
 
+## Tools list
+- [TCP reverse shell](https://github.com/kmanc/remote_code_oxidation/tree/master/src/basic_tcp_reverse_shell)
+  - Navigate to [its config file](https://github.com/kmanc/remote_code_oxidation/blob/master/src/basic_tcp_reverse_shell/config.rs) and change the IP address and port before compiling
+- [Shellcode injection and process migration](http://127.0.0.1)
+  - Navigate to [its config file](http://127.0.0.1) and change the shellcode before compiling
+
 ## Compilation
 
 ### From Linux host for Linux target
@@ -35,8 +41,3 @@ Build!
 cargo build --target x86_64-pc-windows-gnu [--release]
 ```
 
-## basic_tcp_reverse_shell
-
-A simple TCP reverse shell, no bells or whistles.
-
-Navigate to [its config file](https://github.com/kmanc/remote_code_oxidation/blob/master/src/basic_tcp_reverse_shell/config.rs) and change the IP address and port before compiling
