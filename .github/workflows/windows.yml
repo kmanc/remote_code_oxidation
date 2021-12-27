@@ -1,4 +1,4 @@
-name: RCO Windows
+name: RCO for Windows targets
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: RCO Unix
+name: RCO for Unix targets
 
 on:
   push:
