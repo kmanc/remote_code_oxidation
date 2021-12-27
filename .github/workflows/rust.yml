@@ -10,7 +10,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  unix-builds:
 
     runs-on: ubuntu-latest
 
@@ -18,13 +18,23 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build all for Unix
       run: cargo build --verbose
-    - name: Build all for Windows
-      run: cargo build --target x86_64-pc-windows-gnu --verbose
     - name: Build reverse shell for Unix
       run: cargo build -p tcp_reverse_shell --verbose
-    - name: Build reverse shell for Windows
-      run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --verbose
     - name: Build process migration for Unix
       run: cargo build -p process_migration --verbose
+    - name: Prepare for
+      
+  windows-builds:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - name: Build all for Windows
+      run: cargo build --target x86_64-pc-windows-gnu --verbose
+    - name: Build reverse shell for Windows
+      run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --verbose
     - name: Build process migration for Windows
       run: cargo test -p process_migration --target x86_64-pc-windows-gnu --verbose
