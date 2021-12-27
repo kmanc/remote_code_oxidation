@@ -1,1 +1,7 @@
-/target
+# Directories
+/target/
+.idea/
+
+
+# Files
+*.txt

