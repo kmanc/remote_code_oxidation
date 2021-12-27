@@ -30,7 +30,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install linker
-      run: apt -y install mingw-w64
+      run: sudo apt -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
     - name: Build all for Windows
