@@ -1,0 +1,28 @@
+name: RCO Windows
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs: 
+  windows-builds:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install linker
+      run: sudo apt -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - name: Build all for Windows
+      run: cargo build --target x86_64-pc-windows-gnu --verbose
+    - name: Build reverse shell for Windows
+      run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --verbose
+    - name: Build process migration for Windows
+      run: cargo build -p process_migration --target x86_64-pc-windows-gnu --verbose
