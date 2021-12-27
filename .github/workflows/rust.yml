@@ -38,4 +38,4 @@ jobs:
     - name: Build reverse shell for Windows
       run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --verbose
     - name: Build process migration for Windows
-      run: cargo test -p process_migration --target x86_64-pc-windows-gnu --verbose
+      run: cargo build -p process_migration --target x86_64-pc-windows-gnu --verbose
