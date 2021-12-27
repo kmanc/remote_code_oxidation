@@ -16,9 +16,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build all for Unix
-      run: cargo build --verbose
     - name: Build reverse shell for Unix
       run: cargo build -p tcp_reverse_shell --verbose
+    - name: Clean
+      run: cargo clean
     - name: Build process migration for Unix
       run: cargo build -p process_migration --verbose
+    - name: Clean again
+      run: cargo clean
+    - name: Build all for Unix
+      run: cargo build --verbose
