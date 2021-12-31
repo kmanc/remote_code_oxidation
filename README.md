@@ -16,6 +16,11 @@ A collection of offensive security tools written in Rust. More details to come
 
 ## Setup
 
+Clone the repo
+```commandline
+git clone https://github.com/kmanc/remote_code_oxidation.git
+```
+
 ### From Linux host for Linux target
 
 Install Rust
@@ -25,7 +30,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 Add dependencies for compiling
 ```commandline
-sudo apt install cmake
+sudo apt install build-essential
 ```
 
 Build!
