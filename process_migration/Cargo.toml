@@ -8,6 +8,9 @@ authors = ["Kevin Conley <koins@duck.com>"]
 
 [dependencies]
 
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
 [target.'cfg(windows)'.dependencies]
 windows.version = "0.28.0"
 windows.features = [
