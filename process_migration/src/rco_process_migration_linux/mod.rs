@@ -1,5 +1,4 @@
 extern crate libc;
-#[cfg(target_os="linux")]
 use libc::process_vm_readv;
 use std::process::{Command};
 

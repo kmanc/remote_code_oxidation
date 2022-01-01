@@ -18,7 +18,7 @@ dependencies = [
 
 [[package]]
 name = "tcp_reverse_shell"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "windows",
 ]

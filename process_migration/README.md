@@ -10,7 +10,7 @@ to a process that is unlikely to be terminated.
 
 RCO's Windows process migration works by obtaining a handle to the target process and writing the shellcode to it. Then it
 spawns a remote thread within the process whose starting point is the newly written shellcode. At the time of this writing,
-RCO's Unix process migration is not yet written.
+RCO's Linux process migration is not yet written.
 
 ## Using it
 
@@ -22,7 +22,7 @@ and change the shellcode to the shellcode generated in step 1
 
 3. Compile the executable
 
-    #### Build for Unix target
+    #### Build for Linux target
     ```commandline
     cargo build -p process_migration --release
     ```
