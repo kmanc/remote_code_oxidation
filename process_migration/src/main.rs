@@ -8,8 +8,6 @@ mod rco_process_migration_unix;
 use rco_process_migration_unix::inject_and_migrate;
 
 #[cfg(windows)]
-extern crate windows;
-#[cfg(windows)]
 mod rco_process_migration_windows;
 #[cfg(windows)]
 use rco_process_migration_windows::inject_and_migrate;
