@@ -8,8 +8,6 @@ mod rco_reverse_shell_unix;
 use rco_reverse_shell_unix::shell;
 
 #[cfg(windows)]
-extern crate windows;
-#[cfg(windows)]
 mod rco_reverse_shell_windows;
 #[cfg(windows)]
 use rco_reverse_shell_windows::shell;

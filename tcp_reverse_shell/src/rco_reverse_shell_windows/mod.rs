@@ -1,3 +1,4 @@
+extern crate windows;
 use std::{mem, ptr};
 use std::ffi::{CString, c_void};
 use windows::Win32::Foundation::{HANDLE, PSTR};
