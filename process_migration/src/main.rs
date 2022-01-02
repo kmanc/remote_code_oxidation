@@ -2,9 +2,9 @@
 mod config;
 
 // Load the appropriate operating system's implementation
-#[cfg(linux)]
+#[cfg(target_os = "linux")]
 mod rco_process_migration_linux;
-#[cfg(linux)]
+#[cfg(target_os = "linux")]
 use rco_process_migration_linux::inject_and_migrate;
 
 #[cfg(windows)]
