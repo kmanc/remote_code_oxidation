@@ -8,7 +8,7 @@ authors = ["Kevin Conley <koins@duck.com>"]
 
 [dependencies]
 
-[target.'cfg(linux)'.dependencies]
+[target.'cfg(target_os="linux")'.dependencies]
 libc = "0.2"
 
 [target.'cfg(windows)'.dependencies]
