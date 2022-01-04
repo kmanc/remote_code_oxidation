@@ -1,11 +1,8 @@
 # Remote code oxidation (RCO)
 
 [![RCO for Linux targets](https://github.com/kmanc/remote_code_oxidation/actions/workflows/linux.yml/badge.svg)](https://github.com/kmanc/remote_code_oxidation/actions/workflows/linux.yml)
-
 [![RCO for Windows targets](https://github.com/kmanc/remote_code_oxidation/actions/workflows/windows.yml/badge.svg)](https://github.com/kmanc/remote_code_oxidation/actions/workflows/windows.yml)
-
 ![language](https://img.shields.io/github/languages/top/kmanc/remote_code_oxidation?style=plastic)
-
 ![license](https://img.shields.io/github/license/kmanc/remote_code_oxidation?style=plastic)
 
 A collection of offensive security tools written in Rust. More details to come
