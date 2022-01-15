@@ -16,6 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
     - name: Build reverse shell for Unix
       run: cargo build -p tcp_reverse_shell --verbose
     - name: Clean
