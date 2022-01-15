@@ -10,7 +10,7 @@ rust-version = "1.58"
 [dependencies]
 
 [target.'cfg(windows)'.dependencies]
-windows.version = "0"
+windows.version = ">=0.22.1"
 windows.features = [
     "Win32_Foundation",
     "Win32_Security",
