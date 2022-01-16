@@ -1,6 +1,6 @@
 extern crate windows;
 
 
-pub fn inject_and_migrate(shellcode: &[u8]) {
+pub fn hollow_and_run(shellcode: &[u8]) {
     println!("stub");
 }
