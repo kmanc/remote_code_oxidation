@@ -1,11 +1,8 @@
 # Remote code oxidation (RCO)
 
-[![RCO for Unix targets](https://github.com/kmanc/remote_code_oxidation/actions/workflows/unix.yml/badge.svg)](https://github.com/kmanc/remote_code_oxidation/actions/workflows/unix.yml)
-
+[![RCO for Linux targets](https://github.com/kmanc/remote_code_oxidation/actions/workflows/linux.yml/badge.svg)](https://github.com/kmanc/remote_code_oxidation/actions/workflows/linux.yml)
 [![RCO for Windows targets](https://github.com/kmanc/remote_code_oxidation/actions/workflows/windows.yml/badge.svg)](https://github.com/kmanc/remote_code_oxidation/actions/workflows/windows.yml)
-
 ![language](https://img.shields.io/github/languages/top/kmanc/remote_code_oxidation?style=plastic)
-
 ![license](https://img.shields.io/github/license/kmanc/remote_code_oxidation?style=plastic)
 
 A collection of offensive security tools written in Rust. More details to come
@@ -16,6 +13,11 @@ A collection of offensive security tools written in Rust. More details to come
 
 ## Setup
 
+Clone the repo
+```commandline
+git clone https://github.com/kmanc/remote_code_oxidation.git
+```
+
 ### From Linux host for Linux target
 
 Install Rust
@@ -25,7 +27,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 Add dependencies for compiling
 ```commandline
-sudo apt install cmake
+sudo apt install build-essential
 ```
 
 Build!

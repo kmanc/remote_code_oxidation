@@ -2,14 +2,14 @@
 
 ## What it is
 
-RCO's TCP reverse shell is a no-frills [reverse shell](http://127.0.0.1). This means it allows you to run Terminal (Unix)
+RCO's TCP reverse shell is a no-frills [reverse shell](http://127.0.0.1). This means it allows you to run Terminal (Linux)
 or Command Prompt (Windows) commands _on the victim machine_ from the attacking machine. Getting a remote shell on a
 victim machine usually allows much more control over the victim than other attacks. 
 
 ## How it works
 
-Both RCO's Unix and Windows TCP reverse shells work by establishing a [TCP session](http://127.0.0.1) from the victim machine
-to the attacking machine. Then a Terminal (Unix) or Command Prompt (Windows) process is spun up with its [standard input](http://127.0.0.1),
+Both RCO's Linux and Windows TCP reverse shells work by establishing a [TCP session](http://127.0.0.1) from the victim machine
+to the attacking machine. Then a Terminal (Linux) or Command Prompt (Windows) process is spun up with its [standard input](http://127.0.0.1),
 [standard output](http://127.0.0.1), and [standard error](http://127.0.0.1) all assigned to the TCP session. This means that
 input commands and output results are read from and written to (respectively) a TCP stream.
 
@@ -25,7 +25,7 @@ and change the IP address and port to match your attacking machine and listener,
 
 3. Compile the executable
 
-    #### For Unix targets
+    #### For Linux targets
     ```commandline
     cargo build -p tcp_reverse_shell --release
     ```

