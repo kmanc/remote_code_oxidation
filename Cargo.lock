@@ -55,6 +55,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "process_hollowing"
+version = "1.0.0"
+dependencies = [
+ "nix",
+ "windows",
+]
+
+[[package]]
 name = "process_migration"
 version = "1.0.0"
 dependencies = [
