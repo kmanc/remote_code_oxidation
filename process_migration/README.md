@@ -8,13 +8,12 @@ to a process that is unlikely to be terminated.
 
 ## How it works
 
-RCO's Windows process migration works by obtaining a handle to the target process and writing the shellcode to it. Then it
-spawns a remote thread within the process whose starting point is the newly written shellcode. At the time of this writing,
-RCO's Linux process migration is not yet written.
+RCO's Windows process migration works by obtaining a handle to the target process and writing [shellcode](https://en.wikipedia.org/wiki/Shellcode) to it. Then it
+spawns a remote thread within the process whose starting point is the newly written shellcode. RCO's Linux process migration works slightly differently; it temporarily pauses the target process, then writes the shellcode over the [instruction pointer](https://datacadamia.com/computer/instruction/instruction_pointer) for that process. This will likely cause issues with the process.
 
 ## Using it
 
-1. Generate shellcode for the desired end result (for example, use [msfvenom](http://127.0.0.1) to generate a reverse TCP
+1. Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP
 shell shellcode for the target operating system)
 
 2. Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/process_migration/src/config.rs) 
