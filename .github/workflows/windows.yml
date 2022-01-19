@@ -32,5 +32,9 @@ jobs:
       run: cargo build -p process_migration --target x86_64-pc-windows-gnu --verbose
     - name: Clean again
       run: cargo clean
+    - name: Build process hollowing for Windows
+      run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --verbose
+    - name: Clean again
+      run: cargo clean
     - name: Build all for Windows
       run: cargo build --target x86_64-pc-windows-gnu --verbose
