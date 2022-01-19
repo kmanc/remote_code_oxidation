@@ -28,9 +28,5 @@ jobs:
       run: cargo build -p process_migration --verbose
     - name: Clean again
       run: cargo clean
-    - name: Build process hollowing for Linux
-      run: cargo build -p process_hollowing --verbose
-    - name: Clean again
-      run: cargo clean
     - name: Build all for Linux
       run: cargo build --verbose

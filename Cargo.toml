@@ -3,5 +3,4 @@
 members = [
     "tcp_reverse_shell",
     "process_migration",
-    "process_hollowing",
 ]

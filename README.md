@@ -10,7 +10,6 @@ A collection of offensive security tools written in Rust. More details to come
 ## Tools list
 - [TCP reverse shell](https://github.com/kmanc/remote_code_oxidation/tree/master/tcp_reverse_shell)
 - [Process migration](https://github.com/kmanc/remote_code_oxidation/tree/master/process_migration)
-- [Process hollowing](https://github.com/kmanc/remote_code_oxidation/tree/master/process_hollowing)
 
 ## Setup
 
