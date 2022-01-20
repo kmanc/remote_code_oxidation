@@ -63,6 +63,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "rco_utils"
+version = "0.1.0"
+
+[[package]]
 name = "tcp_reverse_shell"
 version = "1.0.1"
 dependencies = [
