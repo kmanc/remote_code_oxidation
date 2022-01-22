@@ -1,0 +1,40 @@
+name: Shields data builder
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  read-tomls:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+    - uses: dante-signal31/rust-app-version@v1.0.0
+      id: tcp_reverse_shell_ver
+      with:
+        cargo_toml_folder: 'tcp_reverse_shell/'
+    - name: Update tcp_reverse_shell version
+      uses: jossef/action-set-json-field@v1
+      with:
+        file: '.custom_shields/tcp_reverse_shell.json'
+        field: message
+        value: ${{ steps.tcp_reverse_shell_ver.outputs.app_version }}
+    - uses: dante-signal31/rust-app-version@v1.0.0
+      id: process_migration_ver
+      with:
+        cargo_toml_folder: 'process_migration/'
+    - name: Update process_migration version
+      uses: jossef/action-set-json-field@v1
+      with:
+        file: '.custom_shields/process_migration.json'
+        field: message
+        value: ${{ steps.process_migration_ver.outputs.app_version }}
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "Update shields data via Github Action"
