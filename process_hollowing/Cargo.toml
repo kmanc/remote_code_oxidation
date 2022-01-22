@@ -20,4 +20,4 @@ windows.features = [
     "Win32_System_Diagnostics_Debug",
     "Win32_System_Kernel",
     "Win32_System_Threading" ]
-byteorder = ">=1.0.0"
+rco_utils = {path = "../rco_utils"}

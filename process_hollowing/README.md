@@ -8,7 +8,7 @@ to a process that is unlikely to be terminated.
 
 ## How it works
 
-Not yet written
+RCO's Windows process hollowing creates a suspended process, then writes the [shellcode](https://en.wikipedia.org/wiki/Shellcode) over the entry point of the process. It then resumes the suspended process, resulting in execution of the shellcode.
 
 ## Using it
 

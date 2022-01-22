@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+    "rco_utils",
     "tcp_reverse_shell",
     "process_migration",
     "process_hollowing",
