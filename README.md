@@ -2,8 +2,8 @@
 
 [![RCO for Linux targets](https://github.com/kmanc/remote_code_oxidation/actions/workflows/linux.yml/badge.svg)](https://github.com/kmanc/remote_code_oxidation/actions/workflows/linux.yml)
 [![RCO for Windows targets](https://github.com/kmanc/remote_code_oxidation/actions/workflows/windows.yml/badge.svg)](https://github.com/kmanc/remote_code_oxidation/actions/workflows/windows.yml)
-![language](https://img.shields.io/github/languages/top/kmanc/remote_code_oxidation?style=plastic)
-![license](https://img.shields.io/github/license/kmanc/remote_code_oxidation?style=plastic)
+![language](https://img.shields.io/github/languages/top/kmanc/remote_code_oxidation?style=plastic&color=orange)
+![license](https://img.shields.io/github/license/kmanc/remote_code_oxidation?style=plastic&color=blueviolet)
 
 ![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Ftcp_reverse_shell.json)
 ![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_migration.json)
