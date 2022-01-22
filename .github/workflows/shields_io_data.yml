@@ -1,0 +1,49 @@
+name: Shields data builder
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  read-tomls:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: SebRollen/toml-action@v1.0.0
+      id: tcp_reverse_shell_ver
+      with:
+        file: 'tcp_reverse_shell/Cargo.toml'
+        field: 'package.version'
+    - name: Update tcp_reverse_shell version
+      uses: jossef/action-set-json-field@v1
+      with:
+        file: 'custom_shields/tcp_reverse_shell.json'
+        field: message
+        value: ${{ steps.tcp_reverse_shell_ver.outputs.value }}
+    - uses: SebRollen/toml-action@v1.0.0
+      id: process_migration_ver
+      with:
+        file: 'process_migration/Cargo.toml'
+        field: 'package.version'
+    - name: Update process_migration version
+      uses: jossef/action-set-json-field@v1
+      with:
+        file: 'custom_shields/process_migration.json'
+        field: message
+        value: ${{ steps.process_migration_ver.outputs.value }}
+    - name: Set email
+      run: git config --global user.email "koins@duck.com"
+    - name: Set name
+      run: git config --global user.name "koins"
+    - name: Add updated files
+      run: git add custom_shields/
+    - name: Commit updated files
+      run: git commit -m "Update shields data"
+    - name: Push changes
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: $\{{ secrets.GITHUB_TOKEN }}
