@@ -22,7 +22,7 @@ jobs:
     - name: Update tcp_reverse_shell version
       uses: jossef/action-set-json-field@v1
       with:
-        file: 'custom_shields/tcp_reverse_shell.json'
+        file: '.custom_shields/tcp_reverse_shell.json'
         field: message
         value: ${{ steps.tcp_reverse_shell_ver.outputs.app_version }}
     - uses: dante-signal31/rust-app-version@v1.0.0
@@ -32,7 +32,7 @@ jobs:
     - name: Update process_migration version
       uses: jossef/action-set-json-field@v1
       with:
-        file: 'custom_shields/process_migration.json'
+        file: '.custom_shields/process_migration.json'
         field: message
         value: ${{ steps.process_migration_ver.outputs.app_version }}
     - uses: stefanzweifel/git-auto-commit-action@v4
