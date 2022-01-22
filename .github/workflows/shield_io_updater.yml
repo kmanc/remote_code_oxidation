@@ -36,9 +36,9 @@ jobs:
         field: message
         value: ${{ steps.process_migration_ver.outputs.app_version }}
     - uses: dante-signal31/rust-app-version@v1.0.0
-        id: process_hollowing_ver
-        with:
-          cargo_toml_folder: 'process_hollowing/'
+      id: process_hollowing_ver
+      with:
+        cargo_toml_folder: 'process_hollowing/'
     - name: Update process_hollowing version
       uses: jossef/action-set-json-field@v1
       with:
