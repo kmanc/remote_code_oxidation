@@ -5,14 +5,13 @@
 ![language](https://img.shields.io/github/languages/top/kmanc/remote_code_oxidation?style=plastic&color=orange)
 ![license](https://img.shields.io/github/license/kmanc/remote_code_oxidation?style=plastic&color=blueviolet)
 
-![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Ftcp_reverse_shell.json)
-![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_migration.json)
-
 A collection of offensive security tools written in Rust. More details to come
 
 ## Tools list
-- [TCP reverse shell](https://github.com/kmanc/remote_code_oxidation/tree/master/tcp_reverse_shell)
-- [Process migration](https://github.com/kmanc/remote_code_oxidation/tree/master/process_migration)
+![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Ftcp_reverse_shell.json)  --> [here](https://github.com/kmanc/remote_code_oxidation/tree/master/tcp_reverse_shell)
+
+![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_migration.json) --> [here](https://github.com/kmanc/remote_code_oxidation/tree/master/process_migration)   
+
 
 ## Setup
 
