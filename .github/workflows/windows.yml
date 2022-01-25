@@ -16,8 +16,6 @@ jobs:
     steps:
     - name: Update rust
       run: rustup update
-    - name: Update cargo
-      run: cargo update
     - name: Apt update
       run: sudo apt-get update
     - name: Install linker
@@ -32,6 +30,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    - name: Update cargo
+      run: cargo update
     - name: Build reverse shell for Windows
       run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --verbose
   
@@ -42,6 +42,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    - name: Update cargo
+      run: cargo update
     - name: Build process migration for Windows
       run: cargo build -p process_migration --target x86_64-pc-windows-gnu --verbose
 
@@ -52,5 +54,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    - name: Update cargo
+      run: cargo update
     - name: Build all for Windows
       run: cargo build --target x86_64-pc-windows-gnu --verbose
