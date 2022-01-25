@@ -39,7 +39,10 @@ and change the IP address and port to match your attacking machine and listener,
 
 5. Return to the listener and enter desired commands for the victim machine to run
 
-![tcp_reverse_shell](https://user-images.githubusercontent.com/14863147/151044738-72dbec76-73b1-47c5-831a-2e995673b559.gif)
+![tcp_reverse_shell_linux](https://user-images.githubusercontent.com/14863147/151044738-72dbec76-73b1-47c5-831a-2e995673b559.gif)
+
+![tcp_reverse_shell_windows](https://user-images.githubusercontent.com/14863147/151058869-8e5e9f6e-3f7b-4a98-ab65-2ac5017a4e76.gif)
+
 
 ## Detection rates
 
