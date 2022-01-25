@@ -43,7 +43,6 @@ and change the IP address and port to match your attacking machine and listener,
 
 ![tcp_reverse_shell_windows](https://user-images.githubusercontent.com/14863147/151058869-8e5e9f6e-3f7b-4a98-ab65-2ac5017a4e76.gif)
 
-
 ## Detection rates
 
 [Linux - 0 / 40](https://kleenscan.com/scan_result/d185d1b1ba09f1a9133b72cb1bb12f177b32f3e65962baf7789b03c968ec8e47)
