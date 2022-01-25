@@ -34,8 +34,9 @@ and change the shellcode to the shellcode generated in step 1
 4. Execute the payload on the victim machine
 5. Return to the listener and enter desired commands for the victim machine to run
 
-![process_migration](https://user-images.githubusercontent.com/14863147/151044951-5ee5b376-9f62-4e2e-a773-8c3b7a7d580e.gif)
+![process_migration_linux](https://user-images.githubusercontent.com/14863147/151044951-5ee5b376-9f62-4e2e-a773-8c3b7a7d580e.gif)
 
+![process_migration_windows](https://user-images.githubusercontent.com/14863147/151059013-b053e9de-d75c-4470-97a7-a109c7f2ef55.gif)
 
 ## Detection rates
 
