@@ -10,7 +10,9 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs: 
-  update-machine:
+ 
+  windows-reverse-shell:
+
     runs-on: ubuntu-latest
     
     steps:
@@ -22,13 +24,6 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
- 
-  windows-reverse-shell:
-
-    runs-on: ubuntu-latest
-    needs: update-machine
-    
-    steps:
     - uses: actions/checkout@v2
     - name: Update cargo
       run: cargo update
@@ -38,9 +33,16 @@ jobs:
   windows-process-migration:
 
     runs-on: ubuntu-latest
-    needs: update-machine
     
     steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
     - uses: actions/checkout@v2
     - name: Update cargo
       run: cargo update
@@ -50,9 +52,16 @@ jobs:
   windows-all:
 
     runs-on: ubuntu-latest
-    needs: update-machine
     
     steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
     - uses: actions/checkout@v2
     - name: Update cargo
       run: cargo update
