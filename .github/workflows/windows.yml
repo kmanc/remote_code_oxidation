@@ -10,31 +10,79 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs: 
-  windows-builds:
+ 
+  windows-reverse-shell:
 
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
     - name: Update rust
       run: rustup update
-    - name: Update cargo
-      run: cargo update
+    - name: Apt update
+      run: sudo apt-get update
     - name: Install linker
-      run: sudo apt -y install mingw-w64
+      run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v2
+    - name: Update cargo
+      run: cargo update
     - name: Build reverse shell for Windows
       run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --verbose
-    - name: Clean
-      run: cargo clean
+  
+  windows-process-migration:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v2
+    - name: Update cargo
+      run: cargo update
     - name: Build process migration for Windows
       run: cargo build -p process_migration --target x86_64-pc-windows-gnu --verbose
-    - name: Clean again
-      run: cargo clean
+
+  windows-process-hollowing:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v2
+    - name: Update cargo
+      run: cargo update
     - name: Build process hollowing for Windows
       run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --verbose
-    - name: Clean again
-      run: cargo clean
+
+  windows-all:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v2
+    - name: Update cargo
+      run: cargo update
     - name: Build all for Windows
       run: cargo build --target x86_64-pc-windows-gnu --verbose

