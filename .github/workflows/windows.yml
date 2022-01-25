@@ -37,6 +37,8 @@ jobs:
       run: rustup update
     - name: Update cargo
       run: cargo update
+    - name: Apt update
+      run: sudo apt update
     - name: Install linker
       run: sudo apt -y install mingw-w64
     - name: Add Windows build target
