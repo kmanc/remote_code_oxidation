@@ -32,3 +32,9 @@ and change the shellcode to the shellcode generated in step 1
     ```
    
 4. Execute the payload on the victim machine
+
+## Detection rates
+
+[Linux - 6 / 40](https://kleenscan.com/scan_result/81ac12b76a4be897145f1772b8c57d6c5330ee9bd574f480a825232bd846d113)
+
+[Windows - 12 / 40](https://kleenscan.com/scan_result/402c207f8a1e53a0f9b9ed533c53b96077956bc91367520ac28289b2fc6cc511)

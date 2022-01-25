@@ -38,3 +38,9 @@ and change the IP address and port to match your attacking machine and listener,
 4. Execute the payload on the victim machine
 
 5. Return to the listener and enter desired commands for the victim machine to run
+
+## Detection rates
+
+[Linux - 0 / 40](https://kleenscan.com/scan_result/d185d1b1ba09f1a9133b72cb1bb12f177b32f3e65962baf7789b03c968ec8e47)
+
+[Windows - 0 / 40](https://kleenscan.com/scan_result/e9ffcf8fffd390b68a4cbc9d506571f0618e473732015be748e1960300bc6a85)
