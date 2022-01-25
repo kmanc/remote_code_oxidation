@@ -10,7 +10,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  linux-builds:
+  linux-reverse-shell:
 
     runs-on: ubuntu-latest
 
@@ -22,11 +22,29 @@ jobs:
       run: cargo update
     - name: Build reverse shell for Linux
       run: cargo build -p tcp_reverse_shell --verbose
-    - name: Clean
-      run: cargo clean
+
+  linux-process-migration:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
     - name: Build process migration for Linux
       run: cargo build -p process_migration --verbose
-    - name: Clean again
-      run: cargo clean
+
+  linux-all:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
     - name: Build all for Linux
       run: cargo build --verbose
