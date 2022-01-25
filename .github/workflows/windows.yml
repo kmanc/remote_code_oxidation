@@ -23,7 +23,7 @@ jobs:
     - name: Set up MinGW
       uses: egor-tensin/setup-mingw@v2
     - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
+      run: rustup target add x86_64-w64-mingw32
     - name: Build reverse shell for Windows
       run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --verbose
   
