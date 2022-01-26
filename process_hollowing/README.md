@@ -12,10 +12,10 @@ RCO's Windows process hollowing creates a suspended process, then writes the [sh
 
 ## Using it
 
-1. Generate shellcode for the desired end result (for example, use [msfvenom](http://127.0.0.1) to generate a reverse TCP
+1. Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP
 shell shellcode for the target operating system)
 
-2. Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/process_hollowing/src/config.rs) 
+2. Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
 and change the shellcode to the shellcode generated in step 1
 
 3. Compile the executable
@@ -31,3 +31,4 @@ and change the shellcode to the shellcode generated in step 1
     ```
    
 4. Execute the payload on the victim machine
+5. Return to the listener and enter desired commands for the victim machine to run
