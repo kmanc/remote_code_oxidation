@@ -5,7 +5,9 @@
 ![language](https://img.shields.io/github/languages/top/kmanc/remote_code_oxidation?style=plastic&color=orange)
 ![license](https://img.shields.io/github/license/kmanc/remote_code_oxidation?style=plastic&color=blueviolet)
 
-Remote Code Oxidation is a collection of offensive security tools written in Rust. My main goal for the project is to enable offensive security professionals and practitioners to prepare the tools needed for an engagement with as little overhead as possible. RCO tools can be compiled on either Linux or Windows systems to provide its users flexibility in their attack infrastructure. Similarly the tools work against either Linux or Windows targets to suit the needs of the task at hand. 
+Remote Code Oxidation is a collection of offensive security tools written in Rust. My main goal for the project is to enable offensive security professionals and practitioners to prepare the tools needed for an engagement with as little overhead as possible.
+
+RCO tools can be compiled on either Linux or Windows systems to provide its users flexibility in their attack infrastructure. Similarly the tools work against either Linux or Windows targets to suit the needs of the task at hand. 
 
 
 ## Tools list
