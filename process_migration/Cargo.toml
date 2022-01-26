@@ -1,6 +1,6 @@
 [package]
 name = "process_migration"
-version = "1.1.1"
+version = "1.2.1"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.58"
@@ -8,6 +8,7 @@ rust-version = "1.58"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+rco_config = {path = "../rco_config"}
 
 [target.'cfg(target_os="linux")'.dependencies]
 nix = ">=0.16"
