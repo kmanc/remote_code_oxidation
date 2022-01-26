@@ -65,11 +65,16 @@ dependencies = [
 
 [[package]]
 name = "process_migration"
-version = "1.1.0"
+version = "1.1.1"
 dependencies = [
  "nix",
+ "rco_config",
  "windows",
 ]
+
+[[package]]
+name = "rco_config"
+version = "0.1.0"
 
 [[package]]
 name = "rco_utils"
@@ -77,8 +82,9 @@ version = "0.1.0"
 
 [[package]]
 name = "tcp_reverse_shell"
-version = "1.0.1"
+version = "1.0.2"
 dependencies = [
+ "rco_config",
  "windows",
 ]
 

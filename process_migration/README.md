@@ -16,7 +16,7 @@ spawns a remote thread within the process whose starting point is the newly writ
 1. Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP
 shell shellcode for the target operating system)
 
-2. Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/process_migration/src/config.rs) 
+2. Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
 and change the shellcode to the shellcode generated in step 1
 
 3. Compile the executable

