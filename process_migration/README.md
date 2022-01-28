@@ -1,25 +1,26 @@
 # RCO: Process Migration
 
-## What it is
+[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_migration.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/process_migration)
 
-RCO's process migration is a technique used to hide malicious code running on a victim machine. It has the added benefit
-of making it less likely the the malicious code is accidentally closed by a user on a victim machine by moving the payload
-to a process that is unlikely to be terminated.
+Linux target               |  Windows target
+:-------------------------:|:-------------------------:
+![](https://user-images.githubusercontent.com/14863147/151044951-5ee5b376-9f62-4e2e-a773-8c3b7a7d580e.gif)  |  ![](https://user-images.githubusercontent.com/14863147/151059013-b053e9de-d75c-4470-97a7-a109c7f2ef55.gif)
+
 
 ## How it works
 
-RCO's Windows process migration works by obtaining a handle to the target process and writing [shellcode](https://en.wikipedia.org/wiki/Shellcode) to it. Then it
-spawns a remote thread within the process whose starting point is the newly written shellcode. RCO's Linux process migration works slightly differently; it temporarily pauses the target process, then writes the shellcode over the [instruction pointer](https://datacadamia.com/computer/instruction/instruction_pointer) for that process. This will likely cause issues with the process.
+Windows process migration works by obtaining a handle to the target process and writing [shellcode](https://en.wikipedia.org/wiki/Shellcode) to it. A remote thread is then created; the starting point of this thread is the newly written shellcode.
+
+Linux process migration works slightly differently. After temporarily pausing the target process, RCO writes shellcode over the process's [instruction pointer](https://datacadamia.com/computer/instruction/instruction_pointer). This can cause issues (the most likely of which is crashing) for the target process.
+
 
 ## Using it
 
-1. Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP
+1. [Not shown in GIF] Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP
 shell shellcode for the target operating system)
-
-2. Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
+2. [Not shown in GIF] Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
 and change the shellcode to the shellcode generated in step 1
-
-3. Compile the executable
+3. [Not shown in GIF] Compile the executable
 
     #### Build for Linux target
     ```commandline
@@ -30,13 +31,13 @@ and change the shellcode to the shellcode generated in step 1
     ```commandline
     cargo build --target x86_64-pc-windows-gnu -p process_migration --release
     ```
-   
-4. Execute the payload on the victim machine
-5. Return to the listener and enter desired commands for the victim machine to run
+4. Start a netcat listener on the attacking machine on the same port you configured the shellcode to connect to in step 1
+    ```commandline
+    nc -nlvp 4444
+    ```   
+5. Execute the payload on the victim machine
+6. Return to the listener and enter desired commands for the victim machine to run
 
-![process_migration_linux](https://user-images.githubusercontent.com/14863147/151044951-5ee5b376-9f62-4e2e-a773-8c3b7a7d580e.gif)
-
-![process_migration_windows](https://user-images.githubusercontent.com/14863147/151059013-b053e9de-d75c-4470-97a7-a109c7f2ef55.gif)
 
 ## Detection rates
 
