@@ -10,7 +10,6 @@ const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE as u32 * 6;
 const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
 
-// There's something wrong here --> https://www.reddit.com/r/rust/comments/sc6cae/question_calling_writeprocessmemory_win32_from/
 pub fn hollow_and_run(shellcode: &[u8]) {
     // Create empty StartupInfoA struct for use in CreateProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow
