@@ -4,7 +4,7 @@
 
 Linux target               |  Windows target
 :-------------------------:|:-------------------------:
-![](http://127.0.0.1)  |  ![](http://127.0.0.1)
+![](http://127.0.0.1)  |  ![](![process_hollowing_windows](https://user-images.githubusercontent.com/14863147/151642061-6df0f601-3f07-4e0c-aaf5-fbbc229de2e0.gif))
 
 
 ## How it works
