@@ -9,7 +9,9 @@ Linux target               |  Windows target
 
 ## How it works
 
-RCO's Windows process hollowing creates a suspended process and writes the [shellcode](https://en.wikipedia.org/wiki/Shellcode) over the entry point of the process's main thread. It then resumes the suspended process, which in turn executes the shellcode.
+Windows process hollowing works by createing a suspended process and writing the [shellcode](https://en.wikipedia.org/wiki/Shellcode) over the entry point of the process's main thread. It then resumes the suspended process, which in turn executes the shellcode.
+
+Linux process hollowing functions a little differently. The executable first creates a child process that is a clone of itself. Then it overwrites the child process's [instruction pointer](https://datacadamia.com/computer/instruction/instruction_pointer) with shellcode. Because this process was not running before, it is unlikely this will cause any issues on the victim machine.
 
 ## Using it
 
