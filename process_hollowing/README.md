@@ -45,4 +45,4 @@ and change the shellcode to the shellcode generated in step 1
 
 [Windows - 13 / 40](https://kleenscan.com/scan_result/6b7fd667a386059a55c8408affc1c8365859c27cd8ad247ca191c2c0796e1ad4)
 
-![image](https://user-images.githubusercontent.com/14863147/151645657-e1924972-f817-40a1-91a6-520e82a7dc01.png)
+![image](https://user-images.githubusercontent.com/14863147/151648081-497de6e6-a8c5-4232-a3b0-5e10fc60a069.png)
