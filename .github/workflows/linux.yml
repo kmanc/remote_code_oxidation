@@ -36,6 +36,19 @@ jobs:
     - name: Build process migration for Linux
       run: cargo build -p process_migration --verbose
 
+  linux-process-hollowing:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build process hollowing for Linux
+      run: cargo build -p process_hollowing --verbose
+
   linux-all:
 
     runs-on: ubuntu-latest

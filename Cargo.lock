@@ -55,8 +55,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "process_hollowing"
+version = "1.0.0"
+dependencies = [
+ "nix",
+ "rco_config",
+ "rco_utils",
+ "windows",
+]
+
+[[package]]
 name = "process_migration"
-version = "1.1.1"
+version = "1.2.1"
 dependencies = [
  "nix",
  "rco_config",
@@ -68,8 +78,12 @@ name = "rco_config"
 version = "0.1.0"
 
 [[package]]
+name = "rco_utils"
+version = "0.1.0"
+
+[[package]]
 name = "tcp_reverse_shell"
-version = "1.0.2"
+version = "1.1.2"
 dependencies = [
  "rco_config",
  "windows",
