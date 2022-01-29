@@ -37,10 +37,10 @@ and change the IP address and port to match the IP address of your attacking mac
 
 ## Detection rates
 
-[Linux - 0 / 40](https://kleenscan.com/scan_result/d185d1b1ba09f1a9133b72cb1bb12f177b32f3e65962baf7789b03c968ec8e47)
+[Linux - 0 / 40](https://kleenscan.com/scan_result/386e7a12b38c22d32ccdef0503b80c3793453a42f3d79b410a0b0045638a8715)
 
-![image](https://user-images.githubusercontent.com/14863147/151023219-84d7ab95-002e-4d20-89c7-264894d72683.png)
+![image](https://user-images.githubusercontent.com/14863147/151648466-26d1d573-1593-460a-9339-8355e35a7db9.png)
 
-[Windows - 0 / 40](https://kleenscan.com/scan_result/e9ffcf8fffd390b68a4cbc9d506571f0618e473732015be748e1960300bc6a85)
+[Windows - 0 / 40](https://kleenscan.com/scan_result/4b373afdab36bb832b3748aadb92cba8c63dc8f2fdfd9af8a17d1737b364becc)
 
-![image](https://user-images.githubusercontent.com/14863147/151023325-d917df57-18ce-4e99-b059-968a479b65ce.png)
+![image](https://user-images.githubusercontent.com/14863147/151648477-fa050479-0f14-4dc3-b8e1-eef71c0115e3.png)

@@ -9,16 +9,16 @@ Linux target               |  Windows target
 
 ## How it works
 
-Windows process hollowing works by createing a suspended process and writing the [shellcode](https://en.wikipedia.org/wiki/Shellcode) over the entry point of the process's main thread. It then resumes the suspended process, which in turn executes the shellcode.
+Windows process hollowing works by creating a suspended process and writing the [shellcode](https://en.wikipedia.org/wiki/Shellcode) over the entry point of the process's main thread. It then resumes the suspended process, which in turn executes the shellcode.
 
-Linux process hollowing functions a little differently. The executable first creates a child process that is a clone of itself. Then it overwrites the child process's [instruction pointer](https://datacadamia.com/computer/instruction/instruction_pointer) with shellcode. Because this process was not running before, it is unlikely this will cause any issues on the victim machine.
+Linux process hollowing functions a little differently. First, the executable creates a child process by cloning itself. Then it overwrites the child process's [instruction pointer](https://datacadamia.com/computer/instruction/instruction_pointer) with shellcode. Because this process was not running before the attack, it is unlikely this will cause any issues on the victim machine.
 
 ## Using it
 
 1. [Not shown in GIF] Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP shell shellcode for the target operating system)
-2. Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
+2. [Not shown in GIF] Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
 and change the shellcode to the shellcode generated in step 1
-3. Compile the executable
+3. [Not shown in GIF] Compile the executable
 
     #### Build for Linux target
     ```commandline
@@ -39,10 +39,10 @@ and change the shellcode to the shellcode generated in step 1
 
 ## Detection rates
 
-[Linux - 7 / 40](https://kleenscan.com/scan_result/c9dd1d93fa8a1a62d136b0f3fbe22fb21cbf65851271e73b177624fd5afbdef9)
+[Linux - 7 / 40](https://kleenscan.com/scan_result/9f584f6ba01c5d4cd09db05ccfa0d0be592a9522eeaaae6b8fa2c4d4f9d86433)
 
-![image](https://user-images.githubusercontent.com/14863147/151645694-c5962e70-a507-4352-8e23-9e452da19c96.png)
+![image](https://user-images.githubusercontent.com/14863147/151648580-225124c1-eb34-42f2-81c8-645f68b68a29.png)
 
-[Windows - 13 / 40](https://kleenscan.com/scan_result/6b7fd667a386059a55c8408affc1c8365859c27cd8ad247ca191c2c0796e1ad4)
+[Windows - 13 / 40](https://kleenscan.com/scan_result/bac19828b35032fd7fa41f9293823b18aca6372fbf606c5428df0ca931aea502)
 
-![image](https://user-images.githubusercontent.com/14863147/151648081-497de6e6-a8c5-4232-a3b0-5e10fc60a069.png)
+![image](https://user-images.githubusercontent.com/14863147/151648602-95557f13-5fc4-46ea-96fb-6a9f6022097b.png)
