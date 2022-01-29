@@ -39,10 +39,10 @@ and change the shellcode to the shellcode generated in step 1
 
 ## Detection rates
 
-[Linux - 7 / 40](https://kleenscan.com/scan_result/c9dd1d93fa8a1a62d136b0f3fbe22fb21cbf65851271e73b177624fd5afbdef9)
+[Linux - 7 / 40](https://kleenscan.com/scan_result/9f584f6ba01c5d4cd09db05ccfa0d0be592a9522eeaaae6b8fa2c4d4f9d86433)
 
-![image](https://user-images.githubusercontent.com/14863147/151645694-c5962e70-a507-4352-8e23-9e452da19c96.png)
+![image](https://user-images.githubusercontent.com/14863147/151648580-225124c1-eb34-42f2-81c8-645f68b68a29.png)
 
-[Windows - 13 / 40](https://kleenscan.com/scan_result/6b7fd667a386059a55c8408affc1c8365859c27cd8ad247ca191c2c0796e1ad4)
+[Windows - 13 / 40](https://kleenscan.com/scan_result/bac19828b35032fd7fa41f9293823b18aca6372fbf606c5428df0ca931aea502)
 
-![image](https://user-images.githubusercontent.com/14863147/151648081-497de6e6-a8c5-4232-a3b0-5e10fc60a069.png)
+![image](https://user-images.githubusercontent.com/14863147/151648602-95557f13-5fc4-46ea-96fb-6a9f6022097b.png)
