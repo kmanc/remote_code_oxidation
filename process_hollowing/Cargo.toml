@@ -1,14 +1,18 @@
 [package]
 name = "process_hollowing"
-version = "1.0.0"
+version = "1.1.0"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.58"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+encrypted = []
+
 [dependencies]
 rco_config = {path = "../rco_config"}
+rco_utils = {path = "../rco_utils"}
 
 [target.'cfg(target_os="linux")'.dependencies]
 nix = ">=0.16"
@@ -21,4 +25,3 @@ windows.features = [
     "Win32_System_Diagnostics_Debug",
     "Win32_System_Kernel",
     "Win32_System_Threading" ]
-rco_utils = {path = "../rco_utils"}
