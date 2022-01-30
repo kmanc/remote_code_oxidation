@@ -35,3 +35,10 @@ pub fn array_to_u64_lit_end(array: &[u8; 8]) -> u64 {
     (array[6] as u64) << 48 |
     (array[7] as u64) << 56
 }
+
+pub fn xor_u8_slices(slice_one: &[u8], slice_two: &[u8]) -> Vec<u8> {
+    slice_one.iter()
+             .zip(slice_two.iter())
+             .map(|(&x1, &x2)| x1 ^ x2)
+             .collect()
+}
