@@ -36,6 +36,14 @@ pub fn array_to_u64_lit_end(array: &[u8; 8]) -> u64 {
     (array[7] as u64) << 56
 }
 
+pub fn equalize_slice_len<T: std::clone::Clone>(slice_one: &[T], slice_two: &[T]) -> Vec<T> {
+    if slice_one.len() > slice_two.len() {
+        slice_two.iter().cloned().cycle().take(slice_one.len()).collect()
+    } else {
+        slice_one.iter().cloned().cycle().take(slice_two.len()).collect()
+    }
+}
+
 pub fn xor_u8_slices(slice_one: &[u8], slice_two: &[u8]) -> Vec<u8> {
     slice_one.iter()
              .zip(slice_two.iter())
