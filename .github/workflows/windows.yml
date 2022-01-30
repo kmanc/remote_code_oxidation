@@ -68,6 +68,25 @@ jobs:
     - name: Build process hollowing for Windows
       run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --verbose
 
+  windows-xor_shellcode:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v2
+    - name: Update cargo
+      run: cargo update
+    - name: Build xor shellcode for Windows
+      run: cargo build -p xor_shellcode --target x86_64-pc-windows-gnu --verbose
+
   windows-all:
 
     runs-on: ubuntu-latest
