@@ -6,8 +6,7 @@ fn main() {
         panic!("Error: XOR_KEY length is larger than WINDOWS_SHELLCODE, LINUX_SHELLCODE, or both");
     }
 
-    let win_key: Vec<u8> = key.iter().cloned().cycle().take(win_shellcode.len()).collect();
-    let win_key: &[u8] = &win_key[..]; 
+    let win_key: &[u8] = &rco_utils::equalize_slice_len(key, win_shellcode)[..];
     let win_output = rco_utils::xor_u8_slices(win_key, win_shellcode);
     let mut win_print = "".to_owned();
     for byte in win_output.iter() {
@@ -20,8 +19,7 @@ fn main() {
 
     println!();
 
-    let lin_key: Vec<u8> = key.iter().cloned().cycle().take(lin_shellcode.len()).collect();
-    let lin_key: &[u8] = &lin_key[..]; 
+    let lin_key: &[u8] = &rco_utils::equalize_slice_len(key, lin_shellcode)[..];
     let lin_output = rco_utils::xor_u8_slices(lin_key, lin_shellcode);
     let mut lin_print = "".to_owned();
     for byte in lin_output.iter() {
