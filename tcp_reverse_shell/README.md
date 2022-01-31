@@ -4,7 +4,7 @@
 
 Linux target               |  Windows target
 :-------------------------:|:-------------------------:
-![](https://user-images.githubusercontent.com/14863147/151044738-72dbec76-73b1-47c5-831a-2e995673b559.gif)  |  ![](https://user-images.githubusercontent.com/14863147/151058869-8e5e9f6e-3f7b-4a98-ab65-2ac5017a4e76.gif)
+![gif](https://user-images.githubusercontent.com/14863147/151044738-72dbec76-73b1-47c5-831a-2e995673b559.gif)  |  ![gif](https://user-images.githubusercontent.com/14863147/151058869-8e5e9f6e-3f7b-4a98-ab65-2ac5017a4e76.gif)
 
 
 ## How it works
@@ -37,10 +37,7 @@ and change the IP address and port to match the IP address of your attacking mac
 
 ## Detection rates
 
-[Linux - 0 / 40](https://kleenscan.com/scan_result/386e7a12b38c22d32ccdef0503b80c3793453a42f3d79b410a0b0045638a8715)
+[Linux - 0 / 40](https://kleenscan.com/scan_result/fb860f5b0e4f835412787d3e20c6d9129bdc4c4bd87b67966aae2f5efa0973f1) | [Windows - 0 / 40](https://kleenscan.com/scan_result/a6cd65ff1dd24cf60a9b39a77c8ccb96fe1d27528857fa4754e70bf4578bcf11)
+:-------------------------:|:-------------------------:
+![image](https://user-images.githubusercontent.com/14863147/151747364-7edb7792-cb7e-421b-8235-8db5d9825211.png) | ![image](https://user-images.githubusercontent.com/14863147/151747339-6c9036e5-ed2e-473e-b92d-b8c1ac8c66a5.png)
 
-![image](https://user-images.githubusercontent.com/14863147/151648466-26d1d573-1593-460a-9339-8355e35a7db9.png)
-
-[Windows - 0 / 40](https://kleenscan.com/scan_result/4b373afdab36bb832b3748aadb92cba8c63dc8f2fdfd9af8a17d1737b364becc)
-
-![image](https://user-images.githubusercontent.com/14863147/151648477-fa050479-0f14-4dc3-b8e1-eef71c0115e3.png)
