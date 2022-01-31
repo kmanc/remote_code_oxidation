@@ -41,6 +41,8 @@ and change the shellcode to the shellcode generated in step 1
 
 ## Detection rates
 
+### No XOR encryption
+
 [Linux - 7 / 40](https://kleenscan.com/scan_result/d3a8ca03f0337b8c9dd5917c769d2267f0aa3d9f8da8413b28425cafc5b8426b)
 
 ![image](https://user-images.githubusercontent.com/14863147/151648519-26612702-de25-429a-88ce-21f7fd5e8f7a.png)
@@ -48,3 +50,13 @@ and change the shellcode to the shellcode generated in step 1
 [Windows - 13 / 40](https://kleenscan.com/scan_result/fb860f5b0e4f835412787d3e20c6d9129bdc4c4bd87b67966aae2f5efa0973f1)
 
 ![image](https://user-images.githubusercontent.com/14863147/151648536-11d1cd0d-fa38-4824-a9c4-6c952e94007c.png)
+
+### XOR encrypted with default key
+
+[Linux - 0 / 40](https://kleenscan.com/scan_result/e93d72187555dabfb89de5dc7c69ebd224e9aae58ab8c114ab6720b87cca48c0)
+
+![image](https://user-images.githubusercontent.com/14863147/151732309-c5451437-a6ad-41cf-81db-89b2c50cf48b.png)
+
+[Windows - 1 / 40](https://kleenscan.com/scan_result/a6cd65ff1dd24cf60a9b39a77c8ccb96fe1d27528857fa4754e70bf4578bcf11)
+
+![image](https://user-images.githubusercontent.com/14863147/151732274-53a95559-c4c2-4137-9d0e-89b098fbad88.png)
