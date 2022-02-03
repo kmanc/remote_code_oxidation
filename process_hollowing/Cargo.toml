@@ -9,6 +9,7 @@ rust-version = "1.58"
 
 [features]
 xor = []
+antisand = []
 
 [dependencies]
 rco_config = {path = "../rco_config"}
@@ -21,5 +22,7 @@ nix = ">=0.16"
 windows.version = ">=0.22.1"
 windows.features = [
     "Win32_Foundation",
-    "Win32_Networking",
-    "Win32_Networking_WinInet", ]
+    "Win32_Security",
+    "Win32_System_Diagnostics_Debug",
+    "Win32_System_Kernel",
+    "Win32_System_Threading" ]
