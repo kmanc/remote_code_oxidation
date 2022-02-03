@@ -26,7 +26,7 @@ pub fn xor_encrypt_decrypt(key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn E
 }
 
 #[cfg(all(windows, feature = "antisand"))]
-use std::{mem, ptr};
+use std::mem;
 #[cfg(all(windows, feature = "antisand"))]
 use std::ffi::CString;
 #[cfg(all(windows, feature = "antisand"))]
