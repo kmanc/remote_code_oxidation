@@ -25,15 +25,18 @@ pub fn xor_encrypt_decrypt(key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn E
     xor_u8_slices(key, text)
 }
 
-#[cfg(windows)]
-extern crate windows;
-#[cfg(windows)]
-use windows::Win32::Foundation::PSTR;
-#[cfg(windows)]
+#[cfg(all(windows, feature = "antisand"))]
 use std::{mem, ptr};
-#[cfg(windows)]
+#[cfg(all(windows, feature = "antisand"))]
+use std::ffi::CString;
+#[cfg(all(windows, feature = "antisand"))]
+extern crate windows;
+#[cfg(all(windows, feature = "antisand"))]
+use windows::Win32::Foundation::PSTR;
+#[cfg(all(windows, feature = "antisand"))]
+use windows::Win32::Networking::WinInet::{InternetOpenA, InternetOpenUrlA};
 
-#[cfg(all((windows), feature = "antisand")]
+#[cfg(all(windows, feature = "antisand"))]
 pub fn pound_sand() -> bool {
     let mut lpsz_agent: PSTR = unsafe { mem::zeroed() };
     lpsz_agent.0 = CString::new("Name in user-agent").unwrap().into_raw() as *mut u8;

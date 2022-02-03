@@ -81,6 +81,9 @@ version = "0.2.0"
 [[package]]
 name = "rco_utils"
 version = "0.2.0"
+dependencies = [
+ "windows",
+]
 
 [[package]]
 name = "tcp_reverse_shell"
