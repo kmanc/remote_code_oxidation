@@ -67,7 +67,7 @@ pub fn pound_sand() -> bool {
 }
 
 /*
-    Antisand Linux implementation - since I currently don't need to do this to remain undetected it's a dummy (does nothing)
+    Antisand not-asked-for "implementation" - this is a dummy that will never do anything except make the compiler happy
 */
 
 #[cfg(not(feature = "antisand"))]
