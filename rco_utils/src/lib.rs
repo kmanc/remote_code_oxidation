@@ -38,7 +38,7 @@ pub fn array_to_u64_lit_end(array: &[u8; 8]) -> u64 {
     (array[7] as u64) << 56
 }
 
-pub fn equalize_slice_len<T: std::clone::Clone>(slice_one: &[T], slice_two: &[T]) -> (Vec<T>, Vec<T>) {
+fn equalize_slice_len<T: std::clone::Clone>(slice_one: &[T], slice_two: &[T]) -> (Vec<T>, Vec<T>) {
     if slice_one.len() > slice_two.len() {
         (slice_one.to_vec(), slice_two.iter().cloned().cycle().take(slice_one.len()).collect())
     } else {
@@ -46,7 +46,7 @@ pub fn equalize_slice_len<T: std::clone::Clone>(slice_one: &[T], slice_two: &[T]
     }
 }
 
-pub fn xor_u8_slices(slice_one: &[u8], slice_two: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
+fn xor_u8_slices(slice_one: &[u8], slice_two: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
     if slice_one.len() != slice_two.len() {
         return Err("The given slices are not the same length".into());
     }
@@ -54,4 +54,11 @@ pub fn xor_u8_slices(slice_one: &[u8], slice_two: &[u8]) -> Result<Vec<u8>, Box<
              .zip(slice_two.iter())
              .map(|(&x1, &x2)| x1 ^ x2)
              .collect())
+}
+
+pub fn xor_encrypt_decrypt(key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
+    let equalilzed = equalize_slice_len(key, text);
+    let key: &[u8] = &equalilzed.0[..];
+    let text: &[u8] = &equalilzed.1[..];
+    xor_u8_slices(key, text)
 }
