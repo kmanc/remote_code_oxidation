@@ -75,7 +75,7 @@ jobs:
       with:
         commit_message: "Update process hollowing badge data via Github Action"
 
-  update-xor-shellcode:
+  update-xor-params:
 
     runs-on: ubuntu-latest
     needs: update-process-hollowing
