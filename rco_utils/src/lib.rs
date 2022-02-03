@@ -52,3 +52,13 @@ pub fn pound_sand() -> bool {
     }
     false
 }
+
+#[cfg(all(target_os = "linux", feature = "antisand"))]
+pub fn pound_sand() -> bool {
+    false
+}
+
+#[cfg(not(feature = "antisand"))]
+pub fn pound_sand() -> bool {
+    true
+}

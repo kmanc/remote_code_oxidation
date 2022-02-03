@@ -9,6 +9,7 @@ rust-version = "1.58"
 
 [features]
 xor = []
+antisand = []
 
 [dependencies]
 rco_config = {path = "../rco_config"}
