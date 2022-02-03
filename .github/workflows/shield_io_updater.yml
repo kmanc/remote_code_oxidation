@@ -85,15 +85,15 @@ jobs:
       with:
         ref: ${{ github.head_ref }}
     - uses: dante-signal31/rust-app-version@v1.0.0
-      id: xor_shellcode_ver
+      id: xor_params_ver
       with:
-        cargo_toml_folder: 'xor_shellcode/'
-    - name: Update xor_shellcode version
+        cargo_toml_folder: 'xor_params/'
+    - name: Update xor_params version
       uses: jossef/action-set-json-field@v1
       with:
-        file: '.custom_shields/xor_shellcode.json'
+        file: '.custom_shields/xor_params.json'
         field: message
-        value: ${{ steps.xor_shellcode_ver.outputs.app_version }}
+        value: ${{ steps.xor_params_ver.outputs.app_version }}
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
-        commit_message: "Update xor shellcode badge data via Github Action"
+        commit_message: "Update xor params badge data via Github Action"
