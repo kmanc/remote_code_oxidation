@@ -1,6 +1,6 @@
-# RCO: XOR Shellcode
+# RCO: XOR Params
 
-[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fxor_shellcode.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/xor_shellcode)
+[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fxor_params.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/xor_params)
 
 ![gif](https://user-images.githubusercontent.com/14863147/151747821-4ae1af09-aac8-446a-a11c-5a1817125824.gif)
 
@@ -19,12 +19,12 @@ XOR shellcode performs an [exclusive OR (XOR)](https://en.wikipedia.org/wiki/Exc
 
     #### For Linux
     ```commandline
-    cargo build -p tcp_reverse_shell --release
+    cargo build -p xor_params --release
     ```
 
     #### For Windows
     ```commandline
-    cargo build --target x86_64-pc-windows-gnu -p tcp_reverse_shell --release
+    cargo build --target x86_64-pc-windows-gnu -p xor_params --release
     ```
 5. Run the executable
 6. Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) and change encrypted payload to the output of step 5

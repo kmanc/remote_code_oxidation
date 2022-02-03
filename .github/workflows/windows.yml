@@ -68,7 +68,7 @@ jobs:
     - name: Build process hollowing for Windows
       run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --verbose
 
-  windows-xor_shellcode:
+  windows-xor_params:
 
     runs-on: ubuntu-latest
     
@@ -85,7 +85,7 @@ jobs:
     - name: Update cargo
       run: cargo update
     - name: Build xor shellcode for Windows
-      run: cargo build -p xor_shellcode --target x86_64-pc-windows-gnu --verbose
+      run: cargo build -p xor_params --target x86_64-pc-windows-gnu --verbose
 
   windows-all:
 

@@ -49,7 +49,7 @@ jobs:
     - name: Build process hollowing for Linux
       run: cargo build -p process_hollowing --verbose
 
-  linux-xor_shellcode:
+  linux-xor-params:
 
     runs-on: ubuntu-latest
 
@@ -60,7 +60,7 @@ jobs:
     - name: Update cargo
       run: cargo update
     - name: Build xor shellcode for Linux
-      run: cargo build -p xor_shellcode --verbose
+      run: cargo build -p xor_params --verbose
 
   linux-all:
 
