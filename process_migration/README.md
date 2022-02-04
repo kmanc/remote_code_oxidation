@@ -20,17 +20,17 @@ Linux process migration works slightly differently. After temporarily pausing th
 shell shellcode for the target operating system)
 2. [Not shown in GIF] Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
 and change the shellcode to the shellcode generated in step 1
-3. [Optional] Encrypt the shellcode using [xor_shellcode](https://github.com/kmanc/remote_code_oxidation/blob/master/xor_shellcode) and update the encrypted shellcode value in [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
-4. [Not shown in GIF] Compile the executable, only including `--features encrypted` if you did step 3
+3. [Optional] Encrypt the shellcode and target process using [xor_params](https://github.com/kmanc/remote_code_oxidation/blob/master/xor_shellcode) and update the encrypted shellcode value in [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
+4. [Not shown in GIF] Compile the executable, only including `--features xor` if you did step 3
 
     #### Build for Linux target
     ```commandline
-    cargo build -p process_migration [--features encrypted] --release
+    cargo build -p process_migration [--features [xor][antisand]] -release
     ```
 
     #### Build for Windows target
     ```commandline
-    cargo build --target x86_64-pc-windows-gnu -p process_migration [--features encrypted] --release
+    cargo build --target x86_64-pc-windows-gnu -p process_migration [--features [xor][antisand]] --release
     ```
 5. Start a netcat listener on the attacking machine on the same port you configured the shellcode to connect to in step 1
     ```commandline
@@ -44,12 +44,12 @@ and change the shellcode to the shellcode generated in step 1
 
 <p align="center"> Linux </p>
 
-[Unencrypted - 7 / 40](https://kleenscan.com/scan_result/d3a8ca03f0337b8c9dd5917c769d2267f0aa3d9f8da8413b28425cafc5b8426b) | [Encrypted with `--features encrypted` - 0 / 40](https://kleenscan.com/scan_result/e93d72187555dabfb89de5dc7c69ebd224e9aae58ab8c114ab6720b87cca48c0)
+[Unencrypted - 7 / 40](https://kleenscan.com/scan_result/d3a8ca03f0337b8c9dd5917c769d2267f0aa3d9f8da8413b28425cafc5b8426b) | [Encrypted with `--features xor` - 0 / 40](https://kleenscan.com/scan_result/e93d72187555dabfb89de5dc7c69ebd224e9aae58ab8c114ab6720b87cca48c0)
 :-------------------------:|:-------------------------:
 ![image](https://user-images.githubusercontent.com/14863147/151746961-a58f350b-b534-4643-b394-bdbd6f39ae2b.png) | ![image](https://user-images.githubusercontent.com/14863147/151746975-a49b1337-a955-44f9-971e-2208eef1478b.png)
 
 <p align="center"> Windows </p>
 
-[Unencrypted - 13 / 40](https://kleenscan.com/scan_result/fb860f5b0e4f835412787d3e20c6d9129bdc4c4bd87b67966aae2f5efa0973f1) | [Encrypted with `--features encrypted` - 1 / 40](https://kleenscan.com/scan_result/a6cd65ff1dd24cf60a9b39a77c8ccb96fe1d27528857fa4754e70bf4578bcf11)
+[Unencrypted - 13 / 40](https://kleenscan.com/scan_result/fb860f5b0e4f835412787d3e20c6d9129bdc4c4bd87b67966aae2f5efa0973f1) | [Encrypted with `--features xor` - 1 / 40](https://kleenscan.com/scan_result/a6cd65ff1dd24cf60a9b39a77c8ccb96fe1d27528857fa4754e70bf4578bcf11)
 :-------------------------:|:-------------------------:
 ![image](https://user-images.githubusercontent.com/14863147/151746991-2a6b210f-fae7-4ae6-865d-38da9cb07b53.png) | ![image](https://user-images.githubusercontent.com/14863147/151747005-64501444-8c6b-4ba0-86b1-7ef093222956.png)

@@ -41,7 +41,7 @@ sudo apt install build-essential
 
 Build!
 ```commandline
-cargo build [-p package_name] [--features encrypted] [--release]
+cargo build [-p package_name] [--features [xor][antisand]] [--release]
 ```
 
 
@@ -60,7 +60,7 @@ rustup target add x86_64-pc-windows-gnu
 
 Build!
 ```commandline
-cargo build --target x86_64-pc-windows-gnu [-p package_name] [--features encrypted] [--release]
+cargo build --target x86_64-pc-windows-gnu [-p package_name] [--features [xor][antisand]] [--release]
 ```
 
 
