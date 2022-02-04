@@ -25,7 +25,7 @@ and change the shellcode to the shellcode generated in step 1
 
     #### Build for Linux target
     ```commandline
-    cargo build -p process_migration [--features [xor][antisand]] -release
+    cargo build -p process_migration [--features [xor][antisand]] --release
     ```
 
     #### Build for Windows target
