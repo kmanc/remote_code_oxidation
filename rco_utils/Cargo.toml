@@ -13,7 +13,7 @@ antisand = ["windows"]
 
 [target.'cfg(windows)'.dependencies]
 windows.optional = true
-windows.version = ">=0.22.1"
+windows.version = ">=0.26.0"
 windows.features = [
     "Win32_Foundation",
     "Win32_Networking",
