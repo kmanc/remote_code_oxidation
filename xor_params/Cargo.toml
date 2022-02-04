@@ -1,6 +1,6 @@
 [package]
 name = "xor_params"
-version = "1.1.0"
+version = "1.1.1"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.58"

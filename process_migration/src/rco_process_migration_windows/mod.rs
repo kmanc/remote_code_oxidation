@@ -15,7 +15,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
         panic!("Could not obtain handle to snapshot");
     }
 
-    // Call Process32Next to iterate over all processes in the snapshot
+    // Call Process32Next to iterate over all processes in the snapshot and look for the target process by name
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32next
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/ToolHelp/fn.Process32Next.html
     let mut pid: u32 = 0;

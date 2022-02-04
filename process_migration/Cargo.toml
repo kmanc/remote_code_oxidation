@@ -1,6 +1,6 @@
 [package]
 name = "process_migration"
-version = "1.6.0"
+version = "1.6.1"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.58"
@@ -8,7 +8,7 @@ rust-version = "1.58"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-xor = []
+xor = ["rco_utils/xor"]
 antisand = ["rco_utils/antisand"]
 
 [dependencies]
@@ -19,7 +19,7 @@ rco_utils = {path = "../rco_utils"}
 nix = ">=0.16"
 
 [target.'cfg(windows)'.dependencies]
-windows.version = ">=0.22.1"
+windows.version = ">=0.26.0"
 windows.features = [
     "Win32_Foundation",
     "Win32_Security",

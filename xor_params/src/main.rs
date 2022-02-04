@@ -1,6 +1,7 @@
 fn main() {
     let key = rco_config::XOR_KEY;
 
+    // XOR-encrypt the Windows shellcode with the key and write it to the console
     let win_shellcode = rco_config::WINDOWS_SHELLCODE;
     let win_output = rco_utils::xor_encrypt_decrypt(key, win_shellcode).unwrap();
     let mut win_print = "".to_owned();
@@ -14,6 +15,7 @@ fn main() {
 
     println!();
 
+    // XOR-encrypt the Linux shellcode with the key and write it to the console
     let lin_shellcode = rco_config::LINUX_SHELLCODE;
     let lin_output = rco_utils::xor_encrypt_decrypt(key, lin_shellcode).unwrap();
     let mut lin_print = "".to_owned();
@@ -27,6 +29,7 @@ fn main() {
 
     println!();
 
+    // XOR-encrypt the Windows target process (for migration) with the key and write it to the console
     let win_target = rco_config::WINDOWS_MIGRATION_TARGET;
     let win_output = rco_utils::xor_encrypt_decrypt(key, win_target.as_bytes()).unwrap();
     let mut win_print = "".to_owned();
@@ -40,6 +43,7 @@ fn main() {
 
     println!();
 
+    // XOR-encrypt the Linux target process (for migration) with the key and write it to the console
     let lin_target = rco_config::LINUX_MIGRATION_TARGET;
     let lin_output = rco_utils::xor_encrypt_decrypt(key, lin_target.as_bytes()).unwrap();
     let mut lin_print = "".to_owned();
@@ -53,6 +57,7 @@ fn main() {
 
     println!();
 
+    // XOR-encrypt the Windows target process (for hollowing) with the key and write it to the console
     let win_target = rco_config::WINDOWS_HOLLOWING_TARGET;
     let win_output = rco_utils::xor_encrypt_decrypt(key, win_target.as_bytes()).unwrap();
     let mut win_print = "".to_owned();
@@ -66,6 +71,7 @@ fn main() {
 
     println!();
 
+    // XOR-encrypt the Linux target process (for hollowing) with the key and write it to the console
     let lin_target = rco_config::LINUX_HOLLOWING_TARGET;
     let lin_output = rco_utils::xor_encrypt_decrypt(key, lin_target.as_bytes()).unwrap();
     let mut lin_print = "".to_owned();
@@ -76,5 +82,4 @@ fn main() {
     lin_print.pop();
     lin_print.pop();
     println!("pub const ENCRYPTED_LINUX_HOLLOWING_TARGET: &[u8] = &[{lin_print}];");
-     
 }
