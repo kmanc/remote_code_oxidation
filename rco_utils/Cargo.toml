@@ -1,6 +1,6 @@
 [package]
 name = "rco_utils"
-version = "0.2.1"
+version = "0.3.0"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.58"
