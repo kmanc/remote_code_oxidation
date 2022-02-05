@@ -39,5 +39,5 @@ and change the IP address and port to match the IP address of your attacking mac
 
 [Linux - 0 / 40](https://kleenscan.com/scan_result/797f4631dd2cbe2251507376b0d091e86478866b02b2a6718cc26c959a0139b9) | [Windows - 0 / 40](https://kleenscan.com/scan_result/64c9cd080360dc668126cd89aeff1ca40a44359dea9a075064f1ac1e0cc3b27f)
 :-------------------------:|:-------------------------:
-![image](https://user-images.githubusercontent.com/14863147/152621667-d230aa8d-24e6-435b-8ff9-bab59a346ddc.png) | ![win_rev](https://user-images.githubusercontent.com/14863147/152621688-dae58eef-1688-4c8e-a5a9-7f6d21dcc1a0.png)
+![image](https://user-images.githubusercontent.com/14863147/152621667-d230aa8d-24e6-435b-8ff9-bab59a346ddc.png) | ![image](https://user-images.githubusercontent.com/14863147/152621688-dae58eef-1688-4c8e-a5a9-7f6d21dcc1a0.png)
 
