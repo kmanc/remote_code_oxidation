@@ -43,12 +43,12 @@ and change the shellcode to the shellcode generated in step 1
 
 <p align="center"> Linux </p>
 
-[Unencrypted - 7 / 40](https://kleenscan.com/scan_result/9f584f6ba01c5d4cd09db05ccfa0d0be592a9522eeaaae6b8fa2c4d4f9d86433) | [Encrypted with `--features xor` - 0 / 40](https://kleenscan.com/scan_result/d9087bca23d0a3d74f335f404e66233a0fe6bf8954cddbac86c1028d17e36410)
+[No features: 7 / 40](https://kleenscan.com/scan_result/9f584f6ba01c5d4cd09db05ccfa0d0be592a9522eeaaae6b8fa2c4d4f9d86433) | [Using `--features xor`: 0 / 40](https://kleenscan.com/scan_result/d9087bca23d0a3d74f335f404e66233a0fe6bf8954cddbac86c1028d17e36410)
 :-------------------------:|:-------------------------:
 ![image](https://user-images.githubusercontent.com/14863147/151746886-343dac24-da1f-447e-b4df-2c35036c09dc.png) | ![image](https://user-images.githubusercontent.com/14863147/151746865-0be49000-efff-4d14-a2e1-afb3bd601bb1.png)
 
 <p align="center"> Windows </p>
 
-[Unencrypted - 13 / 40](https://kleenscan.com/scan_result/bac19828b35032fd7fa41f9293823b18aca6372fbf606c5428df0ca931aea502) | [Encrypted with `--features xor` - 1 / 40](https://kleenscan.com/scan_result/23d6063cc9bf35222c9aa604cc258de8aa8fb40a1fb443bfc97c8cdcb6ec2ad5)
-:-------------------------:|:-------------------------:
-![image](https://user-images.githubusercontent.com/14863147/151746908-58824664-8072-4ce3-8895-e01057b868a6.png) | ![image](https://user-images.githubusercontent.com/14863147/151746900-49ec8f35-6718-4ac7-83fe-5e67610ff4c0.png)
+[No features: 13 / 40](https://kleenscan.com/scan_result/bac19828b35032fd7fa41f9293823b18aca6372fbf606c5428df0ca931aea502) | [Using `--features xor`: 1 / 40](https://kleenscan.com/scan_result/23d6063cc9bf35222c9aa604cc258de8aa8fb40a1fb443bfc97c8cdcb6ec2ad5) | [Using `--features xor,antisand`: 0 / 40](https://kleenscan.com/scan_result/52369fcedfa0029ec43806ea3b6b74d3163cff5adc94e561faf4707bbe502c85)
+:-------------------------:|:-------------------------:|:-------------------------:
+![image](https://user-images.githubusercontent.com/14863147/151746908-58824664-8072-4ce3-8895-e01057b868a6.png) | ![image](https://user-images.githubusercontent.com/14863147/151746900-49ec8f35-6718-4ac7-83fe-5e67610ff4c0.png)  | ![image](https://user-images.githubusercontent.com/14863147/152626795-6ca41258-2032-4753-b404-02322e9f0196.png)
