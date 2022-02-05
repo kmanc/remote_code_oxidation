@@ -2,7 +2,7 @@
 
 [![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fxor_params.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/xor_params)
 
-![gif](https://user-images.githubusercontent.com/14863147/151747821-4ae1af09-aac8-446a-a11c-5a1817125824.gif)
+![xor_params](https://user-images.githubusercontent.com/14863147/152621001-8de291e1-58dd-4f7e-9916-1846a65f1c83.gif)
 
 
 ## How it works
