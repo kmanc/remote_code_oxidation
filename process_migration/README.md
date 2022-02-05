@@ -44,12 +44,12 @@ and change the shellcode to the shellcode generated in step 1
 
 <p align="center"> Linux </p>
 
-[Unencrypted - 7 / 40](https://kleenscan.com/scan_result/d3a8ca03f0337b8c9dd5917c769d2267f0aa3d9f8da8413b28425cafc5b8426b) | [Encrypted with `--features xor` - 0 / 40](https://kleenscan.com/scan_result/e93d72187555dabfb89de5dc7c69ebd224e9aae58ab8c114ab6720b87cca48c0)
+[No features: 7 / 40](https://kleenscan.com/scan_result/3eb81783f8424844677211df497e521613ee5b0b82a5996f96a63b941ba3c87e) | [Using `--features xor`: 0 / 40](https://kleenscan.com/scan_result/b9c0d8a42da33d14be8422bd087624e548a6ecdd22c1d25aed06873e28d1dd96)
 :-------------------------:|:-------------------------:
-![image](https://user-images.githubusercontent.com/14863147/151746961-a58f350b-b534-4643-b394-bdbd6f39ae2b.png) | ![image](https://user-images.githubusercontent.com/14863147/151746975-a49b1337-a955-44f9-971e-2208eef1478b.png)
+![image](https://user-images.githubusercontent.com/14863147/152621843-b78927d0-cfeb-40d0-b150-15d332b0fd61.png) | ![image](https://user-images.githubusercontent.com/14863147/152621872-4be9e051-f9c4-4ecb-bd3d-dcc58980e061.png)
 
 <p align="center"> Windows </p>
 
-[Unencrypted - 13 / 40](https://kleenscan.com/scan_result/fb860f5b0e4f835412787d3e20c6d9129bdc4c4bd87b67966aae2f5efa0973f1) | [Encrypted with `--features xor` - 1 / 40](https://kleenscan.com/scan_result/a6cd65ff1dd24cf60a9b39a77c8ccb96fe1d27528857fa4754e70bf4578bcf11)
-:-------------------------:|:-------------------------:
-![image](https://user-images.githubusercontent.com/14863147/151746991-2a6b210f-fae7-4ae6-865d-38da9cb07b53.png) | ![image](https://user-images.githubusercontent.com/14863147/151747005-64501444-8c6b-4ba0-86b1-7ef093222956.png)
+[No features: 13 / 40](https://kleenscan.com/scan_result/f7c2b651b9629421550a380c09c7b9739d806a62db6fd9d571164b3f5df6a5b9) | [Using `--features xor`: 1 / 40](https://kleenscan.com/scan_result/ac4a1184e97abf31ebd968d2455535b92be646af54d077cbdb3b0a24254aae78) | [Using `--features xor,antisand`: 0 / 40](https://kleenscan.com/scan_result/f7e459f40276d8d1d12bb738b3aaf972997b8275da00967d8dbc264993ed5dc8)
+:-------------------------:|:-------------------------:|:-------------------------:
+![win_proc_mig](https://user-images.githubusercontent.com/14863147/152622089-0e41fc02-9c17-4017-882a-26b58d6166c5.png) | ![win_proc_mig_xor](https://user-images.githubusercontent.com/14863147/152622105-268df42f-b240-463b-baf0-3df350e77110.png) | ![win_proc_mig_full](https://user-images.githubusercontent.com/14863147/152622122-3705c608-62b5-4650-8d79-a7ad128c7a9d.png)
