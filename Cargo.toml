@@ -7,4 +7,7 @@ members = [
     "process_migration",
     "process_hollowing",
     "xor_params",
+    "remote_access_trojan/rat_client"
+    "remote_access_trojan/rat_client"
+    "remote_access_trojan/rat_client",
 ]
