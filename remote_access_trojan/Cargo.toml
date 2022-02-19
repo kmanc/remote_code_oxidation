@@ -9,9 +9,11 @@ rust-version = "1.58"
 
 [dependencies]
 prost = ">=0.9"
+tonic = ">=0.6"
+tokio = { version = ">=1.17", features = ["rt-multi-thread"] }
 
 [build-dependencies]
-prost-build = ">=0.9"
+tonic-build = ">=0.6"
 
 [[bin]]
 name = "client"

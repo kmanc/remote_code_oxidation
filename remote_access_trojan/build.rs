@@ -1,5 +1,8 @@
-extern crate prost_build;
-
 fn main() {
-    prost_build::compile_protos(&["rat.proto"], &["src/../"]).unwrap();
+    let proto_file = "./rat.proto";
+    
+    tonic_build::configure()
+                .build_server(true)
+                .compile(&[proto_file], &["."])
+                .unwrap();
 }

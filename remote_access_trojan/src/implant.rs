@@ -1,17 +1,29 @@
-use prost::Message;
+use remote_access_trojan::rat::service_tester_client::ServiceTesterClient;
+use remote_access_trojan::rat::{self, RequestTester};
+use tonic::transport::Endpoint;
 
-pub mod rat {
-    include!(concat!(env!("OUT_DIR"), "/rat.items.rs"));
-}
-
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("implant");
-    let mut example = rat::Test::default();
-    example.words = "implant words".to_string();
-    example.thoughts = "implant thoughts".to_string();
-    let mut buf = Vec::new();
-    buf.reserve(example.encoded_len());
-    example.encode(&mut buf).unwrap();
+
+    // Does the protobuf structure work?
+    let example = rat::ResponseTester {
+        words:String::from("implant words"),
+        thoughts:String::from("implant thoughts")
+    };
     println!("{example:?}");
-    println!("{buf:?}");
+
+    // Can I send a protobuf from the client to the server?
+    let addr = Endpoint::from_static("http://127.0.0.1:4444");
+    let mut client = ServiceTesterClient::connect(addr).await?;
+    let request = tonic::Request::new(
+        RequestTester {
+            words:String::from("First request"),
+            thoughts:String::from("This was confusing")
+        },
+    );
+    let response = client.send(request).await?.into_inner();
+    println!("Response={response:?}");
+
+    Ok(())
 }

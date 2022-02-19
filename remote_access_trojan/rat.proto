@@ -1,8 +1,17 @@
 syntax = "proto3";
 
-package rat.items;
+package rat;
 
-message Test {
+service ServiceTester {
+    rpc Send (RequestTester) returns (ResponseTester);
+}
+
+message RequestTester {
+    string words = 1;
+    string thoughts = 2;
+}
+
+message ResponseTester {
     string words = 1;
     string thoughts = 2;
 }
