@@ -2,16 +2,27 @@ syntax = "proto3";
 
 package rat;
 
-service ServiceTester {
-    rpc Send (RequestTester) returns (ResponseTester);
+service AskForInstructions {
+    rpc Send (Beacon) returns (CommandRequest);
 }
 
-message RequestTester {
-    string words = 1;
-    string thoughts = 2;
+service RecordCommandResult {
+    rpc Send (CommandResponse) returns (Empty);
 }
 
-message ResponseTester {
-    string words = 1;
-    string thoughts = 2;
+message Beacon {
+    int32 last_received = 1;
 }
+
+message CommandRequest {
+    string command = 1;
+}
+
+message CommandResponse {
+    string implant_id = 1;
+    int32 timestamp = 2;
+    string command = 3;
+    string result = 4;
+}
+
+message Empty {}
