@@ -1,5 +1,5 @@
 /*
-    For tcp_reverse_shell
+    For tcp_reverse_shell OR remote_access_trojan
 */
 
 // IP address of the attacking machine

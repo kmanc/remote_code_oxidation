@@ -622,6 +622,7 @@ name = "remote_access_trojan"
 version = "0.1.0"
 dependencies = [
  "prost",
+ "rco_config",
  "tokio",
  "tonic",
  "tonic-build",

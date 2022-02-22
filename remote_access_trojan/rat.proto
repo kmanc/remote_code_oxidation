@@ -20,7 +20,7 @@ message CommandRequest {
 
 message CommandResponse {
     string implant_id = 1;
-    int32 timestamp = 2;
+    uint64 timestamp = 2;
     string command = 3;
     string result = 4;
 }

