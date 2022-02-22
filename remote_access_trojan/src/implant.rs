@@ -7,6 +7,21 @@ use std::process::Command;
 use std::time::SystemTime;
 use tonic::transport::Endpoint;
 
+// Some TODOs in no meaningful order
+/*
+Define what a command is, and get some cross platform definitions in place
+    - hostname
+    - whoami
+    - whats my ip
+    - whats my os
+    - help
+    - drop into a shell 
+Make the beacons run in a loop
+Figure out the implementation of getting commands newer than last run
+Log actions on the server
+Have a real client do things
+*/
+
 fn calculate_hash<T: Hash>(t: &T) -> u64 {
     let mut s = DefaultHasher::new();
     t.hash(&mut s);
@@ -20,6 +35,7 @@ fn generate_implant_id() -> String {
     let hostname = String::from_utf8(hostname.stdout).unwrap();
     let hostname = hostname.trim();
 
+    // This will work on Linux. Need to do "ipconfig | findstr IPv4" or something similar on Windows
     let ip_address = Command::new("hostname")
                             .arg("-I")
                             .output()
