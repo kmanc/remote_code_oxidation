@@ -114,13 +114,7 @@ fn calculate_hash<T: Hash>(t: &T) -> u64 {
 }
 
 fn generate_implant_id() -> String {
-    let hostname = Command::new("hostname")
-                            .output()
-                            .unwrap();
-    let hostname = String::from_utf8(hostname.stdout).unwrap();
-    let hostname = hostname.trim();
-
-    // This will work on Linux. Need to do "ipconfig | findstr IPv4" or something similar on Windows
+    let hostname = get_hostname();
     let ip_address = get_ip_address();
 
     let hashed_value = calculate_hash(&format!("{hostname}:{ip_address}"));
