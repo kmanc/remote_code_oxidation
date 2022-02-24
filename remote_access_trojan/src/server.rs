@@ -12,7 +12,7 @@ pub struct MyAskForInstructions {}
 impl AskForInstructions for MyAskForInstructions {
     async fn send(&self, request: Request<Beacon>) -> Result<Response<CommandRequest>, Status> {
         println!("Request={request:?}");
-        let fake_commands: Vec<RatCommand> = vec![RatCommand::Quit, RatCommand::Help, RatCommand::Ls];
+        let fake_commands: Vec<RatCommand> = vec![RatCommand::Hostname, RatCommand::Help, RatCommand::Ls];
         let number: usize = request.into_inner().last_received.try_into().unwrap();
         Ok(Response::new(
             CommandRequest {

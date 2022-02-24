@@ -9,15 +9,20 @@ use std::thread;
 use std::time::{Duration, SystemTime};
 use tonic::transport::Endpoint;
 
-// Some TODOs in no meaningful order
 /*
-Define what a command is, and get some cross platform definitions in place
-    - help
-    - change beacon cadence
-    - drop into a shell 
-Figure out the implementation of getting commands newer than last run
-Log actions on the server
-Have a real client do things
+Some outstanding things to do
+    - client --> server help print
+    - server --> implant beacon cadence changing RatCommand
+    - server --> implant drop into shell
+    - beacons should only pull / run most recent commands
+    - log results of commands on the server
+    - create a client to send commands to the server
+    - client get results of commands from server
+    - im gonna go out on a limb and say there is some code repetition here that can be cleaned up
+    - packet capture some traffic to see the magic in action
+        - as an aside it looks like the connection stays established in between beacons which is probably not ideal
+    - encrypt traffic
+    - other communication method(s) between server and implant
 */
 
 // Return the hostname as a string
