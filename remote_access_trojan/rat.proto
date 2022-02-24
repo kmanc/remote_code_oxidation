@@ -10,18 +10,32 @@ service RecordCommandResult {
     rpc Send (CommandResponse) returns (Empty);
 }
 
+enum RATCommand {
+        Cadence = 0; 
+        Dir = 1;
+        Help = 2;
+        Hostname = 3;
+        Ip = 4;
+        Ls = 5;
+        Os = 6;
+        Quit = 7;
+        Shell = 8;
+        Whoami = 9;
+    }
+
 message Beacon {
     int32 last_received = 1;
 }
 
 message CommandRequest {
-    string command = 1;
+    RATCommand command = 1;
+    string arguments = 2;
 }
 
 message CommandResponse {
     string implant_id = 1;
     uint64 timestamp = 2;
-    string command = 3;
+    RATCommand command = 3;
     string result = 4;
 }
 

