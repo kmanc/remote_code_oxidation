@@ -13,7 +13,6 @@ use tonic::transport::Endpoint;
 Some outstanding things to do
     - client --> server help print
     - server --> implant drop into shell
-    - log results of commands on the server
     - create a client to send commands to the server
     - client get results of commands from server
     - im gonna go out on a limb and say there is some code repetition here that can be cleaned up
