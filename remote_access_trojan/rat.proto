@@ -13,15 +13,14 @@ service RecordCommandResult {
 enum RATCommand {
         Cadence = 0; 
         Dir = 1;
-        Help = 2;
-        Hostname = 3;
-        Ip = 4;
-        Ls = 5;
-        None = 6;
-        Os = 7;
-        Quit = 8;
-        Shell = 9;
-        Whoami = 10;
+        Hostname = 2;
+        Ip = 3;
+        Ls = 4;
+        None = 5;
+        Os = 6;
+        Quit = 7;
+        Shell = 8;
+        Whoami = 9;
     }
 
 message Beacon {
