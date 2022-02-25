@@ -10,13 +10,10 @@ use std::time::{Duration, SystemTime};
 use tonic::transport::Endpoint;
 
 /*
-Some outstanding things to do
-    - client --> server help print
-    - server --> implant drop into shell
-    - create a client to send commands to the server
-    - client get results of commands from server
-    - encrypt traffic
-    - other communication method(s) between server and implant
+TODO
+    - encrypt traffic from implant to server
+    - implant 'shell' command
+    - alternate communication method(s) between implant and server
 */
 
 // Return the hostname as a string

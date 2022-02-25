@@ -10,6 +10,15 @@ use std::path::Path;
 use tonic::{Request, Response, Status};
 use tonic::transport::Server;
 
+/*
+TODO
+    - encrypt traffic from implant to server
+    - server 'help' command
+    - alternate communication method(s) between implant and server
+    - accept commands from operator to server
+    - encrypt traffic from operator to server
+*/
+
 // Create a wrapper for RatCommand so I can implement a formatter
 #[derive(Debug)]
 struct FormattableRatCommand(RatCommand);
