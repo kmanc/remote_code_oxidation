@@ -10,18 +10,38 @@ service RecordCommandResult {
     rpc Send (CommandResponse) returns (Empty);
 }
 
+service ScheduleCommand {
+    rpc Send (CommandRequest) returns (Empty);
+}
+
+// Enum variants have to be globally unique apparently, so prepending an "Op" in front of these ones
+enum OperatorCommand {
+    OpCadence = 0;
+    OpDir = 1;
+    OpImplants = 2;
+    OpHelp = 3;
+    OpHostname = 4;
+    OpIp = 5;
+    OpLs = 6;
+    OpOs = 7;
+    OpQuit = 8;
+    OpRetrieve = 9;
+    OpShell = 10;
+    OpWhoami = 11;
+}
+
 enum RATCommand {
-        Cadence = 0; 
-        Dir = 1;
-        Hostname = 2;
-        Ip = 3;
-        Ls = 4;
-        None = 5;
-        Os = 6;
-        Quit = 7;
-        Shell = 8;
-        Whoami = 9;
-    }
+    Cadence = 0;
+    Dir = 1;
+    Hostname = 2;
+    Ip = 3;
+    Ls = 4;
+    None = 5;
+    Os = 6;
+    Quit = 7;
+    Shell = 8;
+    Whoami = 9;
+}
 
 message Beacon {
     uint32 requested_command = 1;

