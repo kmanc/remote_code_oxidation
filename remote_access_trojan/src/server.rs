@@ -151,7 +151,7 @@ impl ScheduleCommand for MyScheduleCommand {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Set up the server parameters
-    let port = rco_config::LISTENER_PORT;
+    let port = rco_config::RAT_SERVER_PORT;
     let socket = format!("127.0.0.1:{port}").parse()?;
 
     // Stand up the server and run it
