@@ -9,3 +9,7 @@ members = [
     "xor_params",
     "remote_access_trojan",
 ]
+
+[profile.release]
+lto = true
+strip = true
