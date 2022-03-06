@@ -60,7 +60,7 @@ use std::ffi::CString;
 #[cfg(all(windows, feature = "antisand"))]
 extern crate windows;
 #[cfg(all(windows, feature = "antisand"))]
-use windows::Win32::Foundation::PSTR;
+use windows::core::PCSTR;
 #[cfg(all(windows, feature = "antisand"))]
 use windows::Win32::Networking::WinInet::{InternetOpenA, InternetOpenUrlA};
 
@@ -70,18 +70,18 @@ pub fn pound_sand() -> bool {
     // Call InternetOpenA to get a handle that can be used in an actual internet request
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopena
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenA.html
-    let mut lpsz_agent: PSTR = unsafe { mem::zeroed() };
+    let mut lpsz_agent: PCSTR = unsafe { mem::zeroed() };
     lpsz_agent.0 = CString::new("Name in user-agent").unwrap().into_raw() as *mut u8;
-    let lpsz_proxy: PSTR = unsafe { mem::zeroed() };
-    let lpsz_proxy_bypass: PSTR = unsafe { mem::zeroed() };
+    let lpsz_proxy: PCSTR = unsafe { mem::zeroed() };
+    let lpsz_proxy_bypass: PCSTR = unsafe { mem::zeroed() };
     let internet_handle = unsafe { InternetOpenA(lpsz_agent, 0, lpsz_proxy, lpsz_proxy_bypass, 0) };
 
     // Call InternetOpenUrlA on a fake website; if there is a response, it's a sandbox trying to get you to take further action
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenurla
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenUrlA.html
-    let mut lpsz_url: PSTR = unsafe { mem::zeroed() };
+    let mut lpsz_url: PCSTR = unsafe { mem::zeroed() };
     lpsz_url.0 = CString::new("https://www.thisisafakewebsiteorelsetheantisanboxcheckwillfail4sure.com").unwrap().into_raw() as *mut u8;
-    let lpsz_headers: PSTR = unsafe { mem::zeroed() };
+    let lpsz_headers: PCSTR = unsafe { mem::zeroed() };
     let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, lpsz_headers, 0, 0, 0) };
     if website != 0 as _ {
         return true
