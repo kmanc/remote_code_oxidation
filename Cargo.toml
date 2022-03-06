@@ -8,3 +8,7 @@ members = [
     "process_hollowing",
     "xor_params",
 ]
+
+[profile.release]
+lto = true
+strip = true
