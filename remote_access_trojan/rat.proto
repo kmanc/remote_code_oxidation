@@ -11,23 +11,24 @@ service RecordCommandResult {
 }
 
 service ScheduleCommand {
-    rpc Send (CommandRequest) returns (Empty);
+    rpc Send (OperatorRequest) returns (OperatorResponse);
 }
 
 // Enum variants have to be globally unique apparently, so prepending an "Op" in front of these ones
 enum OperatorCommand {
     OpCadence = 0;
     OpDir = 1;
-    OpImplants = 2;
-    OpHelp = 3;
-    OpHostname = 4;
-    OpIp = 5;
-    OpLs = 6;
-    OpOs = 7;
-    OpQuit = 8;
-    OpRetrieve = 9;
-    OpShell = 10;
-    OpWhoami = 11;
+    OpHostname = 2;
+    OpIp = 3;
+    OpLs = 4;
+    OpOs = 5;
+    OpNone = 6;
+    OpQuit = 7;
+    OpShell = 8;
+    OpWhoami = 9;
+    OpImplants = 10;
+    OpHelp = 11;
+    OpRetrieve = 12;
 }
 
 enum RATCommand {
@@ -58,6 +59,15 @@ message CommandResponse {
     RATCommand command = 3;
     string arguments = 4;
     string result = 5;
+}
+
+message OperatorRequest {
+    OperatorCommand command = 1;
+    string arguments = 2;
+}
+
+message OperatorResponse {
+    string data = 1;
 }
 
 message Empty {}

