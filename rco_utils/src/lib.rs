@@ -81,8 +81,7 @@ pub fn pound_sand() -> bool {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenUrlA.html
     let mut lpsz_url: PCSTR = unsafe { mem::zeroed() };
     lpsz_url.0 = CString::new("https://www.thisisafakewebsiteorelsetheantisanboxcheckwillfail4sure.com").unwrap().into_raw() as *mut u8;
-    let lpsz_headers: PCSTR = unsafe { mem::zeroed() };
-    let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, lpsz_headers, 0, 0, 0) };
+    let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, &[], 0, 0) };
     if website != 0 as _ {
         return true
     }
