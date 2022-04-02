@@ -1,7 +1,7 @@
 # Remote Code Oxidation (RCO)
 
 [![RCO for Linux targets](https://github.com/kmanc/remote_code_oxidation/actions/workflows/linux.yml/badge.svg?style=flat)](https://github.com/kmanc/remote_code_oxidation/actions/workflows/linux.yml)
-[![RCO for Windows targets](https://github.com/kmanc/remote_code_oxidation/actions/workflows/windows.yml/badge.svg)](https://github.com/kmanc/remote_code_oxidation/actions/workflows/windows.yml)
+[![RCO for Windows targets](https://github.com/kmanc/remote_code_oxidation/actions/workflows/windows.yml/badge.svg?style=flat)](https://github.com/kmanc/remote_code_oxidation/actions/workflows/windows.yml)
 ![language](https://img.shields.io/github/languages/top/kmanc/remote_code_oxidation?style=flat&color=orange)
 ![license](https://img.shields.io/github/license/kmanc/remote_code_oxidation?style=flat&color=blueviolet)
 
