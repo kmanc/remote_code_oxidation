@@ -48,7 +48,7 @@ fn get_ip_address() -> String {
                             .output()
                             .unwrap();
     let ip_address = String::from_utf8(ip_address.stdout).unwrap();
-    let ip_address: Vec<&str> = ip_address.split(":").collect();
+    let ip_address: Vec<&str> = ip_address.split(':').collect();
     let ip_address = ip_address[1].trim();
     ip_address.to_string()
 }

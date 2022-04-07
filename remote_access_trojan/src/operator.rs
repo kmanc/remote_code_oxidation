@@ -27,7 +27,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         stdout().flush().unwrap();
         let mut line = String::new();
         stdin().read_line(&mut line).unwrap();
-        let split_line: Vec<&str> = line.split(" ").collect();
+        let split_line: Vec<&str> = line.split(' ').collect();
         let (command, arguments) = match split_line.len() {
             0 => continue,
             1 => (RsOperatorCommand::from(split_line[0].trim()).into(), "".to_string()),
@@ -57,7 +57,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let request= tonic::Request::new(
             OperatorRequest {
                 command: OperatorCommand::try_into(command).unwrap(),
-                arguments: arguments
+                arguments
             },
         );
         let _response = schedule_client.send(request).await?.into_inner();
