@@ -1,6 +1,6 @@
 [package]
 name = "rco_utils"
-version = "0.3.1"
+version = "0.3.3"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.59"
@@ -13,7 +13,7 @@ antisand = ["windows"]
 
 [target.'cfg(windows)'.dependencies]
 windows.optional = true
-windows.version = ">=0.33.0"
+windows.version = ">=0.35.0"
 windows.features = [
     "Win32_Foundation",
     "Win32_Networking",
