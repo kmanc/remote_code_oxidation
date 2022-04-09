@@ -1,6 +1,6 @@
 [package]
 name = "process_hollowing"
-version = "1.4.4"
+version = "1.5.0"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.59"

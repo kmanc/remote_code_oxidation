@@ -9,9 +9,11 @@ rust-version = "1.59"
 
 [features]
 xor = []
-antisand = ["windows"]
+antisand = ["windows", "rand"]
 
 [target.'cfg(windows)'.dependencies]
+rand.optional = true
+rand.version = ">=0.8.5"
 windows.optional = true
 windows.version = ">=0.35.0"
 windows.features = [
