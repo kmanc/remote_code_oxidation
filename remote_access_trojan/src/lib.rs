@@ -72,9 +72,9 @@ pub enum RsOperatorCommand {
 }
 
 // Way to convert a string slice to the second hacky protobuf copy
-impl Into<OperatorCommand > for RsOperatorCommand {
-    fn into(self) -> OperatorCommand {
-        match self {
+impl From<RsOperatorCommand> for OperatorCommand {
+    fn from(command: RsOperatorCommand) -> Self {
+        match command {
             RsOperatorCommand::OpCadence => OperatorCommand::OpCadence,
             RsOperatorCommand::OpDir => OperatorCommand::OpDir,
             RsOperatorCommand::OpHostname => OperatorCommand::OpHostname,
@@ -93,7 +93,7 @@ impl Into<OperatorCommand > for RsOperatorCommand {
 }
 
 // Way to convert a second hacky protobuf copy to the actual protobuf
-impl From<&str > for RsOperatorCommand {
+impl From<&str> for RsOperatorCommand {
     fn from(in_slice: &str) -> Self {
         match in_slice {
             "cadence" => RsOperatorCommand::OpCadence,
