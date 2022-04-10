@@ -16,7 +16,6 @@ use tonic::transport::Server;
 TODO
     - server state mutable
     - accept commands from operator to server
-    - server 'help' command
     - server 'retrieve' command
     - server 'implants' command
     - encrypt traffic from implant to server
@@ -105,51 +104,62 @@ impl ScheduleCommand for MyScheduleCommand {
         let command = OperatorCommand::from_i32(inner.command).unwrap();
         let arguments = inner.arguments;
         // Run the applicable command
-        let _command_result = match command {
+        let command_result = match command {
             OperatorCommand::OpCadence => {
-                println!("got a cadence {arguments}!")
+                format!("got a cadence {arguments}!")
             },
             OperatorCommand::OpDir => {
                 // Passthrough
+                "got a dir".to_string()
             },
             OperatorCommand::OpImplants => {
                 // List all implant IDs
+                "got an implants".to_string()
             },
             OperatorCommand::OpHelp => {
-                // List available commands
+                "Valid commands:\n\tcadence <number in seconds>\n\tdir\n\thostname\n\thelp\n\timplants\n\tip\n\tls\n\tos\n\tquit\n\tretrieve <implant id>\n\tshell\n\twhoami".to_string()
             },
             OperatorCommand::OpHostname => {
                 // Passthrough
+                "got a hostname".to_string()
             },
             OperatorCommand::OpIp => {
                 // Passthrough
+                "got an ip".to_string()
             },
             OperatorCommand::OpLs => {
                 // Passthrough
+                "got an ls".to_string()
             },
             OperatorCommand::OpOs => {
                 // Passthrough
+                "got an os".to_string()
             },
             OperatorCommand::OpQuit => {
                 // Passthrough
+                "got a quit".to_string()
             },
             OperatorCommand::OpRetrieve => {
                 // Retrieve data from implant
+                "got a retrieve".to_string()
             },
             OperatorCommand::OpShell => {
                 // Passthrough
+                "got a shell".to_string()
             },
             OperatorCommand::OpWhoami => {
                 // Passthrough
-            }
+                "got a whoami".to_string()
+            },
             _ => {
                 // I think this isn't possible?
+                "uh oh".to_string()
             }
         };
         // Respond to the implant basically say 'done'
         Ok(Response::new(
             OperatorResponse {
-                data: "yup".to_string()
+                data: command_result
             }
         ))
     }

