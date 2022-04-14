@@ -2,8 +2,8 @@ extern crate nix;
 use nix::sys::ptrace::{attach, detach, getregs, setregs, write};
 use nix::sys::wait::{waitpid, WaitPidFlag};
 use nix::unistd::Pid;
-use std::process::{self, Command};
 use std::ffi::c_void;
+use std::process::{self, Command};
 
 pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // List and collect all of the PIDs of active processes
