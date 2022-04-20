@@ -122,3 +122,107 @@ pub fn pound_sand() -> bool {
 pub fn pound_sand() -> bool {
     false
 }
+
+/*
+    Calculate the has of a hashable value
+*/
+
+#[cfg(feature = "antistring")]
+use std::collections::hash_map::DefaultHasher;
+#[cfg(feature = "antistring")]
+use std::hash::{Hash, Hasher};
+#[cfg(feature = "antistring")]
+fn calculate_hash<T: Hash>(t: &T) -> u64 {
+    let mut s = DefaultHasher::new();
+    t.hash(&mut s);
+    s.finish()
+}
+
+/*
+    Find Win32 function implementation - finds the memory location of a Win32 function in its DLL so it can be called directly
+*/
+
+#[cfg(all(windows, feature = "antistring"))]
+extern crate windows;
+#[cfg(all(windows, feature = "antistring"))]
+use std::{mem, ptr};
+#[cfg(all(windows, feature = "antistring"))]
+use std::ffi::{CStr, CString};
+#[cfg(all(windows, feature = "antistring"))]
+use windows::core::PCSTR;
+#[cfg(all(windows, feature = "antistring"))]
+use windows::Win32::System::Diagnostics::Debug::{IMAGE_DIRECTORY_ENTRY_EXPORT, IMAGE_NT_HEADERS64};
+#[cfg(all(windows, feature = "antistring"))]
+use windows::Win32::System::LibraryLoader::LoadLibraryA;
+#[cfg(all(windows, feature = "antistring"))]
+use windows::Win32::System::SystemServices::{IMAGE_DOS_HEADER, IMAGE_EXPORT_DIRECTORY};
+#[cfg(all(windows, feature = "antistring"))]
+fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box<dyn Error>> {
+    // Call LoadLibraryA on a DLL to get its base address
+    let mut lib_filename: PCSTR = unsafe { mem::zeroed() };
+    lib_filename.0 = CString::new(dll).unwrap().into_raw() as *mut u8;
+    let library_base = unsafe { LoadLibraryA(lib_filename) };
+    let library_base_usize = library_base.0 as usize;
+
+    // Get a pointer to the DOS header
+    let dos_header: *const IMAGE_DOS_HEADER = library_base.0 as *const IMAGE_DOS_HEADER;
+
+    // Calculate the address of the image headers
+    let image_headers: *const IMAGE_NT_HEADERS64 = unsafe { (library_base_usize + (*dos_header).e_lfanew as usize) as *const IMAGE_NT_HEADERS64 };
+    
+    // Get the relative virtual address of the export directory
+    let export_directory_rva = unsafe { (*image_headers).OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT.0 as usize].VirtualAddress };
+    // Use the RVA to get the real address of the export directory
+    let image_export_directory: *const IMAGE_EXPORT_DIRECTORY = (library_base_usize + export_directory_rva as usize) as *const IMAGE_EXPORT_DIRECTORY;
+
+    // Calculate the base addresses of the arrays holding function information
+    let names_address = unsafe { library_base_usize + (*image_export_directory).AddressOfNames as usize };
+    let ordinals_address = unsafe { library_base_usize + (*image_export_directory).AddressOfNameOrdinals as usize };
+    let functions_address = unsafe { library_base_usize + (*image_export_directory).AddressOfFunctions as usize };
+
+    // Loop over every function looking for the desired name
+    let num_functions = unsafe { (*image_export_directory).NumberOfFunctions };
+    for index in 0..num_functions {
+        // Help traverse the names array; each 4-byte value is a pointer to a name
+        let into_names = mem::size_of::<u32>() * (index as usize);
+
+        // Find the location of the next function name's RVA
+        let function_name_rva_address: *const usize = (names_address + into_names) as *const usize;
+        
+        // Read the RVA from its location
+        let function_name_rva: u32 = unsafe { ptr::read(function_name_rva_address) as u32 };
+        
+        // Calculate the function name's real address
+        let function_name_address: *const i8 = (library_base_usize + function_name_rva as usize) as *const i8;
+        
+        // Read the function name from its address
+        let function_name = unsafe { CStr::from_ptr(function_name_address).to_string_lossy() };
+
+        // Hash the name
+        let function_hash = calculate_hash(&function_name);
+
+        // Compare the hashed name to the name you are looking for
+        if function_hash == name_hash {
+            // Find the location of the function ordinal's RVA; it's the same index as the name array but each offset is only 2 bytes
+            let ordinals_offset_address: *const usize = (ordinals_address + (into_names / 2_usize)) as *const usize;
+
+            // Read the RVA from its location
+            let ordinal_offset: u16 = unsafe { ptr::read(ordinals_offset_address) as u16};
+
+            // Find the location of the function address in the address array by using the ordinal offset
+            let into_functions = mem::size_of::<u32>() * (ordinal_offset as usize);
+
+            // Calculate the function address's location
+            let function_address_rva_address: *const usize = (functions_address + into_functions) as *const usize;
+
+            // Read the function address's location from memory
+            let function_address_rva: u32 = unsafe { ptr::read(function_address_rva_address) as u32};
+
+            // Calculate the function's real address
+            let function_address: *const () = (library_base_usize + function_address_rva as usize) as *const ();
+            
+            return Ok(function_address)
+        }
+    }
+    Err(format!("Could not find the function '{name_hash:x}' in '{dll}'").into())
+}
