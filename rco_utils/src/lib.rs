@@ -132,7 +132,7 @@ use std::collections::hash_map::DefaultHasher;
 #[cfg(feature = "antistring")]
 use std::hash::{Hash, Hasher};
 #[cfg(feature = "antistring")]
-fn calculate_hash<T: Hash>(t: &T) -> u64 {
+pub fn calculate_hash<T: Hash>(t: &T) -> u64 {
     let mut s = DefaultHasher::new();
     t.hash(&mut s);
     s.finish()
@@ -157,7 +157,7 @@ use windows::Win32::System::LibraryLoader::LoadLibraryA;
 #[cfg(all(windows, feature = "antistring"))]
 use windows::Win32::System::SystemServices::{IMAGE_DOS_HEADER, IMAGE_EXPORT_DIRECTORY};
 #[cfg(all(windows, feature = "antistring"))]
-fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box<dyn Error>> {
+pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box<dyn Error>> {
     // Call LoadLibraryA on a DLL to get its base address
     let mut lib_filename: PCSTR = unsafe { mem::zeroed() };
     lib_filename.0 = CString::new(dll).unwrap().into_raw() as *mut u8;
