@@ -1,11 +1,12 @@
 [workspace]
 
 members = [
+    "hash_params",
+    "process_hollowing",
+    "process_migration",
     "rco_config",
     "rco_utils",
-    "tcp_reverse_shell",
-    "process_migration",
-    "process_hollowing",
+    "tcp_reverse_shell",    
     "xor_params",
 ]
 

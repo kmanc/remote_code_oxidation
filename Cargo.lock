@@ -38,6 +38,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "hash_params"
+version = "1.0.0"
+dependencies = [
+ "rco_config",
+ "rco_utils",
+]
+
+[[package]]
 name = "libc"
 version = "0.2.122"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -73,7 +81,7 @@ checksum = "eb9f9e6e233e5c4a35559a617bf40a4ec447db2e84c20b55a6f83167b7e57872"
 
 [[package]]
 name = "process_hollowing"
-version = "1.5.0"
+version = "1.6.0"
 dependencies = [
  "nix",
  "rco_config",
@@ -83,7 +91,7 @@ dependencies = [
 
 [[package]]
 name = "process_migration"
-version = "1.7.0"
+version = "1.8.0"
 dependencies = [
  "nix",
  "rco_config",
@@ -135,9 +143,10 @@ dependencies = [
 
 [[package]]
 name = "tcp_reverse_shell"
-version = "1.1.5"
+version = "1.2.0"
 dependencies = [
  "rco_config",
+ "rco_utils",
  "windows",
 ]
 
