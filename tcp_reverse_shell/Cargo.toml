@@ -13,7 +13,7 @@ antistring = ["rco_utils/antistring"]
 
 [dependencies]
 rco_config = {path = "../rco_config"}
-rco_utils = {path = "../rco_utils", optional = true}
+rco_utils = {path = "../rco_utils"}
 
 [target.'cfg(windows)'.dependencies]
 windows.version = ">=0.35.0"
