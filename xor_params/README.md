@@ -12,10 +12,10 @@ XOR params performs an [exclusive OR (XOR)](https://en.wikipedia.org/wiki/Exclus
 
 ## Using it
 
-1. Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP shell shellcode for the target operating system)
-2. Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) and change the shellcode to the shellcode generated in step 1
+1. [Not shown in GIF] Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP shell shellcode for the target operating system)
+2. [Not shown in GIF] Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) and change the shellcode to the shellcode generated in step 1
 3. Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) and change the key to a desired key
-4. Compile the executable
+4. [Not shown in GIF] Compile the executable
 
     #### For Linux
     ```commandline

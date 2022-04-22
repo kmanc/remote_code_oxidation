@@ -12,7 +12,7 @@ Hash params performs Rust's default hash algorithm ([SipHash-1-3 at the time of 
 
 ## Using it
 
-1. Compile the executable
+1. [Not shown in GIF] Compile the executable
 
     #### For Linux
     ```commandline
