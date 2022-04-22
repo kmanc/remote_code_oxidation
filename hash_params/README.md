@@ -7,7 +7,7 @@
 
 ## How it works
 
-Hash params performs Rust's default hash algorithm ([SipHash-1-3 at the time of this writing](https://en.wikipedia.org/wiki/SipHash)) on commandline arguments and prints their output in hex. This should not be considered cryptographically secure, but works for obfuscating a value in a repeatable way.
+Hash params performs Rust's default hash algorithm ([SipHash-1-3 at the time of this writing](https://en.wikipedia.org/wiki/SipHash)) on command line arguments and prints their output in hex. This should not be considered cryptographically secure, but works for obfuscating a value in a repeatable way.
 
 
 ## Using it
