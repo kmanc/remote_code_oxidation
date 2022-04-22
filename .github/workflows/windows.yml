@@ -317,7 +317,7 @@ jobs:
 
   windows-remote-access-trojan:
 
-  runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     
     steps:
     - name: Update rust
