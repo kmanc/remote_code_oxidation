@@ -1,9 +1,11 @@
 name: RCO for Linux targets
 
 on:
+  workflow_run:
+    workflows: ["Shields data builder"]
+    types:
+      - completed
   push:
-    branches: [ master ]
-  pull_request:
     branches: [ master ]
 
 env:
