@@ -1,6 +1,6 @@
 [package]
 name = "process_migration"
-version = "1.7.0"
+version = "1.8.0"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.59"
@@ -10,6 +10,7 @@ rust-version = "1.59"
 [features]
 xor = ["rco_utils/xor"]
 antisand = ["rco_utils/antisand"]
+antistring = ["rco_utils/antistring"]
 
 [dependencies]
 rco_config = {path = "../rco_config"}
