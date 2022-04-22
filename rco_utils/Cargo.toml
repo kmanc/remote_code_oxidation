@@ -10,6 +10,7 @@ rust-version = "1.59"
 [features]
 xor = []
 antisand = ["windows", "rand"]
+antistring = ["windows"]
 
 [target.'cfg(windows)'.dependencies]
 rand.optional = true
@@ -19,4 +20,7 @@ windows.version = ">=0.35.0"
 windows.features = [
     "Win32_Foundation",
     "Win32_Networking",
-    "Win32_Networking_WinInet" ]
+    "Win32_Networking_WinInet",
+    "Win32_System_Diagnostics_Debug",
+    "Win32_System_LibraryLoader",
+    "Win32_System_SystemServices" ]
