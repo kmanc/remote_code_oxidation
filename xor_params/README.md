@@ -7,7 +7,7 @@
 
 ## How it works
 
-XOR shellcode performs an [exclusive OR (XOR)](https://en.wikipedia.org/wiki/Exclusive_or) operation on each byte of the shellcode with each byte of the key (repeating the key if need be).
+XOR params performs an [exclusive OR (XOR)](https://en.wikipedia.org/wiki/Exclusive_or) operation on each byte of the shellcode with each byte of the key (repeating the key if need be).
 
 
 ## Using it

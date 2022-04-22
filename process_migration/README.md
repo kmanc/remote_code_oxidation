@@ -25,12 +25,12 @@ and change the shellcode to the shellcode generated in step 1
 
     #### Build for Linux target
     ```commandline
-    cargo build -p process_migration [--features [xor][antisand]] --release
+    cargo build -p process_migration [xor][,][antisand][,][antistring]] --release
     ```
 
     #### Build for Windows target
     ```commandline
-    cargo build --target x86_64-pc-windows-gnu -p process_migration [--features [xor][antisand]] --release
+    cargo build --target x86_64-pc-windows-gnu -p process_migration [xor][,][antisand][,][antistring]] --release
     ```
 5. Start a netcat listener on the attacking machine on the same port you configured the shellcode to connect to in step 1
     ```commandline
