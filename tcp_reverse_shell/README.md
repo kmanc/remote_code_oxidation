@@ -37,7 +37,15 @@ and change the IP address and port to match the IP address of your attacking mac
 
 ## Detection rates
 
-[Linux - 0 / 40](https://kleenscan.com/scan_result/797f4631dd2cbe2251507376b0d091e86478866b02b2a6718cc26c959a0139b9) | [Windows - 0 / 40](https://kleenscan.com/scan_result/64c9cd080360dc668126cd89aeff1ca40a44359dea9a075064f1ac1e0cc3b27f)
-:-------------------------:|:-------------------------:
-![image](https://user-images.githubusercontent.com/14863147/152621667-d230aa8d-24e6-435b-8ff9-bab59a346ddc.png) | ![image](https://user-images.githubusercontent.com/14863147/152621688-dae58eef-1688-4c8e-a5a9-7f6d21dcc1a0.png)
+<p align="center"> Linux </p>
 
+[No features: 0 / 40](https://kleenscan.com/scan_result/c01984f5bc45f0ff82723fe6ceab770fe48e955081f8b02e17a8232e6ba2bbeb)
+:-------------------------:
+![image](https://user-images.githubusercontent.com/14863147/164814492-64a4c3e7-e736-4bee-9baa-87d9d49b417b.png)
+
+
+<p align="center"> Windows </p>
+
+[No features: 0 / 40](https://kleenscan.com/scan_result/ce74ac206b59e9acc4e7f528bcec06f2a1dcc8ac0a1fb622c0b646cdfd2602d5) | [Using `--features antisand`: 0 / 40](https://kleenscan.com/scan_result/28fce6da1a75b3d0073649613d5e69b73019091e1a7c2a2033b1551755c5fad4) | [Using `--features antistring`: 0 / 40](https://kleenscan.com/scan_result/fafcad9c3689cf811184cacc3c1e9f939017b4e5d362712468839a6126f82278) | [Using `--features antisand,antistring`: 0 / 40](https://kleenscan.com/scan_result/ff8c1a3fda94bd5f73314e15c9861284250b88720f045351aedc937435b9d8bd) 
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![image](https://user-images.githubusercontent.com/14863147/164814640-1355d414-087b-48c0-9067-2ab6f2ad12bf.png) | ![image](https://user-images.githubusercontent.com/14863147/164814649-9f3ccebd-427e-432f-adcf-06cab5b37c45.png) | ![image](https://user-images.githubusercontent.com/14863147/164814643-a32b5580-c6f0-4ff4-ba44-9c71b408f386.png) | ![image](https://user-images.githubusercontent.com/14863147/164814653-4d6dfe0c-a0b2-44ef-b513-920b8a5530e1.png)
