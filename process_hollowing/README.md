@@ -1,3 +1,8 @@
+---
+title: "PH title"
+datatable: true
+---
+
 # RCO: Process Hollowing
 
 [![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_hollowing.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/process_hollowing)
@@ -41,12 +46,13 @@ and change the shellcode to the shellcode generated in step 1
 ## Detection rates
 
 
-<p align="center"> Linux </p>
+<div class="datatable-begin"></div>
+    <p align="center"> Linux </p>
 
-[No features - 7 / 40](https://kleenscan.com/scan_result/1177abafe77dc580337ec6294c68bdc4873ceb36a4eeac057fd0673c3ae50e7f) | [Using `--features xor` - 0 / 40](https://kleenscan.com/scan_result/8a0268ca750a14fc93f40f6b1864f13ce94318c4c4a7ecc49dfeb332b9c9d860)
-:-------------------------:|:-------------------------:
-![image](https://user-images.githubusercontent.com/14863147/164796610-611fa25b-a631-4f44-8e03-d80d0333dced.png) | ![image](https://user-images.githubusercontent.com/14863147/164796718-c37e8298-0a99-4b11-bcce-17638e31988a.png)
+[No features - 7 / 40](https://kleenscan.com/scan_result/1177abafe77dc580337ec6294c68bdc4873ceb36a4eeac057fd0673c3ae50e7f)            | ![image](https://user-images.githubusercontent.com/14863147/164796610-611fa25b-a631-4f44-8e03-d80d0333dced.png)
+[Using `--features xor` - 0 / 40](https://kleenscan.com/scan_result/8a0268ca750a14fc93f40f6b1864f13ce94318c4c4a7ecc49dfeb332b9c9d860) | ![image](https://user-images.githubusercontent.com/14863147/164796718-c37e8298-0a99-4b11-bcce-17638e31988a.png)
 
+<div class="datatable-end"></div>
 
 <p align="center"> Windows </p>
 
