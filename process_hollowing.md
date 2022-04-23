@@ -3,6 +3,9 @@ title: "Process Hollowing"
 datatable: true
 ---
 
+<script src="assets/js/idk.js"></script>
+<link rel="stylesheet" href="assets/css/maybe.css">
+
 # RCO: Process Hollowing
 
 [![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_hollowing.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/process_hollowing)

@@ -1,0 +1,11 @@
+<style media="screen">
+  div.highlighter-rouge {
+    position: relative;
+  }
+
+  div.highlighter-rouge button {
+    position: absolute;
+    top: 2.3rem;
+    left: 10px;
+  }
+</style>
