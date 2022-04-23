@@ -4,6 +4,11 @@ plugins:
 relative_links:
   enabled: true
   collections: true
+defaults:
+  - scope:
+      path: "images"
+    values:
+      image: true
 include:
   - README.md
   - LICENSE
