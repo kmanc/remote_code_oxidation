@@ -11,7 +11,7 @@ datatable: true
 
 Target OS | Demo
 --------- | ----
-Linux     | ![gif](../assets/gifs/process_hollowing.gif)
+Linux     | ![gif](/assets/gifs/process_hollowing.gif)
 Windows   | <img src="/assets/gifs/process_hollowing_windows.gif" alt="gif">
 
 <div class="datatable-end"></div>
