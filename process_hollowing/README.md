@@ -30,7 +30,7 @@ and change the shellcode to the shellcode generated in step 1
 
     1. Build for Linux target
     ```commandline
-    cargo build -p process_hollowing [xor][,][antisand][,][antistring]] --release
+    cargo build -p process_hollowing [antisand][,][antistring][,][xor]] --release
     ```
 
     2. Build for Windows target
