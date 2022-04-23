@@ -9,3 +9,4 @@ include:
   - LICENSE
   - hash_params/README.md
   - process_hollowing/README.md
+  - /gifs/
