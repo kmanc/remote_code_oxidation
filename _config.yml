@@ -7,3 +7,4 @@ relative_links:
 include:
   - README.md
   - LICENSE
+  - hash_params/README.md
