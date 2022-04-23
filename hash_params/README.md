@@ -1,3 +1,7 @@
+---
+title: "Hash params"
+---
+
 # RCO: Hash Params
 
 [![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fhash_params.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/hash_params)
@@ -12,15 +16,13 @@ Hash params performs Rust's default hash algorithm ([SipHash-1-3 at the time of 
 
 ## Using it
 
-1. [Not shown in GIF] Compile the executable
-
-    #### For Linux
-    ```commandline
-    cargo build -p hash_params --release
-    ```
-
-    #### For Windows
-    ```commandline
-    cargo build --target x86_64-pc-windows-gnu -p hash_params --release
-    ```
-2. Run the executable with the desired hash targets
+1.  [Not shown in GIF] Compile the executable
+  1.  For Linux
+  ```commandline
+  cargo build -p hash_params --release
+  ```
+  2.  For Windows
+  ```commandline
+  cargo build --target x86_64-pc-windows-gnu -p hash_params --release
+  ```
+2.  Run the executable with the desired hash targets
