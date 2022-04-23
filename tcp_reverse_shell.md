@@ -11,8 +11,8 @@ datatable: true
 
 Target OS | Demo
 --------- | ----
-Linux     | [![gif](/assets/gifs/tcp_reverse_shell.gif)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/gifs/tcp_reverse_shell.gif)
-Windows   | [![gif](/assets/gifs/tcp_reverse_shell_windows.gif)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/gifs/tcp_reverse_shell_windows.gif)
+Linux     | [![tcp_reverse_shell_linux](/assets/gifs/tcp_reverse_shell.gif)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/gifs/tcp_reverse_shell.gif)
+Windows   | [![tcp_reverse_shell_windows](/assets/gifs/tcp_reverse_shell_windows.gif)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/gifs/tcp_reverse_shell_windows.gif)
 
 <div class="datatable-end"></div>
 
@@ -48,10 +48,10 @@ nc -nlvp 4444
 
 Target OS | Features                      | Detections                             | Screenshot
 --------- | ----------------------------- | -------------------------------------- | ----------
-Linux     | None                      | [0 / 40](https://kleenscan.com/scan_result/c01984f5bc45f0ff82723fe6ceab770fe48e955081f8b02e17a8232e6ba2bbeb) | [![image](/assets/images/tcp_reverse_shell.png)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/images/tcp_reverse_shell.png)
-Windows   | None                      | [0 / 40](https://kleenscan.com/scan_result/ce74ac206b59e9acc4e7f528bcec06f2a1dcc8ac0a1fb622c0b646cdfd2602d5) | [![image](/assets/images/tcp_reverse_shell_exe.png)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/images/tcp_reverse_shell_exe.png)
-Windows   | `antisand`                | [0 / 40](https://kleenscan.com/scan_result/28fce6da1a75b3d0073649613d5e69b73019091e1a7c2a2033b1551755c5fad4) | [![image](/assets/images/tcp_reverse_shell_antisand_exe.png)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/images/tcp_reverse_shell_antisand_exe.png)
-Windows   | `antistring`              | [0 / 40](https://kleenscan.com/scan_result/fafcad9c3689cf811184cacc3c1e9f939017b4e5d362712468839a6126f82278) | [![image](/assets/images/tcp_reverse_shell_antistring_exe.png)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/images/tcp_reverse_shell_antistring_exe.png)
-Windows   | `antisand,antistring`     | [0 / 40](https://kleenscan.com/scan_result/ff8c1a3fda94bd5f73314e15c9861284250b88720f045351aedc937435b9d8bd) | [![image](/assets/images/tcp_reverse_shell_antisand_antistring_exe.png)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/images/tcp_reverse_shell_antisand_antistring_exe.png)
+Linux     | None                      | [0 / 40](https://kleenscan.com/scan_result/c01984f5bc45f0ff82723fe6ceab770fe48e955081f8b02e17a8232e6ba2bbeb) | [![tcp_reverse_shell_linux](/assets/images/tcp_reverse_shell.png)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/images/tcp_reverse_shell.png)
+Windows   | None                      | [0 / 40](https://kleenscan.com/scan_result/ce74ac206b59e9acc4e7f528bcec06f2a1dcc8ac0a1fb622c0b646cdfd2602d5) | [![tcp_reverse_shell_windows](/assets/images/tcp_reverse_shell_exe.png)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/images/tcp_reverse_shell_exe.png)
+Windows   | `antisand`                | [0 / 40](https://kleenscan.com/scan_result/28fce6da1a75b3d0073649613d5e69b73019091e1a7c2a2033b1551755c5fad4) | [![tcp_reverse_shell_windows_antisand](/assets/images/tcp_reverse_shell_antisand_exe.png)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/images/tcp_reverse_shell_antisand_exe.png)
+Windows   | `antistring`              | [0 / 40](https://kleenscan.com/scan_result/fafcad9c3689cf811184cacc3c1e9f939017b4e5d362712468839a6126f82278) | [![tcp_reverse_shell_windows_antistring](/assets/images/tcp_reverse_shell_antistring_exe.png)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/images/tcp_reverse_shell_antistring_exe.png)
+Windows   | `antisand,antistring`     | [0 / 40](https://kleenscan.com/scan_result/ff8c1a3fda94bd5f73314e15c9861284250b88720f045351aedc937435b9d8bd) | [![tcp_reverse_shell_windows_antisand_antistring](/assets/images/tcp_reverse_shell_antisand_antistring_exe.png)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/images/tcp_reverse_shell_antisand_antistring_exe.png)
 
 <div class="datatable-end"></div>
