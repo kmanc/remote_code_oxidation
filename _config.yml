@@ -4,17 +4,9 @@ plugins:
 relative_links:
   enabled: true
   collections: true
-defaults:
-  - scope:
-      path: "images"
-    values:
-      image: true
-  - scope:
-      path: "gifs"
-    values:
-      image: true
 include:
   - README.md
   - LICENSE
   - hash_params/README.md
   - process_hollowing/README.md
+  - gifs/process_hollowing.gif
