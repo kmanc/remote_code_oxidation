@@ -9,4 +9,6 @@ include:
   - LICENSE
   - hash_params/README.md
   - process_hollowing/README.md
-  - gifs/process_hollowing.gif
+  - process_migration/README.md
+  - tcp_reverse_shell/README.md
+  - xor_params/README.md
