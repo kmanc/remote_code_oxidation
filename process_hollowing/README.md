@@ -12,7 +12,7 @@ datatable: true
 Target OS | Demo
 --------- | ----
 Linux     | ![gif](/assets/gifs/process_hollowing.gif)
-Windows   | [![gif](https://user-images.githubusercontent.com/14863147/151642061-6df0f601-3f07-4e0c-aaf5-fbbc229de2e0.gif)](https://user-images.githubusercontent.com/14863147/151642061-6df0f601-3f07-4e0c-aaf5-fbbc229de2e0.gif)
+Windows   | <img src="/assets/images/process_hollowing_windows.gif" alt="gif">
 
 <div class="datatable-end"></div>
 
@@ -53,7 +53,7 @@ nc -nlvp 4444
 Target OS | Features                      | Detections                             | Screenshot
 --------- | ----------------------------- | -------------------------------------- | ----------
 Linux     | None                      | [7 / 40](https://kleenscan.com/scan_result/1177abafe77dc580337ec6294c68bdc4873ceb36a4eeac057fd0673c3ae50e7f)  | ![image](/assets/images/process_hollowing.png)
-Linux     | `xor`                     | [0 / 40](https://kleenscan.com/scan_result/8a0268ca750a14fc93f40f6b1864f13ce94318c4c4a7ecc49dfeb332b9c9d860)  | [![image](https://user-images.githubusercontent.com/14863147/164796718-c37e8298-0a99-4b11-bcce-17638e31988a.png)](https://user-images.githubusercontent.com/14863147/164796718-c37e8298-0a99-4b11-bcce-17638e31988a.png)
+Linux     | `xor`                     | [0 / 40](https://kleenscan.com/scan_result/8a0268ca750a14fc93f40f6b1864f13ce94318c4c4a7ecc49dfeb332b9c9d860)  | <img src="/assets/images/process_hollowing_xor.png" alt="image">
 Windows   | None                      | [12 / 40](https://kleenscan.com/scan_result/dd7858b48235bc782383fa5a929125369c7918d3c119a9196b0fdab791624763) | [![image](https://user-images.githubusercontent.com/14863147/164800253-42ae28de-dded-4d81-98b5-8169372247de.png)](https://user-images.githubusercontent.com/14863147/164800253-42ae28de-dded-4d81-98b5-8169372247de.png)
 Windows   | `antisand`                | [12 / 40](https://kleenscan.com/scan_result/dc73a322924b772b90957aaffe8d2735acd6d6049e0607a1befada2bc5aa86f3) | [![image](https://user-images.githubusercontent.com/14863147/164803213-b5320794-8e57-4552-ab67-2358ffdd5a81.png)](https://user-images.githubusercontent.com/14863147/164803213-b5320794-8e57-4552-ab67-2358ffdd5a81.png)
 Windows   | `antistring`              | [12 / 40](https://kleenscan.com/scan_result/1505ac5f33afe16a79796045d80c6c55617944c86396411487f1cbd934e875fb) | [![image](https://user-images.githubusercontent.com/14863147/164803228-2ef5ddb5-cfee-4a98-8cad-c2a2c0aec4f9.png)](https://user-images.githubusercontent.com/14863147/164803228-2ef5ddb5-cfee-4a98-8cad-c2a2c0aec4f9.png)
