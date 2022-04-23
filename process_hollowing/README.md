@@ -59,6 +59,6 @@ Windows   | `antisand,antistring`     | [12 / 40](https://kleenscan.com/scan_res
 Windows   | `xor`                     | [6 / 40](https://kleenscan.com/scan_result/455d775c517cf26a6e83a42b3eae7982364d8a8174127eca377094c05e0dd948)  | ![image](https://user-images.githubusercontent.com/14863147/164803307-97d7b75c-4c79-4699-a36c-d99923789751.png)
 Windows   | `antistring,xor`          | [1 / 40](https://kleenscan.com/scan_result/e6214cb0175737d1e3bba8bafbaa17d5aa575f613dab718a6d35dd46c7af8767)  | ![image](https://user-images.githubusercontent.com/14863147/164803332-2d97dd6b-7c78-4b9b-9a14-62430ea83f06.png)
 Windows   | `antisand,xor`            | [0 / 40](https://kleenscan.com/scan_result/de899245ec6a258d741b6243d18cf10fae5e6a1fe344ab3d02f17899a67d2bb7)  | ![image](https://user-images.githubusercontent.com/14863147/164803356-4e45da59-b6bb-4432-89c9-cc91cf1b895e.png)
-Windows   | `antisand,antistring,xor` | [0 / 40](https://kleenscan.com/scan_result/49f53e2e15b86d9e5425d684e9ab964289d2d96fef8ca61ba927e3826ebd0392)  | ![image](https://user-images.githubusercontent.com/14863147/164803373-2cd49344-b5bb-48c1-b853-a7c893435f73.png)
+Windows   | `antisand,antistring,xor` | [0 / 40](https://kleenscan.com/scan_result/49f53e2e15b86d9e5425d684e9ab964289d2d96fef8ca61ba927e3826ebd0392)  | [![image](https://user-images.githubusercontent.com/14863147/164803373-2cd49344-b5bb-48c1-b853-a7c893435f73.png)](https://user-images.githubusercontent.com/14863147/164803373-2cd49344-b5bb-48c1-b853-a7c893435f73.png)
 
 <div class="datatable-end"></div>
