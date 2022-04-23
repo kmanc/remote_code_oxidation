@@ -11,8 +11,8 @@ datatable: true
 
 Target OS | Demo
 --------- | ----
-Linux     | ![gif](/gifs/process_migration.gif)
-Windows   | ![gif](/gifs/process_migration_windows.gif)
+Linux     | ![gif](/assets/gifs/process_migration.gif)
+Windows   | ![gif](/assets/gifs/process_migration_windows.gif)
 
 <div class="datatable-end"></div>
 

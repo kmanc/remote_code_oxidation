@@ -11,8 +11,8 @@ datatable: true
 
 Target OS | Demo
 --------- | ----
-Linux     | ![gif](/gifs/tcp_reverse_shell.gif)
-Windows   | ![gif](/gifs/tcp_reverse_shell_windows.gif)
+Linux     | ![gif](/assets/gifs/tcp_reverse_shell.gif)
+Windows   | ![gif](/assets/gifs/tcp_reverse_shell_windows.gif)
 
 <div class="datatable-end"></div>
 

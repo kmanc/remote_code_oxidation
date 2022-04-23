@@ -6,6 +6,39 @@
   <component name="ChangeListManager">
     <list default="true" id="da8b2084-434c-402e-bd51-269df406b544" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gifs/hash_params.gif" beforeDir="false" afterPath="$PROJECT_DIR$/assets/gifs/hash_params.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gifs/process_hollowing.gif" beforeDir="false" afterPath="$PROJECT_DIR$/assets/gifs/process_hollowing.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gifs/process_hollowing_windows.gif" beforeDir="false" afterPath="$PROJECT_DIR$/assets/gifs/process_hollowing_windows.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gifs/process_migration.gif" beforeDir="false" afterPath="$PROJECT_DIR$/assets/gifs/process_migration.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gifs/process_migration_windows.gif" beforeDir="false" afterPath="$PROJECT_DIR$/assets/gifs/process_migration_windows.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gifs/tcp_reverse_shell.gif" beforeDir="false" afterPath="$PROJECT_DIR$/assets/gifs/tcp_reverse_shell.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gifs/tcp_reverse_shell_windows.gif" beforeDir="false" afterPath="$PROJECT_DIR$/assets/gifs/tcp_reverse_shell_windows.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gifs/xor_shellcode.gif" beforeDir="false" afterPath="$PROJECT_DIR$/assets/gifs/xor_shellcode.gif" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_hollowing.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_hollowing.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_hollowing_antisand_antistring_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_hollowing_antisand_antistring_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_hollowing_antisand_antistring_xor_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_hollowing_antisand_antistring_xor_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_hollowing_antisand_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_hollowing_antisand_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_hollowing_antisand_xor_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_hollowing_antisand_xor_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_hollowing_antistring_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_hollowing_antistring_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_hollowing_antistring_xor_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_hollowing_antistring_xor_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_hollowing_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_hollowing_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_hollowing_xor.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_hollowing_xor.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_hollowing_xor_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_hollowing_xor_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_migration.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_migration.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_migration_antisand_antistring_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_migration_antisand_antistring_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_migration_antisand_antistring_xor_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_migration_antisand_antistring_xor_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_migration_antisand_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_migration_antisand_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_migration_antisand_xor_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_migration_antisand_xor_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_migration_antistring_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_migration_antistring_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_migration_antistring_xor_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_migration_antistring_xor_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_migration_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_migration_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_migration_xor.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_migration_xor.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/process_migration_xor_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/process_migration_xor_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/tcp_reverse_shell.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/tcp_reverse_shell.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/tcp_reverse_shell_antisand_antistring_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/tcp_reverse_shell_antisand_antistring_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/tcp_reverse_shell_antisand_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/tcp_reverse_shell_antisand_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/tcp_reverse_shell_antistring_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/tcp_reverse_shell_antistring_exe.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/images/tcp_reverse_shell_exe.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/images/tcp_reverse_shell_exe.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/process_hollowing/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/process_hollowing/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/process_migration/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/process_migration/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tcp_reverse_shell/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/tcp_reverse_shell/README.md" afterDir="false" />
@@ -41,17 +74,18 @@
     <property name="org.rust.disableDetachedFileInspection/Users/Kevin/Documents/github/rust/remote_code_oxidation/win32_api_rev.rs" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/tcp_reverse_shell/src" />
-      <recent name="$PROJECT_DIR$/" />
-      <recent name="$PROJECT_DIR$/src/basic_tcp_reverse_shell" />
-      <recent name="$PROJECT_DIR$/src" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/process_hollowing/src" />
       <recent name="$PROJECT_DIR$/process_migration/src" />
       <recent name="$PROJECT_DIR$/tcp_reverse_shell" />
       <recent name="$PROJECT_DIR$/src/first" />
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/assets" />
+      <recent name="$PROJECT_DIR$/tcp_reverse_shell/src" />
+      <recent name="$PROJECT_DIR$/" />
+      <recent name="$PROJECT_DIR$/src/basic_tcp_reverse_shell" />
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
