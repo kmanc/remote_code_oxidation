@@ -3,9 +3,6 @@ title: "Process Hollowing"
 datatable: true
 ---
 
-<script src="assets/js/idk.js"></script>
-<link rel="stylesheet" href="assets/css/maybe.css">
-
 # RCO: Process Hollowing
 
 [![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_hollowing.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/process_hollowing)
@@ -34,13 +31,11 @@ and change the shellcode to the shellcode generated in step 1
 3.  *[Optional - shown in [xor_params demo](https://kmanc.github.io/remote_code_oxidation/xor_params.html)]* Encrypt the shellcode and target process using [xor_params](https://github.com/kmanc/remote_code_oxidation/blob/master/xor_shellcode) and update the encrypted shellcode value in [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs)  
 4.  *[Not shown in demo]* Compile the executable, only including `--features xor` if you did step 3
     1.  Build for Linux target
-    {% include code_copy.html %}
-    ```
+    ```commandline
     cargo build -p process_hollowing [antisand][,][antistring][,][xor]] --release
     ```
     2.  Build for Windows target
-    {% include code_copy.html %}
-    ```
+    ```commandline
     cargo build --target x86_64-pc-windows-gnu -p process_hollowing [antisand][,][antistring][,][xor]] --release
     ```
 5.  Start a netcat listener on the attacking machine on the same port you configured the shellcode to connect to in step 1
