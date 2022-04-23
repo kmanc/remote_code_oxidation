@@ -1,4 +1,4 @@
-theme: jekyll-theme-architect
+theme: jekyll-theme-slate
 plugins:
   - jekyll-relative-links
 relative_links:
