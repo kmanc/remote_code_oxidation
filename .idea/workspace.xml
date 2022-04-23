@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="da8b2084-434c-402e-bd51-269df406b544" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/_config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/process_hollowing/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/process_hollowing/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/process_migration/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/process_migration/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tcp_reverse_shell/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/tcp_reverse_shell/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

