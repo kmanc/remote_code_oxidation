@@ -6,9 +6,9 @@ relative_links:
   enabled: true
   collections: true
 include:
-  - readme.md
   - hash_params.md
   - process_hollowing.md
   - process_migration.md
   - tcp_reverse_shell.md
   - xor_params.md
+  - LICENSE

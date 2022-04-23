@@ -1,37 +1,77 @@
-## Welcome to GitHub Pages
+---
+title: "Remote Code Oxidation"
+---
 
-You can use the [editor on GitHub](https://github.com/kmanc/remote_code_oxidation/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+# Remote Code Oxidation (RCO)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+[![RCO for Linux targets](https://github.com/kmanc/remote_code_oxidation/actions/workflows/linux.yml/badge.svg?style=flat)](https://github.com/kmanc/remote_code_oxidation/actions/workflows/linux.yml)
+[![RCO for Windows targets](https://github.com/kmanc/remote_code_oxidation/actions/workflows/windows.yml/badge.svg?style=flat)](https://github.com/kmanc/remote_code_oxidation/actions/workflows/windows.yml)
+![language](https://img.shields.io/github/languages/top/kmanc/remote_code_oxidation?style=flat&color=orange)
+![license](https://img.shields.io/github/license/kmanc/remote_code_oxidation?style=flat&color=blueviolet)
 
-### Markdown
+Remote Code Oxidation is a collection of offensive security tools written in Rust. My main goal for the project is to enable offensive security professionals and practitioners to prepare the tools needed for an engagement with as little overhead as possible.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+RCO tools can be compiled on either Linux or Windows systems to provide its users flexibility in their attack infrastructure. Similarly the tools work against either Linux or Windows targets to suit the needs of the task at hand. 
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
+## Tools list
+[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fhash_params.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/hash_params) 
 
-- Bulleted
-- List
+[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_hollowing.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/process_hollowing)
 
-1. Numbered
-2. List
+[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_migration.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/process_migration)  
 
-**Bold** and _Italic_ and `Code` text
+[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Ftcp_reverse_shell.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/tcp_reverse_shell)
 
-[Link](url) and ![Image](src)
+[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fxor_params.json)](https://github.com/kmanc/remote_code_oxidation/tree/master/xor_params) 
+
+## Setup
+
+Clone the repo
+```commandline
+git clone https://github.com/kmanc/remote_code_oxidation.git
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 
-### Jekyll Themes
+### From Linux host for Linux target
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/kmanc/remote_code_oxidation/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Install Rust
+```commandline
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
 
-### Support or Contact
+Add dependencies for compiling
+```commandline
+sudo apt install build-essential
+```
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+Build!
+```commandline
+cargo build [-p package_name] [--features [xor][antisand]] [--release]
+```
+
+
+### From Linux host for Windows target
+
+Install Rust
+```commandline
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Add dependencies for cross-compiling
+```commandline
+sudo apt install mingw-w64
+rustup target add x86_64-pc-windows-gnu
+```
+
+Build!
+```commandline
+cargo build --target x86_64-pc-windows-gnu [-p package_name] [--features [xor][antisand]] [--release]
+```
+
+
+### From Windows host for Linux target
+#### Todo
+
+### From Windows host for Windows target
+#### Todo
