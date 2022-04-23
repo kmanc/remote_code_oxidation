@@ -52,7 +52,7 @@ nc -nlvp 4444
 
 Target OS | Features                      | Detections                             | Screenshot
 --------- | ----------------------------- | -------------------------------------- | ----------
-Linux     | None                      | [7 / 40](https://kleenscan.com/scan_result/1177abafe77dc580337ec6294c68bdc4873ceb36a4eeac057fd0673c3ae50e7f)  | [![image](/assets/images/process_hollowing.png)](/assets/images/process_hollowing.png)
+Linux     | None                      | [7 / 40](https://kleenscan.com/scan_result/1177abafe77dc580337ec6294c68bdc4873ceb36a4eeac057fd0673c3ae50e7f)  | [![image](/assets/images/process_hollowing.png)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/images/process_hollowing.png)
 Linux     | `xor`                     | [0 / 40](https://kleenscan.com/scan_result/8a0268ca750a14fc93f40f6b1864f13ce94318c4c4a7ecc49dfeb332b9c9d860)  | ![image](/assets/images/process_hollowing_xor.png)
 Windows   | None                      | [12 / 40](https://kleenscan.com/scan_result/dd7858b48235bc782383fa5a929125369c7918d3c119a9196b0fdab791624763) | ![image](/assets/images/process_hollowing_exe.png)
 Windows   | `antisand`                | [12 / 40](https://kleenscan.com/scan_result/dc73a322924b772b90957aaffe8d2735acd6d6049e0607a1befada2bc5aa86f3) | ![image](/assets/images/process_hollowing_antisand_exe.png)
