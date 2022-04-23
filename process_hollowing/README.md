@@ -49,6 +49,7 @@ and change the shellcode to the shellcode generated in step 1
 <div class="datatable-begin"></div>
 
 Operating System | Features                      | Detections                             | Image
+---------------- | ----------------------------- | -------------------------------------- | -----
 Linux            | None                          | [7 / 40](https://kleenscan.com/scan_result/1177abafe77dc580337ec6294c68bdc4873ceb36a4eeac057fd0673c3ae50e7f) | ![image](https://user-images.githubusercontent.com/14863147/164796610-611fa25b-a631-4f44-8e03-d80d0333dced.png)
 Linux            | `xor`                         | [0 / 40](https://kleenscan.com/scan_result/8a0268ca750a14fc93f40f6b1864f13ce94318c4c4a7ecc49dfeb332b9c9d860) | ![image](https://user-images.githubusercontent.com/14863147/164796718-c37e8298-0a99-4b11-bcce-17638e31988a.png)
 
