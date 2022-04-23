@@ -9,6 +9,10 @@ defaults:
       path: "images"
     values:
       image: true
+  - scope:
+      path: "gifs"
+    values:
+      image: true
 include:
   - README.md
   - LICENSE
