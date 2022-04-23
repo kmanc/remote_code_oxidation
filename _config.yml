@@ -6,7 +6,6 @@ relative_links:
   collections: true
 include:
   - README.md
-  - LICENSE
   - hash_params/README.md
   - process_hollowing/README.md
   - process_migration/README.md
