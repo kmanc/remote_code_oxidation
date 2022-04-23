@@ -23,9 +23,9 @@ The reverse shells for both Linux and Windows work by establishing a [Transmissi
 
 ## Using it
 
-1.  [Not shown in GIF] Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
+1.  *[Not shown in demo]* Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) 
 and change the IP address and port to match the IP address of your attacking machine and the port you will use for a listener respectively
-2.  [Not shown in GIF] Compile the executable
+2.  *[Not shown in demo]* Compile the executable
     1.  For Linux targets
     ```commandline
     cargo build -p tcp_reverse_shell [antisand][,][antistring]] --release
