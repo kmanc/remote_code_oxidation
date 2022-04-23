@@ -1,4 +1,4 @@
-theme: jekyll-theme-dinky
+theme: jekyll-theme-hacker
 plugins:
   - jekyll-relative-links
 relative_links:
