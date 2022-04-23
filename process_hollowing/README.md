@@ -9,7 +9,7 @@ datatable: true
 
 Target OS | Demo
 --------- | ----
-Linux     | ![gif](gifs/process_hollowing.gif)
+Linux     | ![gif](/gifs/process_hollowing.gif)
 Windows   | [![gif](https://user-images.githubusercontent.com/14863147/151642061-6df0f601-3f07-4e0c-aaf5-fbbc229de2e0.gif)](https://user-images.githubusercontent.com/14863147/151642061-6df0f601-3f07-4e0c-aaf5-fbbc229de2e0.gif)
 
 
