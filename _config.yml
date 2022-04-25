@@ -1,5 +1,4 @@
 theme: jekyll-theme-cayman
-markdown: kramdown
 plugins:
   - jekyll-relative-links
 relative_links:
