@@ -31,7 +31,6 @@ and change the shellcode to the shellcode generated in step 1
 3.  *[Optional - shown in [xor_params demo](https://kmanc.github.io/remote_code_oxidation/xor_params.html)]* Encrypt the shellcode and target process using [xor_params](https://github.com/kmanc/remote_code_oxidation/blob/master/xor_shellcode) and update the encrypted shellcode value in [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs)  
 4.  *[Not shown in demo]* Compile the executable, only including `--features xor` if you did step 3
     1.  Build for Linux target
-    {% include code_header.html %}
     ```commandline
     cargo build -p process_hollowing [antisand][,][antistring][,][xor]] --release
     ```
