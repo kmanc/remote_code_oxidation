@@ -12,3 +12,4 @@ include:
   - tcp_reverse_shell.md
   - xor_params.md
   - LICENSE
+  - assets/js/copy_code.js
