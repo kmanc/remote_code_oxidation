@@ -1,6 +1,6 @@
 [package]
 name = "process_hollowing"
-version = "1.6.1"
+version = "1.6.2"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.59"
@@ -21,7 +21,7 @@ rco_utils = {path = "../rco_utils"}
 nix = ">=0.16"
 
 [target.'cfg(windows)'.dependencies]
-windows.version = ">=0.35.0"
+windows.version = ">=0.36.0"
 windows.features = [
     "Win32_Foundation",
     "Win32_Security",

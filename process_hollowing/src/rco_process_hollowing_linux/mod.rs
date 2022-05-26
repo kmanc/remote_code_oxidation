@@ -15,8 +15,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
          
          // Dump the registers for the child process
          let registers = match getregs(child) {
-            Err(error) => panic!("Could not get registers for {target_process}: {error}"),
-            Ok(value) => value
+            Ok(value) => value,
+            Err(error) => panic!("Could not get registers for {target_process}: {error}")
          };
 
          // Copy RIP to a mutable variable
