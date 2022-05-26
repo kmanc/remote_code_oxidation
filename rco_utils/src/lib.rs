@@ -200,7 +200,10 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
     // Call LoadLibraryA on a DLL to get its base address
     let mut lib_filename: PCSTR = unsafe { mem::zeroed() };
     lib_filename.0 = CString::new(dll).unwrap().into_raw() as *mut u8;
-    let library_base = unsafe { LoadLibraryA(lib_filename) };
+    let library_base = match unsafe { LoadLibraryA(lib_filename) } {
+        Ok(value) => value,
+        Err(_) => panic!("Could not load {lib_filename:?}")
+    };
     let library_base_usize = library_base.0 as usize;
 
     // Get a pointer to the DOS header

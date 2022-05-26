@@ -45,8 +45,8 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
 
     // Dump the registers for the target process
     let mut registers = match getregs(target_pid) {
-        Err(error) => panic!("Could not get registers for {target_process}: {error}"),
-        Ok(value) => value
+        Ok(value) => value,
+        Err(error) => panic!("Could not get registers for {target_process}: {error}")
     };
 
     // Copy the RIP register to a mutable variable, then increment RIP by 2
