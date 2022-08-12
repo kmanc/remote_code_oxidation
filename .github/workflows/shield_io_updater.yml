@@ -2,9 +2,9 @@ name: Shields data builder
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   update-reverse-shell:
