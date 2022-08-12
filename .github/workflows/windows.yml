@@ -2,11 +2,11 @@ name: RCO for Windows targets
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   push:
-    branches: [ master ]
+    branches: [ main ]
   workflow_dispatch:
-    branches: [ master ]
+    branches: [ main ]
 
 env:
   CARGO_TERM_COLOR: always
