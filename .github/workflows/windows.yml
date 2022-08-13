@@ -26,7 +26,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build reverse shell for Windows
@@ -45,7 +45,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build reverse shell for Windows
@@ -64,7 +64,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build reverse shell for Windows
@@ -83,7 +83,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build reverse shell for Windows
@@ -102,7 +102,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build process migration for Windows
@@ -121,7 +121,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build process migration for Windows
@@ -140,7 +140,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build process migration for Windows
@@ -159,7 +159,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build process migration for Windows
@@ -178,7 +178,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build process migration for Windows
@@ -197,7 +197,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build process hollowing for Windows
@@ -216,7 +216,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build process hollowing for Windows
@@ -235,7 +235,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build process hollowing for Windows
@@ -254,7 +254,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build process hollowing for Windows
@@ -273,7 +273,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build process hollowing for Windows
@@ -292,7 +292,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build xor shellcode for Windows
@@ -311,7 +311,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build xor shellcode for Windows
@@ -330,7 +330,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build all for Windows
@@ -349,7 +349,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build all for Windows
@@ -368,7 +368,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build all for Windows
@@ -387,7 +387,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build all for Windows
@@ -406,7 +406,7 @@ jobs:
       run: sudo apt-get -y install mingw-w64
     - name: Add Windows build target
       run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Update cargo
       run: cargo update
     - name: Build all for Windows
