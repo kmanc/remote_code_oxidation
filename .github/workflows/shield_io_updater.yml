@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         ref: ${{ github.head_ref }}
     - uses: dante-signal31/rust-app-version@v1.0.0
@@ -20,12 +20,12 @@ jobs:
       with:
         cargo_toml_folder: 'tcp_reverse_shell/'
     - name: Update tcp_reverse_shell version
-      uses: jossef/action-set-json-field@v1
+      uses: jossef/action-set-json-field@v2
       with:
         file: '.custom_shields/tcp_reverse_shell.json'
         field: message
         value: ${{ steps.tcp_reverse_shell_ver.outputs.app_version }}
-    - uses: stefanzweifel/git-auto-commit-action@v4
+    - uses: stefanzweifel/git-auto-commit-action@v4.14.1
       with:
         commit_message: "Update reverse shell badge data via Github Action"
 
@@ -35,7 +35,7 @@ jobs:
     needs: update-reverse-shell
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         ref: ${{ github.head_ref }}
     - uses: dante-signal31/rust-app-version@v1.0.0
@@ -43,12 +43,12 @@ jobs:
       with:
         cargo_toml_folder: 'process_migration/'
     - name: Update process_migration version
-      uses: jossef/action-set-json-field@v1
+      uses: jossef/action-set-json-field@v2
       with:
         file: '.custom_shields/process_migration.json'
         field: message
         value: ${{ steps.process_migration_ver.outputs.app_version }}
-    - uses: stefanzweifel/git-auto-commit-action@v4
+    - uses: stefanzweifel/git-auto-commit-action@v4.14.1
       with:
         commit_message: "Update process migration badge data via Github Action"
 
@@ -58,7 +58,7 @@ jobs:
     needs: update-process-migration
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         ref: ${{ github.head_ref }}
     - uses: dante-signal31/rust-app-version@v1.0.0
@@ -66,12 +66,12 @@ jobs:
       with:
         cargo_toml_folder: 'process_hollowing/'
     - name: Update process_hollowing version
-      uses: jossef/action-set-json-field@v1
+      uses: jossef/action-set-json-field@v2
       with:
         file: '.custom_shields/process_hollowing.json'
         field: message
         value: ${{ steps.process_hollowing_ver.outputs.app_version }}
-    - uses: stefanzweifel/git-auto-commit-action@v4
+    - uses: stefanzweifel/git-auto-commit-action@v4.14.1
       with:
         commit_message: "Update process hollowing badge data via Github Action"
 
@@ -81,7 +81,7 @@ jobs:
     needs: update-process-hollowing
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         ref: ${{ github.head_ref }}
     - uses: dante-signal31/rust-app-version@v1.0.0
@@ -89,12 +89,12 @@ jobs:
       with:
         cargo_toml_folder: 'xor_params/'
     - name: Update xor_params version
-      uses: jossef/action-set-json-field@v1
+      uses: jossef/action-set-json-field@v2
       with:
         file: '.custom_shields/xor_params.json'
         field: message
         value: ${{ steps.xor_params_ver.outputs.app_version }}
-    - uses: stefanzweifel/git-auto-commit-action@v4
+    - uses: stefanzweifel/git-auto-commit-action@v4.14.1
       with:
         commit_message: "Update xor params badge data via Github Action"
 
@@ -104,7 +104,7 @@ jobs:
     needs: update-xor-params
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         ref: ${{ github.head_ref }}
     - uses: dante-signal31/rust-app-version@v1.0.0
@@ -112,11 +112,11 @@ jobs:
       with:
         cargo_toml_folder: 'hash_params/'
     - name: Update hash_params version
-      uses: jossef/action-set-json-field@v1
+      uses: jossef/action-set-json-field@v2
       with:
         file: '.custom_shields/hash_params.json'
         field: message
         value: ${{ steps.hash_params_ver.outputs.app_version }}
-    - uses: stefanzweifel/git-auto-commit-action@v4
+    - uses: stefanzweifel/git-auto-commit-action@v4.14.1
       with:
         commit_message: "Update hash params badge data via Github Action"
