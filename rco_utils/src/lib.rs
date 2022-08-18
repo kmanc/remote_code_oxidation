@@ -5,9 +5,6 @@ use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
 #[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
-extern crate windows;
-
-#[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
 use std::ffi::CString;
 #[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
 use std::mem;
@@ -15,9 +12,6 @@ use std::mem;
 use windows::core::PCSTR;
 #[cfg(all(windows, feature = "antisand", feature = "antistring"))]
 use core::ffi::c_void;
-
-#[cfg(all(windows, feature = "antisand"))]
-extern crate rand;
 
 #[cfg(all(windows, feature = "antisand"))]
 use rand::distributions::Alphanumeric;
