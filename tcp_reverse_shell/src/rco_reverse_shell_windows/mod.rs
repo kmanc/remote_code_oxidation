@@ -1,4 +1,3 @@
-extern crate windows;
 use std::{mem, ptr};
 use std::ffi::{CStr, CString, c_void};
 use windows::core::{PCSTR, PSTR};

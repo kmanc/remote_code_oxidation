@@ -117,6 +117,6 @@ jobs:
         file: '.custom_shields/hash_params.json'
         field: message
         value: ${{ steps.hash_params_ver.outputs.app_version }}
-    - uses: stefanzweifel/git-auto-commit-action@v4.14.1.14.1
+    - uses: stefanzweifel/git-auto-commit-action@v4.14.1
       with:
         commit_message: "Update hash params badge data via Github Action"

