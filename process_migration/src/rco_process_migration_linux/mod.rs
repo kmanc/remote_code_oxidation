@@ -1,5 +1,3 @@
-extern crate nix;
-
 use nix::sys::ptrace::{attach, detach, getregs, setregs, write};
 use nix::sys::wait::{waitpid, WaitPidFlag};
 use nix::unistd::Pid;

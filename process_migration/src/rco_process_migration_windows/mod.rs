@@ -1,4 +1,3 @@
-extern crate windows;
 use core::ffi::c_void;
 use std::{mem, ptr};
 use windows::Win32::Foundation::CHAR;
