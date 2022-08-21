@@ -82,7 +82,7 @@ checksum = "eb9f9e6e233e5c4a35559a617bf40a4ec447db2e84c20b55a6f83167b7e57872"
 
 [[package]]
 name = "process_hollowing"
-version = "1.6.2"
+version = "1.6.3"
 dependencies = [
  "nix",
  "rco_config",
@@ -92,7 +92,7 @@ dependencies = [
 
 [[package]]
 name = "process_migration"
-version = "1.8.2"
+version = "1.8.3"
 dependencies = [
  "nix",
  "rco_config",
@@ -144,7 +144,7 @@ dependencies = [
 
 [[package]]
 name = "tcp_reverse_shell"
-version = "1.2.1"
+version = "1.2.2"
 dependencies = [
  "rco_config",
  "rco_utils",
