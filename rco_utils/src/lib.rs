@@ -96,10 +96,10 @@ pub fn pound_sand() -> bool {
     // Call InternetOpenA to get a handle that can be used in an actual internet request
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopena
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenA.html
-    let mut lpsz_agent: PCSTR = unsafe { mem::zeroed() };
+    let mut lpsz_agent = PCSTR::null();
     lpsz_agent.0 = CString::new("Name in user-agent").unwrap().into_raw() as *mut u8;
-    let lpsz_proxy: PCSTR = unsafe { mem::zeroed() };
-    let lpsz_proxy_bypass: PCSTR = unsafe { mem::zeroed() };
+    let lpsz_proxy = PCSTR::null();
+    let lpsz_proxy_bypass = PCSTR::null();
     let internet_handle = unsafe { InternetOpenA(lpsz_agent, 0, lpsz_proxy, lpsz_proxy_bypass, 0) };
 
     // Generate a "website" to search for
@@ -117,7 +117,7 @@ pub fn pound_sand() -> bool {
     // Call InternetOpenUrlA on the fake website; if there is a response, it's a sandbox trying to get you to take further action
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenurla
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenUrlA.html
-    let mut lpsz_url: PCSTR = unsafe { mem::zeroed() };
+    let mut lpsz_url = PCSTR::null();
     lpsz_url.0 = CString::new(full_link).unwrap().into_raw() as *mut u8;
     let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, &[], 0, 0) };
     if website != 0 as _ {
@@ -134,10 +134,10 @@ pub fn pound_sand() -> bool {
 pub fn pound_sand() -> bool {
     // See line 90
     let function = find_function_address("Wininet", 0x4b98c7b42f5ce34f).unwrap();
-    let mut lpsz_agent: PCSTR = unsafe { mem::zeroed() };
+    let mut lpsz_agent = PCSTR::null();
     lpsz_agent.0 = CString::new("Name in user-agent").unwrap().into_raw() as *mut u8;
-    let lpsz_proxy: PCSTR = unsafe { mem::zeroed() };
-    let lpsz_proxy_bypass: PCSTR = unsafe { mem::zeroed() };
+    let lpsz_proxy = PCSTR::null();
+    let lpsz_proxy_bypass = PCSTR::null();
     let internet_handle = unsafe {
         mem::transmute::<*const (), fn(PCSTR, i32, PCSTR, PCSTR, i32) -> *mut c_void>
             (function)(lpsz_agent, 0, lpsz_proxy, lpsz_proxy_bypass, 0)
@@ -156,7 +156,7 @@ pub fn pound_sand() -> bool {
 
     // See line 111
     let function = find_function_address("Wininet", 0x275e2d4fe536ed19).unwrap();
-    let mut lpsz_url: PCSTR = unsafe { mem::zeroed() };
+    let mut lpsz_url = PCSTR::null();
     lpsz_url.0 = CString::new(full_link).unwrap().into_raw() as *mut u8;
     let website = unsafe {
         mem::transmute::<*const (), fn(*mut c_void, PCSTR, &[u8], u32, usize) -> *mut c_void>
@@ -204,7 +204,7 @@ pub fn calculate_hash<T: Hash>(t: &T) -> u64 {
 #[cfg(all(windows, feature = "antistring"))]
 pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box<dyn Error>> {
     // Call LoadLibraryA on a DLL to get its base address
-    let mut lib_filename: PCSTR = unsafe { mem::zeroed() };
+    let mut lib_filename = PCSTR::null();
     lib_filename.0 = CString::new(dll).unwrap().into_raw() as *mut u8;
     let library_base = match unsafe { LoadLibraryA(lib_filename) } {
         Ok(value) => value,

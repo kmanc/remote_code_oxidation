@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
   "label": "tcp_reverse_shell",
-  "message": "1.2.2",
+  "message": "1.2.3",
   "color": "blue"
 }

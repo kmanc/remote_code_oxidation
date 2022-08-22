@@ -1,6 +1,6 @@
 [package]
 name = "xor_params"
-version = "1.1.2"
+version = "1.2.0"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.59"
@@ -9,4 +9,4 @@ rust-version = "1.59"
 
 [dependencies]
 rco_config = {path = "../rco_config"}
-rco_utils = {path = "../rco_utils", features = ["xor"] }
+rco_utils = {path = "../rco_utils" }
