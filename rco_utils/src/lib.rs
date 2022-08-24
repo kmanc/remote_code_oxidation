@@ -275,10 +275,6 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
     Err(format!("Could not find the function '{name_hash:x}' in '{dll}'").into())
 }
 
-
-// Based on https://rust-lang.github.io/unsafe-code-guidelines/layout/function-pointers.html
-// This is a safe transmute because it will be guaranteed on Windows
-
 #[macro_export]
 macro_rules! test {
     (
@@ -286,9 +282,11 @@ macro_rules! test {
             $x:expr; [ $( $y:ty ),* ]; [ $( $z:ty ),* ]
         );*
     ) => {
-        //println!("X {:?}, Z {:?}", $( $x )?, ( $($( $z ),*),* ))
+        // Based on https://rust-lang.github.io/unsafe-code-guidelines/layout/function-pointers.html
+        // This is a safe transmute because it will be guaranteed on Windows
+        // So the macro is safe despite the unsafe code
         unsafe {
-            std::mem::transmute::<*const (), fn(( $($( $y ),*),* )) -> $($( $z ),*),*>($( $x ),*)
+            std::mem::transmute::<*const (), fn( $($( $y ),*),* ) -> $($( $z ),*),*>($( $x ),*)
         }
     }
 }
