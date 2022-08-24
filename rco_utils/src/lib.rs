@@ -275,18 +275,16 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
     Err(format!("Could not find the function '{name_hash:x}' in '{dll}'").into())
 }
 
+#[cfg(all(windows, feature = "antistring"))]
+pub fn construct_win32_function<T, U, V>(dll: &str, name_hash: u64) -> Result<fn(T, U) -> V, Box<dyn Error>> {
+    
+    // NOTE: This isn't gonna work. Best bet is a macro
 
-//#[cfg(all(windows, feature = "antistring"))]
-//https://rust-lang.github.io/unsafe-code-guidelines/layout/function-pointers.html
-pub fn test_mute(in_thing: *const (), b: bool) -> fn(T) -> U {
-    return if b {
-        unsafe {
-            mem::transmute::<*const (), fn(u16, WSAData)>(in_thing)
-        }
-    } else {
-        unsafe {
-            mem::transmute::<*const (), fn(i16, String) -> String>(in_thing)
-        }
+    // Based on https://rust-lang.github.io/unsafe-code-guidelines/layout/function-pointers.html
+    // This is a safe transmute because it will be guaranteed on Windows
+    unsafe {
+        return Ok(mem::transmute::<*const (), fn(T, U) -> V>(function_address))
     }
 
+    Err(format!("Could not find the function '{name_hash:x}' in '{dll}'").into())
 }
