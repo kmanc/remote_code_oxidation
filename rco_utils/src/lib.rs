@@ -277,6 +277,7 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
 
 
 //#[cfg(all(windows, feature = "antistring"))]
+//https://rust-lang.github.io/unsafe-code-guidelines/layout/function-pointers.html
 pub fn test_mute(in_thing: *const (), b: bool) -> fn(T) -> U {
     return if b {
         unsafe {
