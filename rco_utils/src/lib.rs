@@ -274,3 +274,18 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
     }
     Err(format!("Could not find the function '{name_hash:x}' in '{dll}'").into())
 }
+
+
+//#[cfg(all(windows, feature = "antistring"))]
+pub fn test_mute(in_thing: *const (), b: bool) -> fn(T) -> U {
+    return if b {
+        unsafe {
+            mem::transmute::<*const (), fn(u16, WSAData)>(in_thing)
+        }
+    } else {
+        unsafe {
+            mem::transmute::<*const (), fn(i16, String) -> String>(in_thing)
+        }
+    }
+
+}
