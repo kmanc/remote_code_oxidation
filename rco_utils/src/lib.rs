@@ -283,10 +283,12 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
 macro_rules! test {
     (
         $(
-            $x:expr; [ $( $y:ty ),* ]; [ $( $z:expr ),* ]
+            $x:expr; [ $( $y:ty ),* ]; [ $( $z:ty ),* ]
         );*
     ) => {
-        println!("X {:?}, Z {:?}", $( $x )?, ( $($( $z ),*),* ))
-        //std::mem::transmute::<*const (), fn(( $($( $y ),*),* )) -> $($( $z ),*),*>($( $x ),*)
+        //println!("X {:?}, Z {:?}", $( $x )?, ( $($( $z ),*),* ))
+        unsafe {
+            std::mem::transmute::<*const (), fn(( $($( $y ),*),* )) -> $($( $z ),*),*>($( $x ),*)
+        }
     }
 }
