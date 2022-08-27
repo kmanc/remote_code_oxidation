@@ -275,15 +275,21 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
     Err(format!("Could not find the function '{name_hash:x}' in '{dll}'").into())
 }
 
+
 #[macro_export]
-macro_rules! test {
+macro_rules! construct_win32_function {
+    // Take in:
+    //   one x - the function pointer
+    //   zero or more y - the function argument data types
+    //   zero or more z - the function return data types
     (
         $(
             $x:expr; [ $( $y:ty ),* ]; [ $( $z:ty ),* ]
         );*
     ) => {
+        // Interpret the memory at the provided function pointer "x" as a function with args "y" and return "z"
         // Based on https://rust-lang.github.io/unsafe-code-guidelines/layout/function-pointers.html
-        // This is a safe transmute because it will be guaranteed on Windows
+        //   this is a safe transmute because it will be guaranteed on Windows
         // So the macro is safe despite the unsafe code
         unsafe {
             std::mem::transmute::<*const (), fn( $($( $y ),*),* ) -> $($( $z ),*),*>($( $x ),*)

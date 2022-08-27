@@ -1,6 +1,6 @@
 [package]
 name = "tcp_reverse_shell"
-version = "1.2.3"
+version = "1.3.0"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.59"

