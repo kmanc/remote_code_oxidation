@@ -12,6 +12,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+
   linux-reverse-shell:
 
     runs-on: ubuntu-latest
@@ -219,6 +220,19 @@ jobs:
       run: cargo update
     - name: Build hash shellcode for Linux
       run: cargo build -p hash_params --verbose
+
+  linux-remote-access-trojan:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build remote access trojan for Linux
+      run: cargo build -p remote_access_trojan --verbose
 
   linux-all:
 

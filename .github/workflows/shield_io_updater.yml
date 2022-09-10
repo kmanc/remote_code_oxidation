@@ -120,3 +120,25 @@ jobs:
     - uses: stefanzweifel/git-auto-commit-action@v4.14.1
       with:
         commit_message: "Update hash params badge data via Github Action"
+
+  update-remote-access-trojan:
+    runs-on: ubuntu-latest
+    needs: update-hash-params
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.head_ref }}
+    - uses: dante-signal31/rust-app-version@v1.0.0
+      id: remote_access_trojan_ver
+      with:
+        cargo_toml_folder: 'remote_access_trojan/'
+    - name: Update remote_access_trojan version
+      uses: jossef/action-set-json-field@v2
+      with:
+        file: '.custom_shields/remote_access_trojan.json'
+        field: message
+        value: ${{ steps.remote_access_trojan_ver.outputs.app_version }}
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "Update remote access trojan badge data via Github Action"

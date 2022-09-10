@@ -8,6 +8,7 @@ members = [
     "rco_utils",
     "tcp_reverse_shell",    
     "xor_params",
+    "remote_access_trojan",
 ]
 
 [profile.release]
