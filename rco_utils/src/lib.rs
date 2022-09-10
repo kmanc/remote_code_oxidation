@@ -292,7 +292,7 @@ macro_rules! construct_win32_function {
         //   this is a safe transmute because it will be guaranteed on Windows
         // So the macro is safe despite the unsafe code
         unsafe {
-            std::mem::transmute::<*const (), fn( $($( $y ),*),* ) -> $($( $z ),*),*>($( $x ),*)
+            std::mem::transmute::<*const (), unsafe fn( $($( $y ),*),* ) -> $($( $z ),*),*>($( $x ),*)
         }
     }
 }
