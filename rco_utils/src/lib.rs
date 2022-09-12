@@ -234,12 +234,9 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
         (library_base_usize + export_directory_rva as usize) as *const IMAGE_EXPORT_DIRECTORY;
 
     // Calculate the base addresses of the arrays holding function information
-    let names_address =
-        unsafe { library_base_usize + (*image_export_directory).AddressOfNames as usize };
-    let ordinals_address =
-        unsafe { library_base_usize + (*image_export_directory).AddressOfNameOrdinals as usize };
-    let functions_address =
-        unsafe { library_base_usize + (*image_export_directory).AddressOfFunctions as usize };
+    let names_address = unsafe { library_base_usize + (*image_export_directory).AddressOfNames as usize };
+    let ordinals_address = unsafe { library_base_usize + (*image_export_directory).AddressOfNameOrdinals as usize };
+    let functions_address = unsafe { library_base_usize + (*image_export_directory).AddressOfFunctions as usize };
 
     // Loop over every function looking for the desired name
     let num_functions = unsafe { (*image_export_directory).NumberOfFunctions };
@@ -254,8 +251,7 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
         let function_name_rva: u32 = unsafe { ptr::read(function_name_rva_address) as u32 };
 
         // Calculate the function name's real address
-        let function_name_address: *const i8 =
-            (library_base_usize + function_name_rva as usize) as *const i8;
+        let function_name_address: *const i8 = (library_base_usize + function_name_rva as usize) as *const i8;
 
         // Read the function name from its address
         let function_name = unsafe { CStr::from_ptr(function_name_address).to_string_lossy() };
@@ -276,16 +272,13 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
             let into_functions = mem::size_of::<u32>() * (ordinal_offset as usize);
 
             // Calculate the function address's location
-            let function_address_rva_address: *const usize =
-                (functions_address + into_functions) as *const usize;
+            let function_address_rva_address: *const usize = (functions_address + into_functions) as *const usize;
 
             // Read the function address's location from memory
-            let function_address_rva: u32 =
-                unsafe { ptr::read(function_address_rva_address) as u32 };
+            let function_address_rva: u32 = unsafe { ptr::read(function_address_rva_address) as u32 };
 
             // Calculate the function's real address
-            let function_address: *const () =
-                (library_base_usize + function_address_rva as usize) as *const ();
+            let function_address: *const () = (library_base_usize + function_address_rva as usize) as *const ();
 
             return Ok(function_address);
         }
