@@ -1,0 +1,15 @@
+theme: jekyll-theme-cayman
+markdown: kramdown
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: true
+include:
+  - hash_params.md
+  - process_hollowing.md
+  - process_migration.md
+  - tcp_reverse_shell.md
+  - xor_params.md
+  - LICENSE
+  - assets/js/copy_code.js
