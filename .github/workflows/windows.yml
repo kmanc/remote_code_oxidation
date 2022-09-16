@@ -13,329 +13,6 @@ env:
 
 jobs: 
  
-  windows-reverse-shell:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build reverse shell for Windows
-      run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --verbose
-
-  windows-reverse-shell-antisand:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build reverse shell for Windows
-      run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --features antisand --verbose
-
-  windows-reverse-shell-antistring:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build reverse shell for Windows
-      run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --features antistring --verbose
-
-  windows-reverse-shell-all:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build reverse shell for Windows
-      run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --features antisand,antistring --verbose
-  
-  windows-process-migration:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build process migration for Windows
-      run: cargo build -p process_migration --target x86_64-pc-windows-gnu --verbose
-
-  windows-process-migration-xor:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build process migration for Windows
-      run: cargo build -p process_migration --target x86_64-pc-windows-gnu --features xor --verbose
-
-  windows-process-migration-antisand:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build process migration for Windows
-      run: cargo build -p process_migration --target x86_64-pc-windows-gnu --features antisand --verbose
-
-  windows-process-migration-antistring:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build process migration for Windows
-      run: cargo build -p process_migration --target x86_64-pc-windows-gnu --features antistring --verbose
-
-  windows-process-migration-all:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build process migration for Windows
-      run: cargo build -p process_migration --target x86_64-pc-windows-gnu --features xor,antisand,antistring --verbose
-
-  windows-process-hollowing:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build process hollowing for Windows
-      run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --verbose
-
-  windows-process-hollowing-xor:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build process hollowing for Windows
-      run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --features xor --verbose
-
-  windows-process-hollowing-antisand:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build process hollowing for Windows
-      run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --features antisand --verbose
-
-  windows-process-hollowing-antistring:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build process hollowing for Windows
-      run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --features antistring --verbose
-
-  windows-process-hollowing-all:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build process hollowing for Windows
-      run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --features xor,antisand,antistring --verbose
-
-  windows-xor-params:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build xor params for Windows
-      run: cargo build -p xor_params --target x86_64-pc-windows-gnu --verbose
-
-  windows-hash-params:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build hash params for Windows
-      run: cargo build -p hash_params --target x86_64-pc-windows-gnu --verbose
-
-  windows-remote-access-trojan:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v2
-    - name: Update cargo
-      run: cargo update
-    - name: Build remote access trojan for Windows
-      run: cargo build -p remote_access_trojan --target x86_64-pc-windows-gnu --verbose
-
   windows-all:
 
     runs-on: ubuntu-latest
@@ -354,25 +31,6 @@ jobs:
       run: cargo update
     - name: Build all for Windows
       run: cargo build --target x86_64-pc-windows-gnu --verbose
-
-  windows-all-xor:
-
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Update rust
-      run: rustup update
-    - name: Apt update
-      run: sudo apt-get update
-    - name: Install linker
-      run: sudo apt-get -y install mingw-w64
-    - name: Add Windows build target
-      run: rustup target add x86_64-pc-windows-gnu
-    - uses: actions/checkout@v3
-    - name: Update cargo
-      run: cargo update
-    - name: Build all for Windows
-      run: cargo build --target x86_64-pc-windows-gnu --features xor --verbose
 
   windows-all-antisand:
 
@@ -412,6 +70,25 @@ jobs:
     - name: Build all for Windows
       run: cargo build --target x86_64-pc-windows-gnu --features antistring --verbose
 
+  windows-all-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build all for Windows
+      run: cargo build --target x86_64-pc-windows-gnu --features xor --verbose
+
   windows-all-all:
 
     runs-on: ubuntu-latest
@@ -429,4 +106,327 @@ jobs:
     - name: Update cargo
       run: cargo update
     - name: Build all for Windows
-      run: cargo build --target x86_64-pc-windows-gnu --features xor,antisand,antistring --verbose
+      run: cargo build --target x86_64-pc-windows-gnu --features antisand,antistring,xor --verbose
+  
+  windows-hash-params:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build xor shellcode for Windows
+      run: cargo build -p hash_params --target x86_64-pc-windows-gnu --verbose
+      
+  windows-process-hollowing:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build process hollowing for Windows
+      run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --verbose
+
+  windows-process-hollowing-antisand:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build process hollowing for Windows
+      run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --features antisand --verbose
+
+  windows-process-hollowing-antistring:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build process hollowing for Windows
+      run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --features antistring --verbose
+
+  windows-process-hollowing-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build process hollowing for Windows
+      run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --features xor --verbose
+
+  windows-process-hollowing-all:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build process hollowing for Windows
+      run: cargo build -p process_hollowing --target x86_64-pc-windows-gnu --features antisand,antistring,xor --verbose
+
+  windows-process-migration:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build process migration for Windows
+      run: cargo build -p process_migration --target x86_64-pc-windows-gnu --verbose
+
+  windows-process-migration-antisand:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build process migration for Windows
+      run: cargo build -p process_migration --target x86_64-pc-windows-gnu --features antisand --verbose
+
+  windows-process-migration-antistring:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build process migration for Windows
+      run: cargo build -p process_migration --target x86_64-pc-windows-gnu --features antistring --verbose
+
+  windows-process-migration-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build process migration for Windows
+      run: cargo build -p process_migration --target x86_64-pc-windows-gnu --features xor --verbose
+
+  windows-process-migration-all:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build process migration for Windows
+      run: cargo build -p process_migration --target x86_64-pc-windows-gnu --features antisand,antistring,xor --verbose
+
+  windows-remote-access-trojan:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build remote access trojan for Windows
+      run: cargo build -p remote_access_trojan --target x86_64-pc-windows-gnu --verbose
+
+  windows-tcp-reverse-shell:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build reverse shell for Windows
+      run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --verbose
+
+  windows-tcp-reverse-shell-antisand:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build reverse shell for Windows
+      run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --features antisand --verbose
+
+  windows-tcp-reverse-shell-antistring:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build reverse shell for Windows
+      run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --features antistring --verbose
+
+  windows-tcp-reverse-shell-all:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build reverse shell for Windows
+      run: cargo build -p tcp_reverse_shell --target x86_64-pc-windows-gnu --features antisand,antistring --verbose
+      
+  windows-xor-params:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Update rust
+      run: rustup update
+    - name: Apt update
+      run: sudo apt-get update
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Update cargo
+      run: cargo update
+    - name: Build xor shellcode for Windows
+      run: cargo build -p xor_params --target x86_64-pc-windows-gnu --verbose

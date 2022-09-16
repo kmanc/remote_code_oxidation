@@ -1,0 +1,190 @@
+name: Clippy for all targets and all features, failing on any clippy warnings
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs: 
+ 
+  clippy-linux:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy -- -D warnings
+
+  clippy-linux-antisand:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features antisand -- -D warnings
+
+  clippy-linux-antistring:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features antistring -- -D warnings
+
+  clippy-linux-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features xor -- -D warnings
+
+  clippy-linux-antisand-antistring:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features antisand,antistring -- -D warnings
+
+  clippy-linux-antisand-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features antisand,xor -- -D warnings
+
+  clippy-linux-antistring-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features antistring,xor -- -D warnings
+
+  clippy-linux-antisand-antistring-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features antisand,antistring,xor -- -D warnings
+      
+  clippy-windows:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu -- -D warnings
+
+  clippy-windows-antisand:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features antisand -- -D warnings
+
+  clippy-windows-antistring:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features antistring -- -D warnings
+
+  clippy-windows-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features xor -- -D warnings
+
+  clippy-windows-antisand-antistring:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features antisand,antistring -- -D warnings
+
+  clippy-windows-antisand-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features antisand,xor -- -D warnings
+
+  clippy-windows-antistring-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features antistring,xor -- -D warnings
+
+  clippy-windows-antisand-antistring-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features antisand,antistring,xor -- -D warnings

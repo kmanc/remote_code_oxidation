@@ -14,7 +14,8 @@ fn xor_u8_slices(slice_one: &[u8], slice_two: &[u8]) -> Result<Vec<u8>, Box<dyn 
     if slice_one.len() != slice_two.len() {
         return Err("The given slices are not the same length".into());
     }
-    Ok(slice_one.iter()
+    Ok(slice_one
+        .iter()
         .zip(slice_two.iter())
         .map(|(&x1, &x2)| x1 ^ x2)
         .collect())
@@ -27,12 +28,7 @@ fn equalize_slice_len<T: std::clone::Clone>(slice_one: &[T], slice_two: &[T]) ->
     };
     (
         longer.to_vec(),
-        shorter
-            .iter()
-            .cloned()
-            .cycle()
-            .take(longer.len())
-            .collect()
+        shorter.iter().cloned().cycle().take(longer.len()).collect(),
     )
 }
 

