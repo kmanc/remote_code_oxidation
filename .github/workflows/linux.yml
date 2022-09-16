@@ -12,213 +12,6 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  linux-reverse-shell:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build reverse shell for Linux
-      run: cargo build -p tcp_reverse_shell --verbose
-
-  linux-reverse-shell-antisand:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build reverse shell for Linux
-      run: cargo build -p tcp_reverse_shell --features antisand --verbose
-
-  linux-reverse-shell-antistring:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build reverse shell for Linux
-      run: cargo build -p tcp_reverse_shell --features antistring --verbose
-
-  linux-reverse-shell-all:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build reverse shell for Linux
-      run: cargo build -p tcp_reverse_shell --features antisand,antistring --verbose
-
-  linux-process-migration:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build process migration for Linux
-      run: cargo build -p process_migration --verbose
-
-  linux-process-migration-xor:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build process migration for Linux
-      run: cargo build -p process_migration --features xor --verbose
-
-  linux-process-migration-antisand:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build process migration for Linux
-      run: cargo build -p process_migration --features antisand --verbose
-
-  linux-process-migration-antistring:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build process migration for Linux
-      run: cargo build -p process_migration --features antistring --verbose
-
-  linux-process-migration-all:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build process migration for Linux
-      run: cargo build -p process_migration --features xor,antisand,antistring --verbose
-
-  linux-process-hollowing:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build process hollowing for Linux
-      run: cargo build -p process_hollowing --verbose
-
-  linux-process-hollowing-xor:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build process hollowing for Linux
-      run: cargo build -p process_hollowing --features xor --verbose
-
-  linux-process-hollowing-antisand:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build process hollowing for Linux
-      run: cargo build -p process_hollowing --features antisand --verbose
-
-  linux-process-hollowing-antistring:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build process hollowing for Linux
-      run: cargo build -p process_hollowing --features antistring --verbose
-
-  linux-process-hollowing-all:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build process hollowing for Linux
-      run: cargo build -p process_hollowing --features xor,antisand,antistring --verbose
-
-  linux-xor-params:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build xor shellcode for Linux
-      run: cargo build -p xor_params --verbose
-
-  linux-hash-params:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build hash shellcode for Linux
-      run: cargo build -p hash_params --verbose
 
   linux-all:
 
@@ -232,19 +25,6 @@ jobs:
       run: cargo update
     - name: Build all for Linux
       run: cargo build --verbose
-
-  linux-all-xor:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Update rust
-      run: rustup update
-    - name: Update cargo
-      run: cargo update
-    - name: Build all for Linux
-      run: cargo build --features xor --verbose
 
   linux-all-antisand:
 
@@ -272,6 +52,19 @@ jobs:
     - name: Build all for Linux
       run: cargo build --features antistring --verbose
 
+  linux-all-xor:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build all for Linux
+      run: cargo build --features xor --verbose
+
   linux-all-all:
 
     runs-on: ubuntu-latest
@@ -283,4 +76,212 @@ jobs:
     - name: Update cargo
       run: cargo update
     - name: Build all for Linux
-      run: cargo build --features xor,antisand,antistring --verbose
+      run: cargo build --features antisand,antistring,xor --verbose
+
+  linux-hash-params:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build hash shellcode for Linux
+      run: cargo build -p hash_params --verbose
+
+  linux-process-hollowing:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build process hollowing for Linux
+      run: cargo build -p process_hollowing --verbose
+
+  linux-process-hollowing-antisand:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build process hollowing for Linux
+      run: cargo build -p process_hollowing --features antisand --verbose
+
+  linux-process-hollowing-antistring:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build process hollowing for Linux
+      run: cargo build -p process_hollowing --features antistring --verbose
+
+  linux-process-hollowing-xor:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build process hollowing for Linux
+      run: cargo build -p process_hollowing --features xor --verbose
+
+  linux-process-hollowing-all:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build process hollowing for Linux
+      run: cargo build -p process_hollowing --features antisand,antistring,xor --verbose
+
+  linux-process-migration:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build process migration for Linux
+      run: cargo build -p process_migration --verbose
+
+  linux-process-migration-antisand:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build process migration for Linux
+      run: cargo build -p process_migration --features antisand --verbose
+
+  linux-process-migration-antistring:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build process migration for Linux
+      run: cargo build -p process_migration --features antistring --verbose
+
+  linux-process-migration-xor:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build process migration for Linux
+      run: cargo build -p process_migration --features xor --verbose
+
+  linux-process-migration-all:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build process migration for Linux
+      run: cargo build -p process_migration --features antisand,antistring,xor --verbose
+
+  linux-tcp-reverse-shell:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build reverse shell for Linux
+      run: cargo build -p tcp_reverse_shell --verbose
+
+  linux-tcp-reverse-shell-antisand:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build reverse shell for Linux
+      run: cargo build -p tcp_reverse_shell --features antisand --verbose
+
+  linux-tcp-reverse-shell-antistring:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build reverse shell for Linux
+      run: cargo build -p tcp_reverse_shell --features antistring --verbose
+
+  linux-tcp-reverse-shell-all:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build reverse shell for Linux
+      run: cargo build -p tcp_reverse_shell --features antisand,antistring --verbose
+
+  linux-xor-params:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build xor shellcode for Linux
+      run: cargo build -p xor_params --verbose
