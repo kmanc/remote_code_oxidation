@@ -90,6 +90,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
     - uses: actions/checkout@v3
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu -- -D warnings
@@ -99,6 +103,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
     - uses: actions/checkout@v3
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features antisand -- -D warnings
@@ -108,6 +116,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
     - uses: actions/checkout@v3
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features antistring -- -D warnings
@@ -117,6 +129,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
     - uses: actions/checkout@v3
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features xor -- -D warnings
@@ -126,6 +142,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
     - uses: actions/checkout@v3
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features antisand,antistring -- -D warnings
@@ -135,6 +155,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
     - uses: actions/checkout@v3
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features antisand,xor -- -D warnings
@@ -144,6 +168,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
     - uses: actions/checkout@v3
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features antistring,xor -- -D warnings
@@ -153,6 +181,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: Install linker
+      run: sudo apt-get -y install mingw-w64
+    - name: Add Windows build target
+      run: rustup target add x86_64-pc-windows-gnu
     - uses: actions/checkout@v3
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features antisand,antistring,xor -- -D warnings
