@@ -13,6 +13,78 @@ env:
 
 jobs: 
  
+  clippy-lin-base:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy -- -D warnings
+
+  clippy-lin-antisand:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features antisand -- -D warnings
+
+  clippy-lin-antistring:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features antistring -- -D warnings
+
+  clippy-lin-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features xor -- -D warnings
+
+  clippy-lin-antisand-antistring:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features antisand,antistring -- -D warnings
+
+  clippy-lin-antisand-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features antisand,xor -- -D warnings
+
+  clippy-lin-antistring-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features antistring,xor -- -D warnings
+
+  clippy-lin-antisand-antistring-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --features antisand,antistring,xor -- -D warnings
+      
   clippy-win-base:
 
     runs-on: ubuntu-latest
@@ -20,4 +92,67 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Run clippy
-      run: cargo clippy -target x86_64-pc-windows-gnu -- -D warnings
+      run: cargo clippy --target x86_64-pc-windows-gnu -- -D warnings
+
+  clippy-win-antisand:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features antisand -- -D warnings
+
+  clippy-win-antistring:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features antistring -- -D warnings
+
+  clippy-win-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features xor -- -D warnings
+
+  clippy-win-antisand-antistring:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features antisand,antistring -- -D warnings
+
+  clippy-win-antisand-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features antisand,xor -- -D warnings
+
+  clippy-win-antistring-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features antistring,xor -- -D warnings
+
+  clippy-win-antisand-antistring-xor:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run clippy
+      run: cargo clippy --target x86_64-pc-windows-gnu --features antisand,antistring,xor -- -D warnings
