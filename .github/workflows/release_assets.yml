@@ -1,0 +1,446 @@
+name: Asset builder and uploader for releases
+
+on:
+  release:
+    types: [created]
+
+jobs:
+
+  linux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build all for Linux
+      run: cargo build --release
+    - name: Upload hash_params
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./target/release/hash_params
+        asset_name: hash_params
+        asset_content_type: binary/octet-stream
+    - name: Upload process_hollowing
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./target/release/process_hollowing
+        asset_name: process_hollowing
+        asset_content_type: binary/octet-stream
+    - name: Upload process_migration
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./target/release/process_migration
+        asset_name: process_migration
+        asset_content_type: binary/octet-stream
+    - name: Upload tcp_reverse_shell
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./target/release/tcp_reverse_shell
+        asset_name: tcp_reverse_shell
+        asset_content_type: binary/octet-stream
+    - name: Upload xor_params
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./target/release/xor_params
+        asset_name: xor_params
+        asset_content_type: binary/octet-stream
+
+  linux-xor:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Update rust
+      run: rustup update
+    - name: Update cargo
+      run: cargo update
+    - name: Build all xor for Linux
+      run: cargo build --features xor --release
+    - name: Upload process_hollowing
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./target/release/process_hollowing
+        asset_name: process_hollowing_plus_xor
+        asset_content_type: binary/octet-stream
+    - name: Upload process_migration
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./target/release/process_migration
+        asset_name: process_migration_plus_xor
+        asset_content_type: binary/octet-stream
+
+  windows:
+
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Update rust
+        run: rustup update
+      - name: Apt update
+        run: sudo apt-get update
+      - name: Install linker
+        run: sudo apt-get -y install mingw-w64
+      - name: Add Windows build target
+        run: rustup target add x86_64-pc-windows-gnu
+      - uses: actions/checkout@v3
+      - name: Update cargo
+        run: cargo update
+      - name: Build all for Windows
+        run: cargo build --target x86_64-pc-windows-gnu --release
+      - name: Upload hash_params
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/hash_params.exe
+          asset_name: hash_params.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload process_hollowing
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_hollowing.exe
+          asset_name: process_hollowing.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload process_migration
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_migration.exe
+          asset_name: process_migration.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload tcp_reverse_shell
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/tcp_reverse_shell.exe
+          asset_name: tcp_reverse_shell.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload xor_params
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/xor_params.exe
+          asset_name: xor_params.exe
+          asset_content_type: binary/octet-stream
+
+  windows-antisand:
+
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Update rust
+        run: rustup update
+      - name: Apt update
+        run: sudo apt-get update
+      - name: Install linker
+        run: sudo apt-get -y install mingw-w64
+      - name: Add Windows build target
+        run: rustup target add x86_64-pc-windows-gnu
+      - uses: actions/checkout@v3
+      - name: Update cargo
+        run: cargo update
+      - name: Build all for Windows
+        run: cargo build --target x86_64-pc-windows-gnu --features antisand --release
+      - name: Upload process_hollowing
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_hollowing.exe
+          asset_name: process_hollowing_plus_antisand.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload process_migration
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_migration.exe
+          asset_name: process_migration_plus_antisand.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload tcp_reverse_shell
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/tcp_reverse_shell.exe
+          asset_name: tcp_reverse_shell_plus_antisand.exe
+          asset_content_type: binary/octet-stream
+
+  windows-antisand-antistring:
+
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Update rust
+        run: rustup update
+      - name: Apt update
+        run: sudo apt-get update
+      - name: Install linker
+        run: sudo apt-get -y install mingw-w64
+      - name: Add Windows build target
+        run: rustup target add x86_64-pc-windows-gnu
+      - uses: actions/checkout@v3
+      - name: Update cargo
+        run: cargo update
+      - name: Build all for Windows
+        run: cargo build --target x86_64-pc-windows-gnu --features antisand,antistring --release
+      - name: Upload process_hollowing
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_hollowing.exe
+          asset_name: process_hollowing_plus_antisand_antistring.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload process_migration
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_migration.exe
+          asset_name: process_migration_plus_antisand_antistring.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload tcp_reverse_shell
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/tcp_reverse_shell.exe
+          asset_name: tcp_reverse_shell_plus_antisand_antistring.exe
+          asset_content_type: binary/octet-stream
+
+  windows-antisand-antistring-xor:
+
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Update rust
+        run: rustup update
+      - name: Apt update
+        run: sudo apt-get update
+      - name: Install linker
+        run: sudo apt-get -y install mingw-w64
+      - name: Add Windows build target
+        run: rustup target add x86_64-pc-windows-gnu
+      - uses: actions/checkout@v3
+      - name: Update cargo
+        run: cargo update
+      - name: Build all for Windows
+        run: cargo build --target x86_64-pc-windows-gnu --features antisand,antistring,xor --release
+      - name: Upload process_hollowing
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_hollowing.exe
+          asset_name: process_hollowing_plus_antisand_antistring_xor.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload process_migration
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_migration.exe
+          asset_name: process_migration_plus_antisand_antistring_xor.exe
+          asset_content_type: binary/octet-stream
+  
+  windows-antisand-xor:
+
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Update rust
+        run: rustup update
+      - name: Apt update
+        run: sudo apt-get update
+      - name: Install linker
+        run: sudo apt-get -y install mingw-w64
+      - name: Add Windows build target
+        run: rustup target add x86_64-pc-windows-gnu
+      - uses: actions/checkout@v3
+      - name: Update cargo
+        run: cargo update
+      - name: Build all for Windows
+        run: cargo build --target x86_64-pc-windows-gnu --features antisand,xor --release
+      - name: Upload process_hollowing
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_hollowing.exe
+          asset_name: process_hollowing_plus_antisand_xor.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload process_migration
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_migration.exe
+          asset_name: process_migration_plus_antisand_xor.exe
+          asset_content_type: binary/octet-stream
+
+  windows-antistring:
+
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Update rust
+        run: rustup update
+      - name: Apt update
+        run: sudo apt-get update
+      - name: Install linker
+        run: sudo apt-get -y install mingw-w64
+      - name: Add Windows build target
+        run: rustup target add x86_64-pc-windows-gnu
+      - uses: actions/checkout@v3
+      - name: Update cargo
+        run: cargo update
+      - name: Build all for Windows
+        run: cargo build --target x86_64-pc-windows-gnu --features antistring --release
+      - name: Upload process_hollowing
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_hollowing.exe
+          asset_name: process_hollowing_plus_antistring.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload process_migration
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_migration.exe
+          asset_name: process_migration_plus_antistring.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload tcp_reverse_shell
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/tcp_reverse_shell.exe
+          asset_name: tcp_reverse_shell_plus_antistring.exe
+          asset_content_type: binary/octet-stream
+
+  windows-antistring-xor:
+
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Update rust
+        run: rustup update
+      - name: Apt update
+        run: sudo apt-get update
+      - name: Install linker
+        run: sudo apt-get -y install mingw-w64
+      - name: Add Windows build target
+        run: rustup target add x86_64-pc-windows-gnu
+      - uses: actions/checkout@v3
+      - name: Update cargo
+        run: cargo update
+      - name: Build all for Windows
+        run: cargo build --target x86_64-pc-windows-gnu --features antistring,xor --release
+      - name: Upload process_hollowing
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_hollowing.exe
+          asset_name: process_hollowing_plus_antistring_xor.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload process_migration
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_migration.exe
+          asset_name: process_migration_plus_antistring_xor.exe
+          asset_content_type: binary/octet-stream
+  
+  windows-xor:
+
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Update rust
+        run: rustup update
+      - name: Apt update
+        run: sudo apt-get update
+      - name: Install linker
+        run: sudo apt-get -y install mingw-w64
+      - name: Add Windows build target
+        run: rustup target add x86_64-pc-windows-gnu
+      - uses: actions/checkout@v3
+      - name: Update cargo
+        run: cargo update
+      - name: Build all for Windows
+        run: cargo build --target x86_64-pc-windows-gnu --features xor --release
+      - name: Upload process_hollowing
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_hollowing.exe
+          asset_name: process_hollowing_plus_xor.exe
+          asset_content_type: binary/octet-stream
+      - name: Upload process_migration
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./target/x86_64-pc-windows-gnu/release/process_migration.exe
+          asset_name: process_migration_plus_xor.exe
+          asset_content_type: binary/octet-stream
