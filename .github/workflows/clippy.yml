@@ -13,7 +13,7 @@ env:
 
 jobs: 
  
-  clippy-lin-base:
+  clippy-linux:
 
     runs-on: ubuntu-latest
     
@@ -22,7 +22,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy -- -D warnings
 
-  clippy-lin-antisand:
+  clippy-linux-antisand:
 
     runs-on: ubuntu-latest
     
@@ -31,7 +31,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --features antisand -- -D warnings
 
-  clippy-lin-antistring:
+  clippy-linux-antistring:
 
     runs-on: ubuntu-latest
     
@@ -40,7 +40,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --features antistring -- -D warnings
 
-  clippy-lin-xor:
+  clippy-linux-xor:
 
     runs-on: ubuntu-latest
     
@@ -49,7 +49,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --features xor -- -D warnings
 
-  clippy-lin-antisand-antistring:
+  clippy-linux-antisand-antistring:
 
     runs-on: ubuntu-latest
     
@@ -58,7 +58,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --features antisand,antistring -- -D warnings
 
-  clippy-lin-antisand-xor:
+  clippy-linux-antisand-xor:
 
     runs-on: ubuntu-latest
     
@@ -67,7 +67,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --features antisand,xor -- -D warnings
 
-  clippy-lin-antistring-xor:
+  clippy-linux-antistring-xor:
 
     runs-on: ubuntu-latest
     
@@ -76,7 +76,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --features antistring,xor -- -D warnings
 
-  clippy-lin-antisand-antistring-xor:
+  clippy-linux-antisand-antistring-xor:
 
     runs-on: ubuntu-latest
     
@@ -85,7 +85,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --features antisand,antistring,xor -- -D warnings
       
-  clippy-win-base:
+  clippy-windows:
 
     runs-on: ubuntu-latest
     
@@ -98,7 +98,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu -- -D warnings
 
-  clippy-win-antisand:
+  clippy-windows-antisand:
 
     runs-on: ubuntu-latest
     
@@ -111,7 +111,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features antisand -- -D warnings
 
-  clippy-win-antistring:
+  clippy-windows-antistring:
 
     runs-on: ubuntu-latest
     
@@ -124,7 +124,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features antistring -- -D warnings
 
-  clippy-win-xor:
+  clippy-windows-xor:
 
     runs-on: ubuntu-latest
     
@@ -137,7 +137,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features xor -- -D warnings
 
-  clippy-win-antisand-antistring:
+  clippy-windows-antisand-antistring:
 
     runs-on: ubuntu-latest
     
@@ -150,7 +150,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features antisand,antistring -- -D warnings
 
-  clippy-win-antisand-xor:
+  clippy-windows-antisand-xor:
 
     runs-on: ubuntu-latest
     
@@ -163,7 +163,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features antisand,xor -- -D warnings
 
-  clippy-win-antistring-xor:
+  clippy-windows-antistring-xor:
 
     runs-on: ubuntu-latest
     
@@ -176,7 +176,7 @@ jobs:
     - name: Run clippy
       run: cargo clippy --target x86_64-pc-windows-gnu --features antistring,xor -- -D warnings
 
-  clippy-win-antisand-antistring-xor:
+  clippy-windows-antisand-antistring-xor:
 
     runs-on: ubuntu-latest
     
