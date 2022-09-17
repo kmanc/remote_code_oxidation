@@ -1,6 +1,6 @@
 [package]
 name = "process_migration"
-version = "1.9.0"
+version = "1.9.1"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.59"
