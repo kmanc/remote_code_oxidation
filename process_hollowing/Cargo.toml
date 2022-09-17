@@ -1,9 +1,13 @@
 [package]
-name = "process_hollowing"
-version = "1.7.1"
-edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
+description = "Creates a process and overwrites the entry point with shellcode (default to a reverse shell on localhost:4444)"
+documentation = "https://kmanc.github.io/remote_code_oxidation/process_hollowing.html"
+edition = "2021"
+license = "MIT"
+name = "process_hollowing"
+repository = "https://github.com/kmanc/remote_code_oxidation/tree/main/process_hollowing"
 rust-version = "1.59"
+version = "1.7.1"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

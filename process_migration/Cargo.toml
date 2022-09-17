@@ -1,9 +1,13 @@
 [package]
-name = "process_migration"
-version = "1.9.1"
-edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
+description = "Overwrites a running process' next instruction(s) with shellcode (default to a reverse shell on localhost:4444)"
+documentation = "https://kmanc.github.io/remote_code_oxidation/process_migration.html"
+edition = "2021"
+license = "MIT"
+name = "process_migration"
+repository = "https://github.com/kmanc/remote_code_oxidation/tree/main/process_migration"
 rust-version = "1.59"
+version = "1.9.1"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
