@@ -9,8 +9,6 @@ use core::ffi::c_void;
 #[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
 use std::ffi::CString;
 #[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
-use std::mem;
-#[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
 use windows::core::PCSTR;
 
 #[cfg(all(windows, feature = "antisand"))]
@@ -19,6 +17,8 @@ use rand::distributions::Alphanumeric;
 use rand::Rng;
 #[cfg(all(windows, feature = "antistring"))]
 use std::ffi::CStr;
+#[cfg(all(windows, feature = "antistring"))]
+use std::mem;
 #[cfg(all(windows, feature = "antistring"))]
 use std::ptr;
 #[cfg(all(windows, feature = "antisand", not(feature = "antistring")))]
@@ -117,7 +117,7 @@ pub fn pound_sand() -> bool {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenUrlA.html
     let mut lpsz_url = PCSTR::null();
     lpsz_url.0 = CString::new(full_link).unwrap().into_raw() as *mut u8;
-    let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, &[], 0, 0) };
+    let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, None, 0, 0) };
     if website != 0 as _ {
         return true;
     }

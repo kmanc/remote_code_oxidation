@@ -1,6 +1,6 @@
 [package]
 name = "rco_utils"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
 rust-version = "1.59"
@@ -16,7 +16,7 @@ antistring = ["windows"]
 rand.optional = true
 rand.version = ">=0.8.5"
 windows.optional = true
-windows.version = ">=0.36.0"
+windows.version = ">=0.40.0"
 windows.features = [
     "Win32_Foundation",
     "Win32_Networking",
