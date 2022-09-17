@@ -17,8 +17,8 @@ antisand = ["rco_utils/antisand"]
 antistring = ["rco_utils/antistring"]
 
 [dependencies]
-rco_config = {path = "../rco_config"}
-rco_utils = {path = "../rco_utils"}
+rco_config = {path = "../rco_config", version = ">=0.2.0"}
+rco_utils = {path = "../rco_utils", version = ">=1.0.1"}
 
 [target.'cfg(target_os="linux")'.dependencies]
 nix = ">=0.16"
