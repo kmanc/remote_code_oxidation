@@ -3,7 +3,7 @@ use std::{mem, ptr, slice};
 use windows::core::{PCSTR, PSTR};
 use windows::Win32::Foundation::HANDLE;
 use windows::Win32::Networking::WinSock::{
-    connect, htons, inet_pton, WSASocketA, WSAStartup, AF_INET, IPPROTO_TCP, SOCKADDR, SOCKADDR_IN,
+    connect, htons, inet_pton, WSASocketA, WSAStartup, AF_INET, IPPROTO_TCP, SOCKADDR_IN,
     SOCKET, SOCK_STREAM, WSADATA,
 };
 use windows::Win32::Security::SECURITY_ATTRIBUTES;
