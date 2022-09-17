@@ -136,7 +136,7 @@ version = "0.2.0"
 
 [[package]]
 name = "rco_utils"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "rand",
  "windows",
