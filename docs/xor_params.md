@@ -4,7 +4,7 @@ title: "XOR Params"
 
 # RCO: XOR Params
 
-[![xor_params](https://user-images.githubusercontent.com/14863147/152621001-8de291e1-58dd-4f7e-9916-1846a65f1c83.gif)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/gifs/xor_params.gif)
+[![xor_params](https://user-images.githubusercontent.com/14863147/152621001-8de291e1-58dd-4f7e-9916-1846a65f1c83.gif)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/main/docs/assets/gifs/xor_params.gif)
 
 
 ## How it works
