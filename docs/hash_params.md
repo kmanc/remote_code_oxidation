@@ -4,7 +4,7 @@ title: "Hash params"
 
 # RCO: Hash Params
 
-[![hash_params](https://user-images.githubusercontent.com/14863147/164768272-9b010714-6b81-42d1-9caf-d08324827959.gif)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/gh-pages/assets/gifs/hash_params.gif)
+[![hash_params](https://user-images.githubusercontent.com/14863147/164768272-9b010714-6b81-42d1-9caf-d08324827959.gif)](https://raw.githubusercontent.com/kmanc/remote_code_oxidation/main/docs/assets/gifs/hash_params.gif)
 
 
 ## How it works
