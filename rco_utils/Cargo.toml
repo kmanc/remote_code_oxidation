@@ -1,6 +1,6 @@
 [package]
 authors = ["Kevin Conley <koins@duck.com>"]
-description = "Shared functions for `Remote Code Execution`'s (RCO's) binaries"
+description = "Shared functions for \"Remote Code Execution\"'s (RCO's) binaries"
 edition = "2021"
 license = "MIT"
 name = "rco_utils"

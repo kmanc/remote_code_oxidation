@@ -15,15 +15,19 @@ RCO tools can be compiled on either Linux or Windows systems to provide its user
 
 
 ## Tools list
-[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fhash_params.json)](https://kmanc.github.io/remote_code_oxidation/hash_params.html)
 
-[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_hollowing.json)](https://kmanc.github.io/remote_code_oxidation/process_hollowing.html)
+[![Process hollowing version unavailable](https://img.shields.io/crates/v/process_hollowing?label=process_hollowing)](https://kmanc.github.io/remote_code_oxidation/process_hollowing.html)
 
-[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fprocess_migration.json)](https://kmanc.github.io/remote_code_oxidation/process_migration.html) 
+[![Process migration version unavailable](https://img.shields.io/crates/v/process_migration?label=process_migration)](https://kmanc.github.io/remote_code_oxidation/process_migration.html) 
 
-[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Ftcp_reverse_shell.json)](https://kmanc.github.io/remote_code_oxidation/tcp_reverse_shell.html)
+[![TCP reverse shell version unavailable](https://img.shields.io/crates/v/tcp_reverse_shell?label=tcp_reverse_shell)](https://kmanc.github.io/remote_code_oxidation/tcp_reverse_shell.html)
 
-[![Custom badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fkmanc%2Fremote_code_oxidation%2Fmaster%2F.custom_shields%2Fxor_params.json)](https://kmanc.github.io/remote_code_oxidation/xor_params.html) 
+
+## Helper tools
+
+- [hash_params](https://kmanc.github.io/remote_code_oxidation/hash_params.html)
+
+- [xor_params](https://kmanc.github.io/remote_code_oxidation/xor_params.html) 
 
 ## Setup
 
