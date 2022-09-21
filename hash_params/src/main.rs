@@ -1,3 +1,4 @@
+use std::collections::hash_map::DefaultHasher;
 use std::env;
 
 // Yeah all of this stuff is already in the lib, but it's gated by a feature and I haven't figured out
