@@ -25,11 +25,11 @@ RCO tools can be compiled on either Linux or Windows systems to provide its user
 
 ## Helper tools
 
-- [hash_params](https://kmanc.github.io/remote_code_oxidation/hash_params.html)
+1. [hash_params](https://kmanc.github.io/remote_code_oxidation/hash_params.html)
 
-- [xor_params](https://kmanc.github.io/remote_code_oxidation/xor_params.html) 
+2. [xor_params](https://kmanc.github.io/remote_code_oxidation/xor_params.html) 
 
-## Setup
+## Building the executables
 
 Clone the repo
 ```commandline
@@ -37,7 +37,11 @@ git clone https://github.com/kmanc/remote_code_oxidation.git
 ```
 
 
-### From Linux host for Linux target
+### From Linux
+---
+
+##### For Linux
+---
 
 Install Rust
 ```commandline
@@ -51,31 +55,127 @@ sudo apt install build-essential
 
 Build!
 ```commandline
-cargo build [-p package_name] [--features [xor][antisand]] [--release]
+cargo build [-p package_name] [--features [antisand][,][antistring][,][xor]] [--release]
 ```
 
-
-### From Linux host for Windows target
+##### For Windows
+---
 
 Install Rust
 ```commandline
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-Add dependencies for cross-compiling
+Add dependencies for cross-compiling (1)
+```commandline
+rustup target add x86_64-pc-windows-gnu
+```
+
+Add dependencies for cross-compiling (2)
 ```commandline
 sudo apt install mingw-w64
-rustup target add x86_64-pc-windows-gnu
 ```
 
 Build!
 ```commandline
-cargo build --target x86_64-pc-windows-gnu [-p package_name] [--features [xor][antisand]] [--release]
+cargo build --target x86_64-pc-windows-gnu [-p package_name] [--features [antisand][,][antistring][,][xor]] [--release]
 ```
 
 
-### From Windows host for Linux target
-#### Todo
+### From Mac
+---
 
-### From Windows host for Windows target
-#### Todo
+##### For Linux
+---
+
+Install Rust
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Add dependencies for cross-compiling (1)
+```commandline
+rustup target add x86_64-unknown-linux-musl
+```
+
+Add dependencies for cross-compiling (2)
+```commandline
+brew install filosottile/musl-cross/musl-cross
+```
+
+Configure linker for cross-compiling
+```commandline
+Create a file in your home directory's .cargo directory called config.toml with the following contents
+[target.x86_64-unknown-linux-musl]
+linker = "x86_64-linux-musl-gcc"
+```
+
+Build!
+```commandline
+cargo build --target x86_64-unknown-linux-musl [-p package_name] [--features [antisand][,][antistring][,][xor]] [--release]
+```
+
+##### For Windows
+---
+
+Install Rust
+```
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Add dependencies for cross-compiling (1)
+```commandline
+rustup target add x86_64-pc-windows-gnu
+```
+
+Add dependencies for cross-compiling (2)
+```commandline
+brew install mingw-w64
+```
+
+Build!
+```commandline
+cargo build --target x86_64-pc-windows-gnu [-p package_name] [--features [antisand][,][antistring][,][xor]] [--release]
+```
+
+
+### From Windows
+---
+
+##### For Linux
+---
+
+Install Rust
+```
+Download and run the installer from the Rust website
+```
+
+Add dependencies for cross-compiling
+```commandline
+rustup target add x86_64-pc-windows-gnu
+```
+
+Configure linker for cross-compiling
+```commandline
+Create a file in your home directory's .cargo directory called config.toml with the following contents
+[target.x86_64-unknown-linux-musl]
+linker = "rust-lld"
+```
+
+Build!
+```commandline
+cargo build --target x86_64-unknown-linux-musl [-p package_name] [--features [antisand][,][antistring][,][xor]] [--release]
+```
+
+##### For Windows
+---
+
+Install Rust
+```
+Download and run the installer from the Rust website
+```
+
+Build!
+```commandline
+cargo build [-p package_name] [--features [antisand][,][antistring][,][xor]] [--release]
+```
