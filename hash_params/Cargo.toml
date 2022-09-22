@@ -3,10 +3,10 @@ authors = ["Kevin Conley <koins@duck.com>"]
 edition = "2021"
 name = "hash_params"
 rust-version = "1.59"
-version = "1.0.0"
+version = "1.0.1"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 rco_config = {path = "../rco_config"}
-rco_utils = {path = "../rco_utils", features = ["antistring"] }
+rco_utils = {path = "../rco_utils"}

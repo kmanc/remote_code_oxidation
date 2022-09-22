@@ -1,26 +1,22 @@
-#[cfg(feature = "antistring")]
-use std::collections::hash_map::DefaultHasher;
 use std::error::Error;
-#[cfg(feature = "antistring")]
-use std::hash::{Hash, Hasher};
 
-#[cfg(all(windows, feature = "antisand", feature = "antistring"))]
-use core::ffi::c_void;
-#[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
-use windows::core::PCSTR;
-
+// Things Antisand needs
 #[cfg(all(windows, feature = "antisand"))]
 use rand::distributions::Alphanumeric;
 #[cfg(all(windows, feature = "antisand"))]
 use rand::Rng;
+
+// Things Antistring needs
+#[cfg(feature = "antistring")]
+use std::collections::hash_map::DefaultHasher;
 #[cfg(all(windows, feature = "antistring"))]
 use std::ffi::CStr;
+#[cfg(feature = "antistring")]
+use std::hash::{Hash, Hasher};
 #[cfg(all(windows, feature = "antistring"))]
 use std::mem;
 #[cfg(all(windows, feature = "antistring"))]
 use std::ptr;
-#[cfg(all(windows, feature = "antisand", not(feature = "antistring")))]
-use windows::Win32::Networking::WinInet::{InternetOpenA, InternetOpenUrlA};
 #[cfg(all(windows, feature = "antistring"))]
 use windows::Win32::System::Diagnostics::Debug::{
     IMAGE_DIRECTORY_ENTRY_EXPORT, IMAGE_NT_HEADERS64,
@@ -29,6 +25,29 @@ use windows::Win32::System::Diagnostics::Debug::{
 use windows::Win32::System::LibraryLoader::LoadLibraryA;
 #[cfg(all(windows, feature = "antistring"))]
 use windows::Win32::System::SystemServices::{IMAGE_DOS_HEADER, IMAGE_EXPORT_DIRECTORY};
+
+// Things Antisand and Antistring need
+#[cfg(all(windows, feature = "antisand", feature = "antistring"))]
+use core::ffi::c_void;
+#[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
+use std::ffi::CString;
+#[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
+use windows::core::PCSTR;
+
+// Things Antisand needs only when Antistring is not set
+#[cfg(all(windows, feature = "antisand", not(feature = "antistring")))]
+use windows::Win32::Networking::WinInet::{InternetOpenA, InternetOpenUrlA};
+
+/*
+    Calculate the hash of a hashable value
+*/
+
+#[cfg(feature = "antistring")]
+pub fn calculate_hash<T: Hash>(t: &T) -> u64 {
+    let mut s = DefaultHasher::new();
+    t.hash(&mut s);
+    s.finish()
+}
 
 /*
     Helper function for XOR - makes two slices the same length by repeating the shorter till it's the length of the longer
@@ -47,24 +66,22 @@ fn equalize_slice_len<T: std::clone::Clone>(slice_one: &[T], slice_two: &[T]) ->
 }
 
 /*
-    Helper function for XOR - XORs two slices of equal length
+    Find Win32 function implementation - finds the memory location of a Win32 function in its DLL so it can be called directly
 */
 
-#[cfg(feature = "xor")]
-fn xor_u8_slices(slice_one: &[u8], slice_two: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
-    if slice_one.len() != slice_two.len() {
-        return Err("The given slices are not the same length".into());
-    }
-    Ok(slice_one
-        .iter()
-        .zip(slice_two.iter())
-        .map(|(&x1, &x2)| x1 ^ x2)
-        .collect())
-}
+#[cfg(all(windows, feature = "antistring"))]
+pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box<dyn Error>> {
+    // Call LoadLibraryA on a DLL to get its base address
+    let mut lib_filename = PCSTR::null();
+    lib_filename.0 = CString::new(dll).unwrap().into_raw() as *mut u8;
+    let library_base = match unsafe { LoadLibraryA(lib_filename) } {
+        Ok(value) => value,
+        Err(_) => panic!("Could not load {lib_filename:?}"),
+    };
+    let library_base_usize = library_base.0 as usize;
 
-/*
-    XOR implementation - takes in a key and a value and outputs the key ^ value byte-bye-byte
-*/
+    // Get a pointer to the DOS header
+    let dos_header: *const IMAGE_DOS_HEADER = library_base.0 as *const IMAGE_DOS_HEADER;
 
 #[cfg(feature = "xor")]
 pub fn xor_encrypt_decrypt(key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
@@ -124,7 +141,6 @@ pub fn pound_sand() -> bool {
 
 #[cfg(all(windows, feature = "antisand", feature = "antistring"))]
 pub fn pound_sand() -> bool {
-    // See line 90
     let function = find_function_address("Wininet", 0x4b98c7b42f5ce34f).unwrap();
     let lpsz_agent = PCSTR::from_raw("Name in user-agent\0".as_mut_ptr());
     let internet_handle = unsafe {
@@ -148,7 +164,6 @@ pub fn pound_sand() -> bool {
     full_link.push_str(&alphanum);
     full_link.push_str(&link_end);
 
-    // See line 111
     let function = find_function_address("Wininet", 0x275e2d4fe536ed19).unwrap();
     let lpsz_url = PCSTR::from_raw(format!("{full_link}\0").as_mut_ptr());
     let website = unsafe {
@@ -181,18 +196,19 @@ pub fn pound_sand() -> bool {
 }
 
 /*
-    Calculate the has of a hashable value
+    XOR implementation - takes in a key and a value and outputs the key ^ value byte-bye-byte
 */
 
-#[cfg(feature = "antistring")]
-pub fn calculate_hash<T: Hash>(t: &T) -> u64 {
-    let mut s = DefaultHasher::new();
-    t.hash(&mut s);
-    s.finish()
+#[cfg(feature = "xor")]
+pub fn xor_encrypt_decrypt(key: &[u8], text: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
+    let equalilzed = equalize_slice_len(key, text);
+    let key: &[u8] = &equalilzed.0[..];
+    let text: &[u8] = &equalilzed.1[..];
+    xor_u8_slices(key, text)
 }
 
 /*
-    Find Win32 function implementation - finds the memory location of a Win32 function in its DLL so it can be called directly
+    XOR not-asked-for "implementation" - this is a dummy that will never do anything except make the compiler happy
 */
 
 #[cfg(all(windows, feature = "antistring"))]
@@ -266,13 +282,20 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
             // Read the function address's location from memory
             let function_address_rva: u32 = unsafe { ptr::read(function_address_rva_address) as u32 };
 
-            // Calculate the function's real address
-            let function_address: *const () = (library_base_usize + function_address_rva as usize) as *const ();
+/*
+    Helper function for XOR - XORs two slices of equal length
+*/
 
-            return Ok(function_address);
-        }
+#[cfg(feature = "xor")]
+fn xor_u8_slices(slice_one: &[u8], slice_two: &[u8]) -> Result<Vec<u8>, Box<dyn Error>> {
+    if slice_one.len() != slice_two.len() {
+        return Err("The given slices are not the same length".into());
     }
-    Err(format!("Could not find the function '{name_hash:x}' in '{dll}'").into())
+    Ok(slice_one
+        .iter()
+        .zip(slice_two.iter())
+        .map(|(&x1, &x2)| x1 ^ x2)
+        .collect())
 }
 
 #[macro_export]
@@ -288,8 +311,8 @@ macro_rules! construct_win32_function {
     ) => {
         // Interpret the memory at the provided function pointer "x" as a function with args "y" and return "z"
         // Based on https://rust-lang.github.io/unsafe-code-guidelines/layout/function-pointers.html
-        //   this is a safe transmute because it will be guaranteed on Windows
-        // So the macro is safe despite the unsafe code
+        //   this is a safe transmute because it will be guaranteed on Windows, so the macro is safe
+        //   despite the unsafe code
         unsafe {
             std::mem::transmute::<*const (), unsafe fn( $($( $y ),*),* ) -> $($( $z ),*),*>($( $x ),*)
         }
