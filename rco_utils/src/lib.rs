@@ -30,8 +30,6 @@ use windows::Win32::System::SystemServices::{IMAGE_DOS_HEADER, IMAGE_EXPORT_DIRE
 #[cfg(all(windows, feature = "antisand", feature = "antistring"))]
 use core::ffi::c_void;
 #[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
-use std::ffi::CString;
-#[cfg(all(windows, any(feature = "antisand", feature = "antistring")))]
 use windows::core::PCSTR;
 
 // Things Antisand needs only when Antistring is not set
@@ -184,7 +182,7 @@ pub fn pound_sand() -> bool {
     // Call InternetOpenA to get a handle that can be used in an actual internet request
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopena
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenA.html
-    let lpsz_agent = PCSTR::from_raw("Name in user-agent\0".as_mut_ptr());
+    let lpsz_agent = PCSTR::from_raw(String::from("Name in user-agent\0").as_mut_ptr());
     let internet_handle = unsafe { InternetOpenA(lpsz_agent, 0, PCSTR::null(), PCSTR::null(), 0) };
 
     // Generate a "website" to search for
@@ -218,7 +216,7 @@ pub fn pound_sand() -> bool {
 pub fn pound_sand() -> bool {
     // See line 90
     let function = find_function_address("Wininet", 0x4b98c7b42f5ce34f).unwrap();
-    let lpsz_agent = PCSTR::from_raw("Name in user-agent\0".as_mut_ptr());
+    let lpsz_agent = PCSTR::from_raw(String::from("Name in user-agent\0").as_mut_ptr());
     let internet_handle = unsafe {
         mem::transmute::<*const (), fn(PCSTR, i32, PCSTR, PCSTR, i32) -> *mut c_void>(function)(
             lpsz_agent,
