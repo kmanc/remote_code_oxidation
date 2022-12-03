@@ -1,9 +1,13 @@
 [package]
-name = "process_hollowing"
-version = "1.7.1"
-edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
+description = "Creates a process and overwrites the entry point with shellcode (default to a reverse shell on localhost:4444)"
+documentation = "https://kmanc.github.io/remote_code_oxidation/process_hollowing.html"
+edition = "2021"
+license = "MIT"
+name = "process_hollowing"
+repository = "https://github.com/kmanc/remote_code_oxidation/tree/main/process_hollowing"
 rust-version = "1.59"
+version = "1.10.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -14,14 +18,14 @@ antistring = ["rco_utils/antistring"]
 
 
 [dependencies]
-rco_config = {path = "../rco_config"}
-rco_utils = {path = "../rco_utils"}
+rco_config = {path = "../rco_config", version = ">=0.2.0"}
+rco_utils = {path = "../rco_utils", version = ">=1.0.1"}
 
 [target.'cfg(target_os="linux")'.dependencies]
 nix = ">=0.16"
 
 [target.'cfg(windows)'.dependencies]
-windows.version = ">=0.40.0"
+windows.version = ">=0.41.0"
 windows.features = [
     "Win32_Foundation",
     "Win32_Security",

@@ -1,10 +1,9 @@
 [package]
-name = "rco_config"
-version = "0.2.0"
-edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
+description = "Configuration for \"Remote Code Execution\"'s (RCO's) binaries"
+edition = "2021"
+license = "MIT"
+name = "rco_config"
+repository = "https://github.com/kmanc/remote_code_oxidation/tree/main/rco_config"
 rust-version = "1.59"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
+version = "0.2.0"

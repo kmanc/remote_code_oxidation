@@ -1,9 +1,9 @@
 [package]
-name = "xor_params"
-version = "1.2.0"
-edition = "2021"
 authors = ["Kevin Conley <koins@duck.com>"]
+edition = "2021"
+name = "xor_params"
 rust-version = "1.59"
+version = "1.2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

