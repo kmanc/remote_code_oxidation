@@ -7,7 +7,7 @@ license = "MIT"
 name = "tcp_reverse_shell"
 repository = "https://github.com/kmanc/remote_code_oxidation/tree/main/tcp_reverse_shell"
 rust-version = "1.59"
-version = "1.5.1"
+version = "1.5.2"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -20,7 +20,7 @@ rco_config = {path = "../rco_config", version = ">=0.2.0"}
 rco_utils = {path = "../rco_utils", version = ">=1.0.1"}
 
 [target.'cfg(windows)'.dependencies]
-windows.version = ">=0.41.0"
+windows.version = ">=0.44.0"
 windows.features = [
     "Win32_Foundation",
     "Win32_Security",

