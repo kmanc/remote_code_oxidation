@@ -6,7 +6,7 @@ license = "MIT"
 name = "rco_utils"
 repository = "https://github.com/kmanc/remote_code_oxidation/tree/main/rco_utils"
 rust-version = "1.59"
-version = "1.2.1"
+version = "1.2.2"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -19,7 +19,7 @@ antistring = ["windows"]
 rand.optional = true
 rand.version = ">=0.8.5"
 windows.optional = true
-windows.version = ">=0.44.0"
+windows.version = ">=0.46.0"
 windows.features = [
     "Win32_Foundation",
     "Win32_Networking",
