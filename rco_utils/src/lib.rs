@@ -72,7 +72,6 @@ pub fn calculate_hash<T: Hash>(t: &T) -> u64 {
     s.finish()
 }
 
-
 /*
     Helper function for XOR - makes two slices the same length by repeating the shorter till it's the length of the longer
 */
@@ -94,7 +93,10 @@ fn equalize_slice_len<T: std::clone::Clone>(slice_one: &[T], slice_two: &[T]) ->
 */
 
 #[cfg(all(windows, feature = "antistring"))]
-pub fn find_function_address(library_base_usize: usize, name_hash: u64) -> Result<*const (), Box<dyn Error>> {
+pub fn find_function_address(
+    library_base_usize: usize,
+    name_hash: u64,
+) -> Result<*const (), Box<dyn Error>> {
     // Get a pointer to the DOS header
     let dos_header: *const IMAGE_DOS_HEADER = library_base_usize as *const IMAGE_DOS_HEADER;
 
@@ -113,9 +115,12 @@ pub fn find_function_address(library_base_usize: usize, name_hash: u64) -> Resul
         (library_base_usize + export_directory_rva as usize) as *const IMAGE_EXPORT_DIRECTORY;
 
     // Calculate the base addresses of the arrays holding function information
-    let names_address = unsafe { library_base_usize + (*image_export_directory).AddressOfNames as usize };
-    let ordinals_address = unsafe { library_base_usize + (*image_export_directory).AddressOfNameOrdinals as usize };
-    let functions_address = unsafe { library_base_usize + (*image_export_directory).AddressOfFunctions as usize };
+    let names_address =
+        unsafe { library_base_usize + (*image_export_directory).AddressOfNames as usize };
+    let ordinals_address =
+        unsafe { library_base_usize + (*image_export_directory).AddressOfNameOrdinals as usize };
+    let functions_address =
+        unsafe { library_base_usize + (*image_export_directory).AddressOfFunctions as usize };
 
     // Loop over every function looking for the desired name
     let num_functions = unsafe { (*image_export_directory).NumberOfFunctions };
@@ -130,7 +135,8 @@ pub fn find_function_address(library_base_usize: usize, name_hash: u64) -> Resul
         let function_name_rva: u32 = unsafe { ptr::read(function_name_rva_address) as u32 };
 
         // Calculate the function name's real address
-        let function_name_address: *const i8 = (library_base_usize + function_name_rva as usize) as *const i8;
+        let function_name_address: *const i8 =
+            (library_base_usize + function_name_rva as usize) as *const i8;
 
         // Read the function name from its address
         let function_name = unsafe { CStr::from_ptr(function_name_address).to_string_lossy() };
@@ -151,13 +157,16 @@ pub fn find_function_address(library_base_usize: usize, name_hash: u64) -> Resul
             let into_functions = mem::size_of::<u32>() * (ordinal_offset as usize);
 
             // Calculate the function address's location
-            let function_address_rva_address: *const usize = (functions_address + into_functions) as *const usize;
+            let function_address_rva_address: *const usize =
+                (functions_address + into_functions) as *const usize;
 
             // Read the function address's location from memory
-            let function_address_rva: u32 = unsafe { ptr::read(function_address_rva_address) as u32 };
+            let function_address_rva: u32 =
+                unsafe { ptr::read(function_address_rva_address) as u32 };
 
             // Calculate the function's real address
-            let function_address: *const () = (library_base_usize + function_address_rva as usize) as *const ();
+            let function_address: *const () =
+                (library_base_usize + function_address_rva as usize) as *const ();
 
             return Ok(function_address);
         }
@@ -177,7 +186,7 @@ pub fn find_library_address(dll: &str) -> Result<usize, Box<dyn Error>> {
         Ok(value) => value,
         Err(_) => panic!("Could not load {lib_filename:?}"),
     };
-    
+
     Ok(library_base.0 as usize)
 }
 

