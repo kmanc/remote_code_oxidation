@@ -1,13 +1,13 @@
 use core::ffi::c_void;
 use std::ptr;
 use windows::core::{PCSTR, PSTR};
+use windows::Wdk::System::Threading::PROCESSINFOCLASS;
 use windows::Win32::Foundation::{BOOL, HANDLE};
 use windows::Win32::Security::SECURITY_ATTRIBUTES;
 use windows::Win32::System::Threading::{
-    CREATE_SUSPENDED, PROCESS_BASIC_INFORMATION, PROCESS_CREATION_FLAGS,
-    PROCESS_INFORMATION, STARTUPINFOA,
+    CREATE_SUSPENDED, PROCESS_BASIC_INFORMATION, PROCESS_CREATION_FLAGS, PROCESS_INFORMATION,
+    STARTUPINFOA,
 };
-use windows::Wdk::System::Threading::PROCESSINFOCLASS;
 
 const E_LFANEW_OFFSET: usize = 0x3C;
 const OPTHDR_ADDITIONAL_OFFSET: usize = 0x28;

