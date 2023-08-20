@@ -6,7 +6,7 @@ license = "MIT"
 name = "rco_utils"
 repository = "https://github.com/kmanc/remote_code_oxidation/tree/main/rco_utils"
 rust-version = "1.59"
-version = "1.2.1"
+version = "1.2.3"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

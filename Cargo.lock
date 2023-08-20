@@ -57,7 +57,9 @@ dependencies = [
 [[package]]
 name = "nix"
 version = "0.26.2"
+version = "0.26.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bfdda3d196821d6af13126e40375cdf7da646a96114af134d5f417a9a1dc8e1a"
 checksum = "bfdda3d196821d6af13126e40375cdf7da646a96114af134d5f417a9a1dc8e1a"
 dependencies = [
  "bitflags",
@@ -82,7 +84,7 @@ checksum = "5b40af805b3121feab8a3c29f04d8ad262fa8e0561883e7653e024ae4479e6de"
 
 [[package]]
 name = "process_hollowing"
-version = "1.10.2"
+version = "1.10.4"
 dependencies = [
  "nix",
  "rco_config",
@@ -92,7 +94,7 @@ dependencies = [
 
 [[package]]
 name = "process_migration"
-version = "1.11.2"
+version = "1.11.4"
 dependencies = [
  "nix",
  "rco_config",
@@ -136,7 +138,7 @@ version = "0.2.0"
 
 [[package]]
 name = "rco_utils"
-version = "1.2.1"
+version = "1.2.2"
 dependencies = [
  "rand",
  "windows",
@@ -150,7 +152,7 @@ checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
 name = "tcp_reverse_shell"
-version = "1.5.2"
+version = "1.5.3"
 dependencies = [
  "rco_config",
  "rco_utils",
