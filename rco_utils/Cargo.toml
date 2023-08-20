@@ -19,7 +19,7 @@ antistring = ["windows"]
 rand.optional = true
 rand.version = ">=0.8.5"
 windows.optional = true
-windows.version = ">=0.44.0"
+windows.version = ">=0.51.0"
 windows.features = [
     "Win32_Foundation",
     "Win32_Networking",
