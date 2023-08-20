@@ -1,7 +1,6 @@
 use core::ffi::c_void;
 use std::{mem, ptr};
 use windows::Win32::Foundation::{BOOL, HANDLE};
-use windows::Win32::Foundation::{BOOL, HANDLE};
 use windows::Win32::System::Diagnostics::ToolHelp::{
     CREATE_TOOLHELP_SNAPSHOT_FLAGS, PROCESSENTRY32, TH32CS_SNAPPROCESS,
 };
