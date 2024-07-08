@@ -11,7 +11,11 @@ members = [
     "xor_params",
 ]
 
+resolver = "2"
+
 [profile.release]
+codegen-units = 1
 lto = true
-strip = true
+opt-level = "z"
 panic = "abort"
+strip = true

