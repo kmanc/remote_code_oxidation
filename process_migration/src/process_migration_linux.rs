@@ -56,7 +56,7 @@ pub fn inject_and_migrate(shellcode: &[u8], target_process: &str) {
 
     // Write shellcode to target process one byte at a time
     for byte in shellcode {
-        if let Err(error) = unsafe { write(target_pid, point as *mut c_void, *byte as *mut c_void) }
+        if let Err(error) = write(target_pid, point as *mut c_void, *byte as i64)
         {
             panic!("Unable to write portion of shellcode at {byte} to {target_process}: {error}");
         }
