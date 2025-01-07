@@ -218,7 +218,7 @@ pub fn pound_sand() -> bool {
     // WINDOWS --> https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenurla
     // RUST --> https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Networking/WinInet/fn.InternetOpenUrlA.html
     let lpsz_url = PCSTR::from_raw(format!("{full_link}\0").as_mut_ptr());
-    let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, None, 0, 0) };
+    let website = unsafe { InternetOpenUrlA(internet_handle, lpsz_url, None, 0, Some(0)) };
     if website != 0 as _ {
         return true;
     }

