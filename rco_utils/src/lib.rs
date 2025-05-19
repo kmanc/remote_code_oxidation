@@ -2,7 +2,7 @@ use std::error::Error;
 
 // Things Antisand needs
 #[cfg(all(windows, feature = "antisand"))]
-use rand::distributions::Alphanumeric;
+use rand::distr::Alphanumeric;
 #[cfg(all(windows, feature = "antisand"))]
 use rand::Rng;
 
@@ -203,8 +203,8 @@ pub fn pound_sand() -> bool {
     let internet_handle = unsafe { InternetOpenA(lpsz_agent, 0, PCSTR::null(), PCSTR::null(), 0) };
 
     // Generate a "website" to search for
-    let length = rand::thread_rng().gen_range(20..40);
-    let alphanum: String = rand::thread_rng()
+    let length = rand::rng().random_range(20..40);
+    let alphanum: String = rand::rng()
         .sample_iter(&Alphanumeric)
         .take(length)
         .map(char::from)
