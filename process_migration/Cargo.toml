@@ -24,7 +24,7 @@ rco_utils = {path = "../rco_utils", version = ">=1.0.1"}
 nix = {version = ">=0.29", features=["ptrace"]}
 
 [target.'cfg(windows)'.dependencies]
-windows.version = ">=0.52.0"
+windows.version = ">=0.58.0"
 windows.features = [
     "Win32_Foundation",
     "Win32_Security",

