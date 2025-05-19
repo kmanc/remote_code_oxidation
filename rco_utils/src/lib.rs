@@ -247,8 +247,8 @@ pub fn pound_sand() -> bool {
         )
     };
 
-    let length = rand::thread_rng().gen_range(20..40);
-    let alphanum: String = rand::thread_rng()
+    let length = rand::rng().random_range(20..40);
+    let alphanum: String = rand::rng()
         .sample_iter(&Alphanumeric)
         .take(length)
         .map(char::from)
