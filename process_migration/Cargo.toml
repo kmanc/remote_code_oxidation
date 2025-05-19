@@ -7,7 +7,7 @@ license = "MIT"
 name = "process_migration"
 repository = "https://github.com/kmanc/remote_code_oxidation/tree/main/process_migration"
 rust-version = "1.63"
-version = "1.13.0"
+version = "1.14.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
