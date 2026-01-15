@@ -54,7 +54,9 @@ pub fn hollow_and_run(shellcode: &[u8], target_process: &str) {
             POINTER_SIZE_TIMES_SIX,
             &mut 0_u32,
         )
-    }.is_err() {
+    }
+    .is_err()
+    {
         panic!("Could not get the entry point with NtQueryInformationProcess");
     }
 
