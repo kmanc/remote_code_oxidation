@@ -15,8 +15,8 @@ XOR params performs an [exclusive OR (XOR)](https://en.wikipedia.org/wiki/Exclus
 ## Using it
 
 1.  *[Not shown in demo]* Generate shellcode for the desired end result (for example, use [msfvenom](https://book.hacktricks.xyz/shells/shells/msfvenom) to generate a reverse TCP shell shellcode for the target operating system)
-2.  *[Not shown in demo]* Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) and change the shellcode to the shellcode generated in step 1
-3.  *[Not shown in demo]* Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) and change the key to a desired key
+2.  *[Not shown in demo]* Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/main/rco_config/src/lib.rs) and change the shellcode to the shellcode generated in step 1
+3.  *[Not shown in demo]* Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/main/rco_config/src/lib.rs) and change the key to a desired key
 4.  *[Not shown in demo]* Compile the executable
     1.  For Linux
     ```commandline
@@ -27,4 +27,4 @@ XOR params performs an [exclusive OR (XOR)](https://en.wikipedia.org/wiki/Exclus
     cargo build --target x86_64-pc-windows-gnu -p xor_params --release
     ```
 5.  Run the executable
-6.  Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/master/rco_config/src/lib.rs) and change encrypted payload to the output of step 5
+6.  Open [the config file](https://github.com/kmanc/remote_code_oxidation/blob/main/rco_config/src/lib.rs) and change encrypted payload to the output of step 5
